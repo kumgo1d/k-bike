@@ -1,10 +1,14 @@
 package com.android.apps.seoulpublicbike
 
+import android.Manifest
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.UiThread
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.android.apps.seoulpublicbike.data.Bike
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
@@ -19,65 +23,31 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    private lateinit var naverMap: NaverMap
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setFragment()
-
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as MapFragment?
-            ?: MapFragment.newInstance().also {
-                supportFragmentManager.beginTransaction().add(R.id.map, it).commit()
-            }
-        mapFragment.getMapAsync(this)
+        //checkPermissions()
     }
 
-    fun setFragment() {
+    private fun setFragment() {
         val bikeMapFragment: BikeMapFragment = BikeMapFragment()
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.frameLayout, bikeMapFragment)
         transaction.commit()
     }
 
-    @UiThread
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BUILDING, true)
-        loadBikeList()
-    }
-
-    private fun loadBikeList() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(SeoulOpenApi.DOMAIN)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val seoulOpenService = retrofit.create(SeoulOpenService::class.java)
-        seoulOpenService.getBike(SeoulOpenApi.API_KEY).enqueue(object : Callback<Bike> {
-            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                showBikeList(response.body() as Bike)
-            }
-
-            override fun onFailure(call: Call<Bike>, t: Throwable) {
-                Toast.makeText(baseContext, "서버에 오류가 발생하였습니다.", Toast.LENGTH_LONG).show()
-            }
-        })
-    }
-
-    fun showBikeList(bike: Bike) {
-        val latLngBounds = LatLngBounds.Builder()
-
-        for(b in bike.rentBikeStatus.row) {
-            val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
-            val marker = Marker()
-            marker.apply {
-                position = pos
-                captionText = b.stationName
-                map = naverMap
-            }
-
-            latLngBounds.include(marker.position)
+    private fun checkPermissions() {
+        val locationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if(locationPermission == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "위치 추적이 활성화됩니다.", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "설정에서 위치 서비스를 활성화할 수 있습니다.", Toast.LENGTH_LONG).show()
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                BikeMapFragment.LOCATION_PERMISSION_REQUEST_CODE
+            )
         }
     }
 }
