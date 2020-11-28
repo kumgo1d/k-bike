@@ -40,6 +40,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private var locationManager: LocationManager? = null
 
     //내 위치
+    private var locationPermission = false
     private var longitude: Double = 0.0
     private var latitude: Double = 0.0
 
@@ -81,8 +82,10 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         //권한
         if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
+            locationPermission = true
         } else {
             ActivityCompat.requestPermissions(activity as AppCompatActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+            locationPermission = false
         }
     }
 
@@ -98,12 +101,22 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
-        var cameraPosition = CameraPosition(LatLng(latitude, longitude), 16.0)
         this.naverMap = naverMap
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
-        naverMap.cameraPosition = cameraPosition
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
+
+        if(locationPermission) {
+            var cameraPosition = CameraPosition(LatLng(latitude, longitude), 16.0)
+            naverMap.locationSource = locationSource
+            naverMap.locationTrackingMode = LocationTrackingMode.Follow
+            naverMap.cameraPosition = cameraPosition
+
+            naverMap.addOnCameraIdleListener {
+                naverMap.locationTrackingMode = LocationTrackingMode.Follow
+            }
+        } else {
+            naverMap.locationTrackingMode = LocationTrackingMode.None
+        }
+
     }
 
     private fun checkPermissions() {
@@ -157,30 +170,36 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
 
     fun showBikeList(bike: Bike) {
         var distance = 0.01f
+        var curInfo = InfoWindow()
         //현재 위치와 자전거 대여소의 위치를 비교하여 내 위치 주변 대여소만 보여준다.
         for(b in bike.rentBikeStatus.row) {
             if(latitude-distance <= b.stationLatitude.toDouble() && b.stationLatitude.toDouble() <= latitude+distance
                 && longitude-distance <= b.stationLongitude.toDouble() && b.stationLongitude.toDouble() <= longitude+distance) {
                 val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
-
                 val infoWindow = InfoWindow()
                 infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(context!!) {
                     override fun getText(infoWindow: InfoWindow): CharSequence {
                         return "자전거 : ${b.parkingBikeTotCnt} \n주차가능 : ${b.rackTotCnt}"
                     }
                 }
-
                 val listener = Overlay.OnClickListener { overlay ->
                     val marker = overlay as Marker
-
                     if (marker.infoWindow == null) {
+                        curInfo.close()
                         // 현재 마커에 정보 창이 열려있지 않을 경우 엶
+                        val cameraUpdate = CameraUpdate.scrollTo(pos)
+                            .animate(CameraAnimation.Fly, 1000)
+                        naverMap.moveCamera(cameraUpdate)
                         infoWindow.open(marker)
+                        curInfo = infoWindow
                     } else {
+                        curInfo.close()
                         // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
                         infoWindow.close()
                     }
-
+                    naverMap.setOnMapClickListener { pointF, latLng ->
+                        infoWindow.close()
+                    }
                     true
                 }
 
@@ -193,6 +212,10 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                     onClickListener = listener
                 }
             }
+        }
+        val infoWindow = InfoWindow()
+        naverMap.setOnMapClickListener { pointF, latLng ->
+            infoWindow.close()
         }
     }
 
