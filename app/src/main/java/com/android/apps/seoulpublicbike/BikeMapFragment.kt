@@ -40,7 +40,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private var locationManager: LocationManager? = null
 
     //내 위치
-    private var locationPermission = false
+    private var lPermission = false
     private var longitude: Double = 0.0
     private var latitude: Double = 0.0
 
@@ -62,31 +62,26 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         //내 위치를 알기 위한 location manager
         locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
-        checkPermissions()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (locationSource.onRequestPermissionsResult(requestCode, permissions,
-                grantResults)) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
             if (!locationSource.isActivated) { // 권한 거부됨
                 naverMap.locationTrackingMode = LocationTrackingMode.None
             }
-            return
         }
+        if(requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            lPermission = true
+        }
+        return
     }
 
     override fun onStart() {
         super.onStart()
-
         //권한
-        if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
-            locationPermission = true
-        } else {
-            ActivityCompat.requestPermissions(activity as AppCompatActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-            locationPermission = false
-        }
+        checkPermissions()
     }
 
     override fun onStop() {
@@ -104,7 +99,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         this.naverMap = naverMap
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
 
-        if(locationPermission) {
+        if(lPermission) {
             var cameraPosition = CameraPosition(LatLng(latitude, longitude), 16.0)
             naverMap.locationSource = locationSource
             naverMap.locationTrackingMode = LocationTrackingMode.Follow
@@ -114,17 +109,25 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                 naverMap.locationTrackingMode = LocationTrackingMode.Follow
             }
         } else {
+            var cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
+            naverMap.cameraPosition = cameraPosition
             naverMap.locationTrackingMode = LocationTrackingMode.None
         }
+    }
+
+    private fun initMapSeetings(naverMap: NaverMap) {
 
     }
 
     private fun checkPermissions() {
         val locationPermission = ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
         if(locationPermission == PackageManager.PERMISSION_GRANTED) {
+            lPermission = true
+            locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             Toast.makeText(context, "위치 추적이 활성화됩니다.", Toast.LENGTH_LONG).show()
         } else {
-            ActivityCompat.requestPermissions(activity as AppCompatActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+            lPermission = false
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             Toast.makeText(context, "설정에서 위치 서비스를 활성화할 수 있습니다.", Toast.LENGTH_LONG).show()
         }
     }
