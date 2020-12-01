@@ -40,12 +40,11 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private var locationManager: LocationManager? = null
 
     //내 위치
-    private var lPermission = false
     private var longitude: Double = 0.0
     private var latitude: Double = 0.0
 
     companion object {
-        const val LOCATION_PERMISSION_REQUEST_CODE = 100
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,15 +66,20 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            if (!locationSource.isActivated) { // 권한 거부됨
-                naverMap.locationTrackingMode = LocationTrackingMode.None
-            }
+//        when(requestCode) {
+//            LOCATION_PERMISSION_REQUEST_CODE -> {
+//                //지도 restart
+//                locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
+//                locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+//                naverMap.locationSource = locationSource
+//            }
+//        }
+        if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
+            locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
+            locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+            naverMap.locationSource = locationSource
         }
-        if(requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            lPermission = true
-        }
-        return
     }
 
     override fun onStart() {
@@ -99,7 +103,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         this.naverMap = naverMap
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
 
-        if(lPermission) {
+        if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             var cameraPosition = CameraPosition(LatLng(latitude, longitude), 16.0)
             naverMap.locationSource = locationSource
             naverMap.locationTrackingMode = LocationTrackingMode.Follow
@@ -115,19 +119,13 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         }
     }
 
-    private fun initMapSeetings(naverMap: NaverMap) {
-
-    }
-
     private fun checkPermissions() {
         val locationPermission = ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
         if(locationPermission == PackageManager.PERMISSION_GRANTED) {
-            lPermission = true
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             Toast.makeText(context, "위치 추적이 활성화됩니다.", Toast.LENGTH_LONG).show()
         } else {
-            lPermission = false
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             Toast.makeText(context, "설정에서 위치 서비스를 활성화할 수 있습니다.", Toast.LENGTH_LONG).show()
         }
     }
@@ -223,6 +221,9 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     }
 
     override fun onLocationChanged(location: Location?) {
+        if(locationManager == null) {
+            return
+        }
         //현재 위치를 저장하는 변수에 값을 할당한다.
         longitude = location!!.longitude
         latitude = location!!.latitude
