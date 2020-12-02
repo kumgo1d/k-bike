@@ -38,6 +38,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
     private var locationManager: LocationManager? = null
+    private lateinit var bike: Bike
 
     //내 위치
     private var longitude: Double = 0.0
@@ -61,6 +62,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         //내 위치를 알기 위한 location manager
         locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
+        loadBikeList()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -71,10 +73,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
             initMapSettings()
-            loadBikeList()
-        }
-        if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            loadBikeList()
         }
     }
 
@@ -110,7 +108,10 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             naverMap.cameraPosition = cameraPosition
             naverMap.locationTrackingMode = LocationTrackingMode.None
         }
-        loadBikeList()
+
+        naverMap.addOnCameraChangeListener { i, b ->
+            showBikeList(bike)
+        }
     }
 
     private fun initMapSettings() {
@@ -143,27 +144,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         //1 ~ 1000
         seoulOpenService.getBike(SeoulOpenApi.API_KEY1).enqueue(object : Callback<Bike> {
             override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                showBikeList(response.body() as Bike)
-            }
-
-            override fun onFailure(call: Call<Bike>, t: Throwable) {
-                Toast.makeText(context, "서버 오류가 발생하였습니다.", Toast.LENGTH_LONG).show()
-            }
-        })
-        //1001 ~ 2000
-        seoulOpenService.getBike(SeoulOpenApi.API_KEY2).enqueue(object : Callback<Bike> {
-            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                showBikeList(response.body() as Bike)
-            }
-
-            override fun onFailure(call: Call<Bike>, t: Throwable) {
-                Toast.makeText(context, "서버 오류가 발생하였습니다.", Toast.LENGTH_LONG).show()
-            }
-        })
-        //2001 ~ 3000
-        seoulOpenService.getBike(SeoulOpenApi.API_KEY3).enqueue(object : Callback<Bike> {
-            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                showBikeList(response.body() as Bike)
+                bike = response.body() as Bike
             }
 
             override fun onFailure(call: Call<Bike>, t: Throwable) {
@@ -173,51 +154,12 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     }
 
     fun showBikeList(bike: Bike) {
-        var distance = 0.01f
         var curInfo = InfoWindow()
         //현재 위치와 자전거 대여소의 위치를 비교하여 내 위치 주변 대여소만 보여준다.
         for(b in bike.rentBikeStatus.row) {
-            if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                if(latitude-distance <= b.stationLatitude.toDouble() && b.stationLatitude.toDouble() <= latitude+distance
-                    && longitude-distance <= b.stationLongitude.toDouble() && b.stationLongitude.toDouble() <= longitude+distance) {
-                    val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
-                    val infoWindow = InfoWindow()
-                    infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(context!!) {
-                        override fun getText(infoWindow: InfoWindow): CharSequence {
-                            return "자전거 : ${b.parkingBikeTotCnt} \n주차가능 : ${b.rackTotCnt}"
-                        }
-                    }
-                    val listener = Overlay.OnClickListener { overlay ->
-                        val marker = overlay as Marker
-                        if (marker.infoWindow == null) {
-                            curInfo.close()
-                            // 현재 마커에 정보 창이 열려있지 않을 경우 엶
-                            val cameraUpdate = CameraUpdate.scrollTo(pos)
-                                .animate(CameraAnimation.Fly, 1000)
-                            naverMap.moveCamera(cameraUpdate)
-                            infoWindow.open(marker)
-                            curInfo = infoWindow
-                        } else {
-                            curInfo.close()
-                            // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
-                            infoWindow.close()
-                        }
-                        naverMap.setOnMapClickListener { pointF, latLng ->
-                            infoWindow.close()
-                        }
-                        true
-                    }
 
-                    val marker = Marker()
-                    marker.apply {
-                        width = 80
-                        height = 100
-                        position = pos
-                        map = naverMap
-                        onClickListener = listener
-                    }
-                }
-            } else {
+            if(naverMap.contentBounds.southLatitude <= b.stationLatitude.toDouble() && b.stationLatitude.toDouble() <= naverMap.contentBounds.northLatitude
+                && naverMap.contentBounds.westLongitude <= b.stationLongitude.toDouble() && b.stationLongitude.toDouble() <= naverMap.contentBounds.eastLongitude) {
                 val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
                 val infoWindow = InfoWindow()
                 infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(context!!) {
@@ -255,13 +197,13 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                     onClickListener = listener
                 }
             }
-
         }
         val infoWindow = InfoWindow()
         naverMap.setOnMapClickListener { pointF, latLng ->
             infoWindow.close()
         }
     }
+
 
     override fun onLocationChanged(location: Location?) {
         if(locationManager == null) {
