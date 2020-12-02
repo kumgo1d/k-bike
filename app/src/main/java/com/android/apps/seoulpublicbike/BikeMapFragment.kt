@@ -73,6 +73,9 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             initMapSettings()
             loadBikeList()
         }
+        if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+            loadBikeList()
+        }
     }
 
     override fun onStart() {
@@ -96,18 +99,18 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         this.naverMap = naverMap
         val uiSettings = naverMap.uiSettings
         uiSettings.isLogoClickEnabled = false
-        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
+        //naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
 
         if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             var cameraPosition = CameraPosition(LatLng(latitude, longitude), 16.0)
             naverMap.cameraPosition = cameraPosition
             initMapSettings()
-            loadBikeList()
         } else {
             var cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
             naverMap.cameraPosition = cameraPosition
             naverMap.locationTrackingMode = LocationTrackingMode.None
         }
+        loadBikeList()
     }
 
     private fun initMapSettings() {
@@ -174,8 +177,47 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         var curInfo = InfoWindow()
         //현재 위치와 자전거 대여소의 위치를 비교하여 내 위치 주변 대여소만 보여준다.
         for(b in bike.rentBikeStatus.row) {
-            if(latitude-distance <= b.stationLatitude.toDouble() && b.stationLatitude.toDouble() <= latitude+distance
-                && longitude-distance <= b.stationLongitude.toDouble() && b.stationLongitude.toDouble() <= longitude+distance) {
+            if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if(latitude-distance <= b.stationLatitude.toDouble() && b.stationLatitude.toDouble() <= latitude+distance
+                    && longitude-distance <= b.stationLongitude.toDouble() && b.stationLongitude.toDouble() <= longitude+distance) {
+                    val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
+                    val infoWindow = InfoWindow()
+                    infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(context!!) {
+                        override fun getText(infoWindow: InfoWindow): CharSequence {
+                            return "자전거 : ${b.parkingBikeTotCnt} \n주차가능 : ${b.rackTotCnt}"
+                        }
+                    }
+                    val listener = Overlay.OnClickListener { overlay ->
+                        val marker = overlay as Marker
+                        if (marker.infoWindow == null) {
+                            curInfo.close()
+                            // 현재 마커에 정보 창이 열려있지 않을 경우 엶
+                            val cameraUpdate = CameraUpdate.scrollTo(pos)
+                                .animate(CameraAnimation.Fly, 1000)
+                            naverMap.moveCamera(cameraUpdate)
+                            infoWindow.open(marker)
+                            curInfo = infoWindow
+                        } else {
+                            curInfo.close()
+                            // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
+                            infoWindow.close()
+                        }
+                        naverMap.setOnMapClickListener { pointF, latLng ->
+                            infoWindow.close()
+                        }
+                        true
+                    }
+
+                    val marker = Marker()
+                    marker.apply {
+                        width = 80
+                        height = 100
+                        position = pos
+                        map = naverMap
+                        onClickListener = listener
+                    }
+                }
+            } else {
                 val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
                 val infoWindow = InfoWindow()
                 infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(context!!) {
@@ -213,6 +255,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                     onClickListener = listener
                 }
             }
+
         }
         val infoWindow = InfoWindow()
         naverMap.setOnMapClickListener { pointF, latLng ->
@@ -227,7 +270,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         //현재 위치를 저장하는 변수에 값을 할당한다.
         longitude = location!!.longitude
         latitude = location!!.latitude
-        //loadBikeList()
     }
 
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
