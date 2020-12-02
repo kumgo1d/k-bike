@@ -66,19 +66,12 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-//        when(requestCode) {
-//            LOCATION_PERMISSION_REQUEST_CODE -> {
-//                //지도 restart
-//                locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
-//                locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-//                naverMap.locationSource = locationSource
-//            }
-//        }
+        //권한을 거부한 뒤에 다시 허용을 눌렀을 때, 정상 작동하기 위한 if문
         if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-            naverMap.locationSource = locationSource
+            initMapSettings()
+            loadBikeList()
         }
     }
 
@@ -101,21 +94,28 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
+        val uiSettings = naverMap.uiSettings
+        uiSettings.isLogoClickEnabled = false
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
 
         if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             var cameraPosition = CameraPosition(LatLng(latitude, longitude), 16.0)
-            naverMap.locationSource = locationSource
-            naverMap.locationTrackingMode = LocationTrackingMode.Follow
             naverMap.cameraPosition = cameraPosition
-
-            naverMap.addOnCameraIdleListener {
-                naverMap.locationTrackingMode = LocationTrackingMode.Follow
-            }
+            initMapSettings()
+            loadBikeList()
         } else {
             var cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
             naverMap.cameraPosition = cameraPosition
             naverMap.locationTrackingMode = LocationTrackingMode.None
+        }
+    }
+
+    private fun initMapSettings() {
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+
+        naverMap.addOnCameraIdleListener {
+            naverMap.locationTrackingMode = LocationTrackingMode.Follow
         }
     }
 
@@ -227,7 +227,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         //현재 위치를 저장하는 변수에 값을 할당한다.
         longitude = location!!.longitude
         latitude = location!!.latitude
-        loadBikeList()
+        //loadBikeList()
     }
 
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
