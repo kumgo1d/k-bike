@@ -1,28 +1,24 @@
 package com.android.apps.seoulpublicbike
 
 import android.Manifest
-import android.app.Activity
-import android.content.Context
 import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.android.apps.seoulpublicbike.data.Bike
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
@@ -34,12 +30,14 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
+class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
-    private var locationManager: LocationManager? = null
-    private lateinit var bike: Bike
+    private lateinit var bike1: Bike
+    private lateinit var bike2: Bike
+    private lateinit var bike3: Bike
 
+    private var locationManager: LocationManager? = null
     //내 위치
     private var longitude: Double = 0.0
     private var latitude: Double = 0.0
@@ -63,9 +61,14 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         //내 위치를 알기 위한 location manager
         locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
         loadBikeList()
+        checkPermissions()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         //권한을 거부한 뒤에 다시 허용을 눌렀을 때, 정상 작동하기 위한 if문
@@ -76,18 +79,16 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        //권한
-        checkPermissions()
-    }
-
     override fun onStop() {
         super.onStop()
         locationManager?.removeUpdates(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_bike_map, container, false)
     }
@@ -97,7 +98,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         this.naverMap = naverMap
         val uiSettings = naverMap.uiSettings
         uiSettings.isLogoClickEnabled = false
-        //naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
 
         if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             var cameraPosition = CameraPosition(LatLng(latitude, longitude), 16.0)
@@ -110,7 +110,9 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         }
 
         naverMap.addOnCameraChangeListener { i, b ->
-            showBikeList(bike)
+            showBikeList(bike1)
+            showBikeList(bike2)
+            showBikeList(bike3)
         }
     }
 
@@ -124,12 +126,15 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     }
 
     private fun checkPermissions() {
-        val locationPermission = ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
+        val locationPermission = ContextCompat.checkSelfPermission(
+            context!!,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
         if(locationPermission == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             Toast.makeText(context, "위치 추적이 활성화됩니다.", Toast.LENGTH_LONG).show()
         } else {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             Toast.makeText(context, "설정에서 위치 서비스를 활성화할 수 있습니다.", Toast.LENGTH_LONG).show()
         }
     }
@@ -144,7 +149,27 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         //1 ~ 1000
         seoulOpenService.getBike(SeoulOpenApi.API_KEY1).enqueue(object : Callback<Bike> {
             override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                bike = response.body() as Bike
+                bike1 = response.body() as Bike
+            }
+
+            override fun onFailure(call: Call<Bike>, t: Throwable) {
+                Toast.makeText(context, "서버 오류가 발생하였습니다.", Toast.LENGTH_LONG).show()
+            }
+        })
+        //1001 ~ 2000
+        seoulOpenService.getBike(SeoulOpenApi.API_KEY2).enqueue(object : Callback<Bike> {
+            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
+                bike2 = response.body() as Bike
+            }
+
+            override fun onFailure(call: Call<Bike>, t: Throwable) {
+                Toast.makeText(context, "서버 오류가 발생하였습니다.", Toast.LENGTH_LONG).show()
+            }
+        })
+        //2001 ~ 3000
+        seoulOpenService.getBike(SeoulOpenApi.API_KEY3).enqueue(object : Callback<Bike> {
+            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
+                bike3 = response.body() as Bike
             }
 
             override fun onFailure(call: Call<Bike>, t: Throwable) {
@@ -153,7 +178,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         })
     }
 
-    fun showBikeList(bike: Bike) {
+    private fun showBikeList(bike: Bike) {
         var curInfo = InfoWindow()
         //현재 위치와 자전거 대여소의 위치를 비교하여 내 위치 주변 대여소만 보여준다.
         for(b in bike.rentBikeStatus.row) {
@@ -203,7 +228,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             infoWindow.close()
         }
     }
-
 
     override fun onLocationChanged(location: Location?) {
         if(locationManager == null) {

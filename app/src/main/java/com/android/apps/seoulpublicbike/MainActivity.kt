@@ -11,10 +11,18 @@ class MainActivity : AppCompatActivity() {
         setFragment()
     }
 
+//    override fun onRestart() {
+//        super.onRestart()
+//        val seoulBikeMapFragment = SeoulBikeMapFragment()
+//        val transaction = supportFragmentManager.beginTransaction()
+//        transaction.detach(seoulBikeMapFragment)
+//        transaction.attach(seoulBikeMapFragment)
+//    }
+
     private fun setFragment() {
-        val bikeMapFragment = BikeMapFragment()
+        val seoulBikeMapFragment = SeoulBikeMapFragment()
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.frameLayout, bikeMapFragment)
+        transaction.add(R.id.frameLayout, seoulBikeMapFragment)
         transaction.commit()
     }
 }
