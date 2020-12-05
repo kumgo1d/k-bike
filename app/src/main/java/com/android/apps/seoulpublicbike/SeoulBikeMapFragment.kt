@@ -100,7 +100,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         return inflater.inflate(R.layout.fragment_bike_map, container, false)
     }
 
-    @UiThread
+    @Override
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         val uiSettings = naverMap.uiSettings
@@ -238,9 +238,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     }
 
     override fun onLocationChanged(location: Location?) {
-        if(locationManager == null) {
-            return
-        }
         //현재 위치를 저장하는 변수에 값을 할당한다.
         longitude = location!!.longitude
         latitude = location!!.latitude

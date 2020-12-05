@@ -2,6 +2,7 @@ package com.android.apps.seoulpublicbike
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,10 +12,20 @@ class MainActivity : AppCompatActivity() {
         setFragment()
     }
 
+    override fun onStop() {
+        super.onStop()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.detach(supportFragmentManager.findFragmentByTag("seoul")!!)
+    }
+
     private fun setFragment() {
         val seoulBikeMapFragment = SeoulBikeMapFragment()
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.frameLayout, seoulBikeMapFragment)
+        if(supportFragmentManager.findFragmentByTag("seoul") == null) {
+            transaction.add(R.id.frameLayout, seoulBikeMapFragment, "seoul")
+        } else {
+            transaction.attach(supportFragmentManager.findFragmentByTag("seoul")!!)
+        }
         transaction.commit()
     }
 }
