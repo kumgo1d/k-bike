@@ -41,6 +41,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
 
     private var bikeList = mutableSetOf<String>() //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
     private var curInfo = InfoWindow() //마커를 클릭했을 때 이전 infoWindow가 있다면 제거하기 위한 임시 변수
+    private var isFirst = true
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -69,9 +70,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
         //권한을 거부한 뒤에 다시 허용을 눌렀을 때, 정상 작동하기 위한 if문
-        if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if(!isFirst && locationManager != null && ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
             initMapSettings()
@@ -99,6 +99,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
 
     @Override
     override fun onMapReady(naverMap: NaverMap) {
+        isFirst = false
         this.naverMap = naverMap
         val uiSettings = naverMap.uiSettings
         uiSettings.isLogoClickEnabled = false
@@ -118,6 +119,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             showBikeList(bike2)
             showBikeList(bike3)
         }
+        //checkPermissions()
     }
 
     private fun initMapSettings() {
