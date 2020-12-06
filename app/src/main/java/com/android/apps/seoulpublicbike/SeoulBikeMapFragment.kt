@@ -6,17 +6,14 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.android.apps.seoulpublicbike.data.Bike
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -137,11 +134,11 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             context!!,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
+        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
         if(locationPermission == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             Toast.makeText(context, "위치 추적이 활성화됩니다.", Toast.LENGTH_LONG).show()
         } else {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             Toast.makeText(context, "설정에서 위치 서비스를 활성화할 수 있습니다.", Toast.LENGTH_LONG).show()
         }
     }
