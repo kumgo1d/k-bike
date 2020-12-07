@@ -65,23 +65,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
     }
 
-    private fun connectRetrofit() {
-        val thread: Thread = object : Thread() {
-            override fun run() {
-                try {
-                    super.run()
-                    loadBikeList()
-                    sleep(1000) //Delay of 2 seconds
-                } catch (e: Exception) {
-
-                } finally {
-
-                }
-            }
-        }
-        thread.start()
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -169,6 +152,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val seoulOpenService = retrofit.create(SeoulOpenService::class.java)
+
         //1 ~ 1000
         seoulOpenService.getBike(SeoulOpenApi.API_KEY1).enqueue(object : Callback<Bike> {
             override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
@@ -176,7 +160,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             }
 
             override fun onFailure(call: Call<Bike>, t: Throwable) {
-                Toast.makeText(context, "서버 오류가 발생하였습니다.", Toast.LENGTH_LONG).show()
+                t.printStackTrace()
             }
         })
         //1001 ~ 2000
@@ -186,7 +170,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             }
 
             override fun onFailure(call: Call<Bike>, t: Throwable) {
-                Toast.makeText(context, "서버 오류가 발생하였습니다.", Toast.LENGTH_LONG).show()
+                t.printStackTrace()
             }
         })
         //2001 ~ 3000
@@ -196,7 +180,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             }
 
             override fun onFailure(call: Call<Bike>, t: Throwable) {
-                Toast.makeText(context, "서버 오류가 발생하였습니다.", Toast.LENGTH_LONG).show()
+                t.printStackTrace()
             }
         })
     }

@@ -18,9 +18,9 @@ class StartActivity : AppCompatActivity() {
             override fun run() {
                 try {
                     super.run()
-                    sleep(2000) //Delay of 2 seconds
+                    sleep(1500) //Delay of 2 seconds
                 } catch (e: Exception) {
-
+                    e.printStackTrace()
                 } finally {
                     val intent = Intent(
                         this@StartActivity,
