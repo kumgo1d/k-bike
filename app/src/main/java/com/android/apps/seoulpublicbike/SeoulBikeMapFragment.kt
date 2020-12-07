@@ -26,6 +26,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
 
 class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private lateinit var locationSource: FusedLocationSource
@@ -62,6 +63,23 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         //내 위치를 알기 위한 location manager
         locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
+    }
+
+    private fun connectRetrofit() {
+        val thread: Thread = object : Thread() {
+            override fun run() {
+                try {
+                    super.run()
+                    loadBikeList()
+                    sleep(1000) //Delay of 2 seconds
+                } catch (e: Exception) {
+
+                } finally {
+
+                }
+            }
+        }
+        thread.start()
     }
 
     override fun onRequestPermissionsResult(
@@ -119,7 +137,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             showBikeList(bike2)
             showBikeList(bike3)
         }
-        //checkPermissions()
     }
 
     private fun initMapSettings() {
