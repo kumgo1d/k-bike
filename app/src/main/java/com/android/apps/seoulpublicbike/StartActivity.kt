@@ -18,7 +18,7 @@ class StartActivity : AppCompatActivity() {
             override fun run() {
                 try {
                     super.run()
-                    sleep(1500) //Delay of 2 seconds
+                    sleep(1000) //Delay of 2 seconds
                 } catch (e: Exception) {
                     e.printStackTrace()
                 } finally {

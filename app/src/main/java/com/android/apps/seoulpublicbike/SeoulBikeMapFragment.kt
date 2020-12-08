@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Transformations.map
 import com.android.apps.seoulpublicbike.data.Bike
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -26,7 +27,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
+
 
 class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private lateinit var locationSource: FusedLocationSource
@@ -72,7 +73,10 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         //권한을 거부한 뒤에 다시 허용을 눌렀을 때, 정상 작동하기 위한 if문
-        if(!isFirst && locationManager != null && ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if(!isFirst && locationManager != null && ContextCompat.checkSelfPermission(
+                context!!,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
             initMapSettings()
@@ -136,7 +140,10 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             context!!,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
-        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        requestPermissions(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
         if(locationPermission == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             Toast.makeText(context, "위치 추적이 활성화됩니다.", Toast.LENGTH_LONG).show()
@@ -209,6 +216,17 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                                 .animate(CameraAnimation.Fly, 1000)
                             naverMap.moveCamera(cameraUpdate)
                             infoWindow.open(marker)
+
+                            val bottomSheet = ShowBikeDataBottomSheet()
+                            val bundle = Bundle()
+                            bundle.apply {
+                                putString("station_name", b.stationName)
+                                putString("parking_bike", b.parkingBikeTotCnt)
+                                putString("rack_bike", b.rackTotCnt)
+                            }
+                            bottomSheet.arguments = bundle
+                            bottomSheet.show(fragmentManager!!, bottomSheet.tag)
+
                             curInfo = infoWindow
                         } else {
                             curInfo.close()

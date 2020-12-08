@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ShowBikeDataBottomSheet"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/favorite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="favorite"/>
+    <TextView
+        android:id="@+id/station_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="station_name"
+        android:textSize="25dp"
+        android:textColor="@android:color/black"/>
+    <TextView
+        android:id="@+id/parking_bike"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="can_borrow_bike"
+        android:textSize="20dp"
+        android:textColor="@android:color/black"/>
+    <TextView
+        android:id="@+id/rack_bike"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="parking_bike"
+        android:textSize="20dp"
+        android:textColor="@android:color/black"/>
+</LinearLayout>
