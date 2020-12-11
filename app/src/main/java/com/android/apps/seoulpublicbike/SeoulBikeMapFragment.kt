@@ -32,9 +32,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
-    private lateinit var bike1: Bike
-    private lateinit var bike2: Bike
-    private lateinit var bike3: Bike
+    private var bike1: Bike? = null
+    private var bike2: Bike? = null
+    private var bike3: Bike? = null
 
     private var locationManager: LocationManager? = null
     //내 위치
@@ -120,9 +120,9 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             naverMap.locationTrackingMode = LocationTrackingMode.None
         }
         naverMap.addOnCameraChangeListener { i, b ->
-            showBikeList(bike1)
-            showBikeList(bike2)
-            showBikeList(bike3)
+            showBikeList(bike1!!)
+            showBikeList(bike2!!)
+            showBikeList(bike3!!)
         }
     }
 
