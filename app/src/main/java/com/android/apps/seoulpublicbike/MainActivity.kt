@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
                     setFragment()
                 }
                 R.id.favorite_list -> {
-
+                    
                 }
             }
             true
