@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Transformations.map
 import com.android.apps.seoulpublicbike.data.Bike
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*

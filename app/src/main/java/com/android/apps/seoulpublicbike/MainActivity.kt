@@ -6,18 +6,30 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        val seoulBikeMapFragment = SeoulBikeMapFragment()
+        val favoriteListFragment = FavoriteListFragment()
+    }
+
+    private val SEOUL = "seoul"
+    private val FAVORITE = "favorite"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setFragment()
+        setFragment(seoulBikeMapFragment, SEOUL)
 
         bottom_navigation_view.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.map_view -> {
-                    setFragment()
+                    val bundle = Bundle()
+                    bundle.putBoolean("mapAttach", true)
+                    seoulBikeMapFragment.arguments = bundle
+
+                    setFragment(seoulBikeMapFragment, SEOUL)
                 }
                 R.id.favorite_list -> {
-                    
+                    //setFragment(favoriteListFragment, FAVORITE)
                 }
             }
             true
@@ -30,21 +42,14 @@ class MainActivity : AppCompatActivity() {
         transaction.detach(supportFragmentManager.findFragmentByTag("seoul")!!)
     }
 
-    private fun setFragment() {
-        val seoulBikeMapFragment = SeoulBikeMapFragment()
+    private fun setFragment(fragment: Fragment, tag: String) {
         val transaction = supportFragmentManager.beginTransaction()
-        if(supportFragmentManager.findFragmentByTag("seoul") == null) {
-            transaction.add(R.id.frameLayout, seoulBikeMapFragment, "seoul")
-        } else {
-            transaction.attach(supportFragmentManager.findFragmentByTag("seoul")!!)
-        }
-        transaction.commit()
-    }
-
-    private fun setLIstFragment() {
-        val favoriteListFragment = FavoriteListFragment()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.frameLayout, favoriteListFragment, "favorite")
+//        if(supportFragmentManager.findFragmentByTag(tag) == null) {
+//            transaction.add(R.id.frameLayout, fragment, tag)
+//        } else {
+//            transaction.attach(supportFragmentManager.findFragmentByTag(tag)!!)
+//        }
+        transaction.replace(R.id.frameLayout, fragment, tag)
         transaction.commit()
     }
 }
