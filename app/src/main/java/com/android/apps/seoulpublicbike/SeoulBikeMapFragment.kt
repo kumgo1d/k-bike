@@ -14,6 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.android.apps.seoulpublicbike.data.Bike
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -31,9 +33,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
+
+    lateinit var seoulMapViewModel: SeoulMapViewModel
+
     private var bike1: Bike? = null
-    private var bike2: Bike? = null
-    private var bike3: Bike? = null
+//    private var bike2: Bike? = null
+//    private var bike3: Bike? = null
 
     private var locationManager: LocationManager? = null
     //내 위치
@@ -50,7 +55,12 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loadBikeList()
+        //loadBikeList()
+
+        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(SeoulMapViewModel::class.java)
+        seoulMapViewModel.getBikes()!!.observe(this, Observer { bike ->
+            bike1 = bike
+        })
 
         //map fragment와 sync
         val mapFragment = fragmentManager?.findFragmentById(R.id.map) as MapFragment?
@@ -92,6 +102,12 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         locationManager?.removeUpdates(this)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -120,8 +136,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         }
         naverMap.addOnCameraChangeListener { i, b ->
             showBikeList(bike1!!)
-            showBikeList(bike2!!)
-            showBikeList(bike3!!)
+//            showBikeList(bike2!!)
+//            showBikeList(bike3!!)
         }
     }
 
@@ -151,45 +167,45 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         }
     }
 
-    private fun loadBikeList() {
-        //Retrofit 사용
-        val retrofit = Retrofit.Builder()
-            .baseUrl(SeoulOpenApi.DOMAIN)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val seoulOpenService = retrofit.create(SeoulOpenService::class.java)
-
-        //1 ~ 1000
-        seoulOpenService.getBike(SeoulOpenApi.API_KEY1).enqueue(object : Callback<Bike> {
-            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                bike1 = response.body() as Bike
-            }
-
-            override fun onFailure(call: Call<Bike>, t: Throwable) {
-                t.printStackTrace()
-            }
-        })
-        //1001 ~ 2000
-        seoulOpenService.getBike(SeoulOpenApi.API_KEY2).enqueue(object : Callback<Bike> {
-            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                bike2 = response.body() as Bike
-            }
-
-            override fun onFailure(call: Call<Bike>, t: Throwable) {
-                t.printStackTrace()
-            }
-        })
-        //2001 ~ 3000
-        seoulOpenService.getBike(SeoulOpenApi.API_KEY3).enqueue(object : Callback<Bike> {
-            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                bike3 = response.body() as Bike
-            }
-
-            override fun onFailure(call: Call<Bike>, t: Throwable) {
-                t.printStackTrace()
-            }
-        })
-    }
+//    private fun loadBikeList() {
+//        //Retrofit 사용
+//        val retrofit = Retrofit.Builder()
+//            .baseUrl(SeoulOpenApi.DOMAIN)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//        val seoulOpenService = retrofit.create(SeoulOpenService::class.java)
+//
+//        //1 ~ 1000
+//        seoulOpenService.getBike(SeoulOpenApi.API_KEY1).enqueue(object : Callback<Bike> {
+//            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
+//                bike1 = response.body() as Bike
+//            }
+//
+//            override fun onFailure(call: Call<Bike>, t: Throwable) {
+//                t.printStackTrace()
+//            }
+//        })
+//        //1001 ~ 2000
+//        seoulOpenService.getBike(SeoulOpenApi.API_KEY2).enqueue(object : Callback<Bike> {
+//            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
+//                bike2 = response.body() as Bike
+//            }
+//
+//            override fun onFailure(call: Call<Bike>, t: Throwable) {
+//                t.printStackTrace()
+//            }
+//        })
+//        //2001 ~ 3000
+//        seoulOpenService.getBike(SeoulOpenApi.API_KEY3).enqueue(object : Callback<Bike> {
+//            override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
+//                bike3 = response.body() as Bike
+//            }
+//
+//            override fun onFailure(call: Call<Bike>, t: Throwable) {
+//                t.printStackTrace()
+//            }
+//        })
+//    }
 
     private fun showBikeList(bike: Bike) {
         //현재 위치와 자전거 대여소의 위치를 비교하여 내 위치 주변 대여소만 보여준다.
