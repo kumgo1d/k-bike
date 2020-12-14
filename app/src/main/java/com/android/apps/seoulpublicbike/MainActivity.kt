@@ -40,12 +40,10 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId) {
                 R.id.map_view -> {
                     supportFragmentManager.beginTransaction().hide(activeFragment).show(seoulBikeMapFragment).commit()
-                    //setFragment(seoulBikeMapFragment, SEOUL)
                     activeFragment = seoulBikeMapFragment
                 }
                 R.id.favorite_list -> {
                     supportFragmentManager.beginTransaction().hide(activeFragment).show(favoriteListFragment).commit()
-                    //setFragment(favoriteListFragment, FAVORITE)
                     activeFragment = favoriteListFragment
                 }
             }
