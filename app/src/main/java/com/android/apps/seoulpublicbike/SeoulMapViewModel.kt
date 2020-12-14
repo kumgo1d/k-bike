@@ -7,12 +7,22 @@ import androidx.lifecycle.ViewModelProvider
 import com.android.apps.seoulpublicbike.data.Bike
 
 class SeoulMapViewModel : ViewModel() {
-    var bikes: MutableLiveData<Bike>? = null
+    var bikes1: MutableLiveData<Bike>? = null
+    var bikes2: MutableLiveData<Bike>? = null
+    var bikes3: MutableLiveData<Bike>? = null
 
-    fun getBikes(): LiveData<Bike>? {
-        bikes = SeoulRepository.getBikeData()
-        return bikes
+    fun getBikes1(): LiveData<Bike>? {
+        bikes1 = SeoulRepository.getBikeData1()
+        return bikes1
     }
+    fun getBikes2(): LiveData<Bike>? {
+        bikes2 = SeoulRepository.getBikeData2()
+        return bikes2
+    }fun getBikes3(): LiveData<Bike>? {
+        bikes3 = SeoulRepository.getBikeData3()
+        return bikes3
+    }
+
 }
 
 class SeoulMapViewModelFactory(): ViewModelProvider.Factory {

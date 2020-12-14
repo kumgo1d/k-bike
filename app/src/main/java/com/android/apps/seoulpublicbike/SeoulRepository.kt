@@ -8,38 +8,50 @@ import retrofit2.Response
 
 object SeoulRepository {
 
-    val bike = MutableLiveData<Bike>()
+    val bike1 = MutableLiveData<Bike>()
+    val bike2 = MutableLiveData<Bike>()
+    val bike3 = MutableLiveData<Bike>()
 
-    fun getBikeData(): MutableLiveData<Bike> {
+    fun getBikeData1(): MutableLiveData<Bike> {
         val call = SeoulMapRetrofitClient.seoulOpenService
 
         call.getBike(SeoulOpenApi.API_KEY1).enqueue(object : Callback<Bike> {
             override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                bike.value = response.body() as Bike
+                bike1.value = response.body() as Bike
             }
 
             override fun onFailure(call: Call<Bike>, t: Throwable) {
                 t.printStackTrace()
             }
         })
+        return bike1
+    }
+    fun getBikeData2(): MutableLiveData<Bike> {
+        val call = SeoulMapRetrofitClient.seoulOpenService
+
         call.getBike(SeoulOpenApi.API_KEY2).enqueue(object : Callback<Bike> {
             override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                bike.value = response.body() as Bike
+                bike2.value = response.body() as Bike
             }
 
             override fun onFailure(call: Call<Bike>, t: Throwable) {
                 t.printStackTrace()
             }
         })
+        return bike2
+    }
+    fun getBikeData3(): MutableLiveData<Bike> {
+        val call = SeoulMapRetrofitClient.seoulOpenService
+
         call.getBike(SeoulOpenApi.API_KEY3).enqueue(object : Callback<Bike> {
             override fun onResponse(call: Call<Bike>, response: Response<Bike>) {
-                bike.value = response.body() as Bike
+                bike3.value = response.body() as Bike
             }
 
             override fun onFailure(call: Call<Bike>, t: Throwable) {
                 t.printStackTrace()
             }
         })
-        return bike
+        return bike3
     }
 }

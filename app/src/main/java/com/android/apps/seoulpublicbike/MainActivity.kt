@@ -6,34 +6,18 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    companion object {
-        val seoulBikeMapFragment = SeoulBikeMapFragment()
-        val favoriteListFragment = FavoriteListFragment()
-    }
-
     private val SEOUL = "seoul"
     private val FAVORITE = "favorite"
+
+    private val seoulBikeMapFragment = SeoulBikeMapFragment()
+    private val favoriteListFragment = FavoriteListFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setFragment(seoulBikeMapFragment, SEOUL)
 
-        bottom_navigation_view.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.map_view -> {
-                    val bundle = Bundle()
-                    bundle.putBoolean("mapAttach", true)
-                    seoulBikeMapFragment.arguments = bundle
-
-                    setFragment(seoulBikeMapFragment, SEOUL)
-                }
-                R.id.favorite_list -> {
-                    //setFragment(favoriteListFragment, FAVORITE)
-                }
-            }
-            true
-        }
+        addFragments()
+        navigationFragments()
     }
 
     override fun onStop() {
@@ -42,14 +26,30 @@ class MainActivity : AppCompatActivity() {
         transaction.detach(supportFragmentManager.findFragmentByTag("seoul")!!)
     }
 
-    private fun setFragment(fragment: Fragment, tag: String) {
+    private fun addFragments() {
         val transaction = supportFragmentManager.beginTransaction()
-//        if(supportFragmentManager.findFragmentByTag(tag) == null) {
-//            transaction.add(R.id.frameLayout, fragment, tag)
-//        } else {
-//            transaction.attach(supportFragmentManager.findFragmentByTag(tag)!!)
-//        }
-        transaction.replace(R.id.frameLayout, fragment, tag)
-        transaction.commit()
+        transaction.apply {
+            add(R.id.frameLayout, seoulBikeMapFragment, SEOUL)
+            add(R.id.frameLayout, favoriteListFragment, FAVORITE).hide(favoriteListFragment)
+        }.commit()
+    }
+
+    private fun navigationFragments() {
+        var activeFragment: Fragment = seoulBikeMapFragment
+        bottom_navigation_view.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.map_view -> {
+                    supportFragmentManager.beginTransaction().hide(activeFragment).show(seoulBikeMapFragment).commit()
+                    //setFragment(seoulBikeMapFragment, SEOUL)
+                    activeFragment = seoulBikeMapFragment
+                }
+                R.id.favorite_list -> {
+                    supportFragmentManager.beginTransaction().hide(activeFragment).show(favoriteListFragment).commit()
+                    //setFragment(favoriteListFragment, FAVORITE)
+                    activeFragment = favoriteListFragment
+                }
+            }
+            true
+        }
     }
 }
