@@ -77,7 +77,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         //권한을 거부한 뒤에 다시 허용을 눌렀을 때, 정상 작동하기 위한 if문
         if(!isFirst && locationManager != null && ContextCompat.checkSelfPermission(
-                context!!,
+                requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
@@ -112,7 +112,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         val uiSettings = naverMap.uiSettings
         uiSettings.isLogoClickEnabled = false
 
-        if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             var cameraPosition = CameraPosition(LatLng(latitude, longitude), 16.0)
             naverMap.cameraPosition = cameraPosition
@@ -157,7 +157,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
 
     private fun checkPermissions() {
         val locationPermission = ContextCompat.checkSelfPermission(
-            context!!,
+            requireContext(),
             Manifest.permission.ACCESS_FINE_LOCATION
         )
         requestPermissions(
@@ -181,7 +181,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                     bikeList.add(b.stationId)
                     val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
                     val infoWindow = InfoWindow()
-                    infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(context!!) {
+                    infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                         override fun getText(infoWindow: InfoWindow): CharSequence {
                             return "자전거 : ${b.parkingBikeTotCnt} \n주차가능 : ${b.rackTotCnt}"
                         }
@@ -205,7 +205,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                                 putString("rack_bike", b.rackTotCnt)
                             }
                             bottomSheet.arguments = bundle
-                            bottomSheet.show(fragmentManager!!, bottomSheet.tag)
+                            bottomSheet.show(requireFragmentManager(), bottomSheet.tag)
 
                             curInfo = infoWindow
                         } else {
