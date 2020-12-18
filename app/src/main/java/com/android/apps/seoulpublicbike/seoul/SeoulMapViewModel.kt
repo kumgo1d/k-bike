@@ -1,4 +1,4 @@
-package com.android.apps.seoulpublicbike
+package com.android.apps.seoulpublicbike.seoul
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

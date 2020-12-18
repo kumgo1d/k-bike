@@ -1,8 +1,7 @@
-package com.android.apps.seoulpublicbike
+package com.android.apps.seoulpublicbike.seoul
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 object SeoulMapRetrofitClient {
     private val retrofitClient: Retrofit.Builder by lazy {

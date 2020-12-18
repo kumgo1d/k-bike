@@ -17,17 +17,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.android.apps.seoulpublicbike.data.Bike
+import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModel
+import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModelFactory
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
@@ -123,7 +120,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             naverMap.locationTrackingMode = LocationTrackingMode.None
         }
 
-        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(SeoulMapViewModel::class.java)
+        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
+            SeoulMapViewModel::class.java)
         seoulMapViewModel.getBikes1()!!.observe(this, Observer { bike ->
             bike1 = bike
             showBikeList(bike)

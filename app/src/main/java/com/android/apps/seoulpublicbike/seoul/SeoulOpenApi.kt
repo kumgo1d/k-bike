@@ -1,4 +1,4 @@
-package com.android.apps.seoulpublicbike
+package com.android.apps.seoulpublicbike.seoul
 
 import com.android.apps.seoulpublicbike.data.Bike
 import retrofit2.Call
