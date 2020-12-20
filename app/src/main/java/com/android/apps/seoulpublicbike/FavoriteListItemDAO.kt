@@ -11,6 +11,9 @@ interface FavoriteListItemDAO {
     @Query("select * from list_item")
     fun getAll(): MutableList<FavoriteListItem>
 
+    @Query("select * from list_item where station = :station")
+    fun getItem(station: String): MutableList<FavoriteListItem>
+
     @Insert(onConflict = REPLACE)
     fun insert(item: FavoriteListItem)
 

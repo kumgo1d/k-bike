@@ -26,18 +26,10 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.Holder>() {
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var mListItem: FavoriteListItem? = null
-
-        init {
-            helper?.FavoriteListItemDAO()?.delete(mListItem!!)
-            listItem.remove(mListItem)
-            notifyDataSetChanged()
-        }
-
         fun setList(item: FavoriteListItem) {
             itemView.item_station.text = item.station
-            itemView.item_parking.text = item.parkingBike
-            itemView.item_rack.text = item.rackBike
+            itemView.item_parking.text = "자전거 : " + item.parkingBike
+            itemView.item_rack.text = "주차가능 : " + item.rackBike
         }
     }
 }

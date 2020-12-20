@@ -6,12 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.room.Room
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.fragment_show_bike_data.*
 import kotlinx.android.synthetic.main.fragment_show_bike_data.view.*
 
 class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
+    var helper: FavoriteListItemHelper? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        helper = Room.databaseBuilder(requireContext(), FavoriteListItemHelper::class.java, "favorite_list")
+            .allowMainThreadQueries()
+            .build()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -19,15 +30,22 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_show_bike_data, container, false)
 
-        view.station_name.text = arguments?.getString("station_name")
-        view.parking_bike.text = "자전거 : " + arguments?.getString("parking_bike")
-        view.rack_bike.text = "주차 가능 : " + arguments?.getString("rack_bike")
-        // Inflate the layout for this fragment
+        val station = requireArguments().getString("station_name")
+        val parking = requireArguments().getString("parking_bike")
+        val rack = requireArguments().getString("rack_bike")
+        val adapter = FavoriteAdapter()
+
+        view.station_name.text = station
+        view.parking_bike.text = "자전거 : " + parking
+        view.rack_bike.text = "주차 가능 : " + rack
+        view.add_favorite_button.setOnClickListener {
+            val item = FavoriteListItem(station!!, parking!!, rack!!)
+            helper?.FavoriteListItemDAO()?.insert(item)
+            adapter.listItem.clear()
+            adapter.listItem.addAll(helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf())
+            adapter.notifyDataSetChanged()
+        }
+
         return view
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
     }
 }
