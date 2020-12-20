@@ -39,11 +39,18 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
         view.parking_bike.text = "자전거 : " + parking
         view.rack_bike.text = "주차 가능 : " + rack
         view.add_favorite_button.setOnClickListener {
-            val item = FavoriteListItem(station!!, parking!!, rack!!)
-            helper?.FavoriteListItemDAO()?.insert(item)
-            adapter.listItem.clear()
-            adapter.listItem.addAll(helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf())
-            adapter.notifyDataSetChanged()
+            if(!requireArguments().getBoolean("is_save")) {
+                val item = FavoriteListItem(station!!, parking!!, rack!!)
+                helper?.FavoriteListItemDAO()?.insert(item)
+                adapter.listItem.clear()
+                adapter.listItem.addAll(helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf())
+                adapter.notifyDataSetChanged()
+
+                val bundle = Bundle()
+                bundle.putBoolean("is_save", true)
+                SeoulBikeMapFragment().arguments = bundle
+                this.arguments = bundle
+            }
         }
 
         return view
