@@ -33,11 +33,6 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.Holder>() {
                 helper?.FavoriteListItemDAO()?.delete(mItem!!)
                 listItem.remove(mItem)
                 notifyDataSetChanged()
-
-                val bundle = Bundle()
-                bundle.putBoolean("is_save", false)
-                SeoulBikeMapFragment().arguments = bundle
-                ShowBikeDataBottomSheet().arguments = bundle
             }
         }
         fun setList(item: FavoriteListItem) {

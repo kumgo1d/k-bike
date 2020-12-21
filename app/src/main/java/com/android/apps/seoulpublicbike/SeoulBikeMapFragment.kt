@@ -201,7 +201,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                                 putString("station_name", b.stationName)
                                 putString("parking_bike", b.parkingBikeTotCnt)
                                 putString("rack_bike", b.rackTotCnt)
-                                putBoolean("is_save", false)
                             }
                             bottomSheet.arguments = bundle
                             bottomSheet.show(requireFragmentManager(), bottomSheet.tag)
