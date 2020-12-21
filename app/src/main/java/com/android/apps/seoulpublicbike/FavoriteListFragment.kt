@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
-import kotlinx.android.synthetic.main.fragment_favorite_list.*
 import kotlinx.android.synthetic.main.fragment_favorite_list.view.*
 
 class FavoriteListFragment : Fragment() {
@@ -18,6 +17,7 @@ class FavoriteListFragment : Fragment() {
 
         helper = Room.databaseBuilder(requireContext(), FavoriteListItemHelper::class.java, "favorite_list")
             .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
             .build()
     }
 
@@ -27,7 +27,7 @@ class FavoriteListFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_favorite_list, container, false)
 
-        val adapter = FavoriteAdapter()
+        val adapter = FavoriteListAdapter()
         adapter.helper = helper
         adapter.listItem = helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf()
 

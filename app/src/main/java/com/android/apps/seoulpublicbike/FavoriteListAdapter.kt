@@ -1,13 +1,12 @@
 package com.android.apps.seoulpublicbike
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_favorite_list.view.*
 
-class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.Holder>() {
+class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
     var helper: FavoriteListItemHelper? = null
     var listItem = mutableListOf<FavoriteListItem>()
 

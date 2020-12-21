@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "list_item")
 class FavoriteListItem {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo
     var no: Long? = null
     @ColumnInfo
@@ -16,7 +16,8 @@ class FavoriteListItem {
     @ColumnInfo
     var rackBike: String = ""
 
-    constructor(station: String, parkingBike: String, rackBike: String) {
+    constructor(no: Long, station: String, parkingBike: String, rackBike: String) {
+        this.no = no
         this.station = station
         this.parkingBike = parkingBike
         this.rackBike = rackBike

@@ -1,15 +1,11 @@
 package com.android.apps.seoulpublicbike
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.room.Room
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.fragment_show_bike_data.*
 import kotlinx.android.synthetic.main.fragment_show_bike_data.view.*
 
 class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
@@ -20,6 +16,7 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
 
         helper = Room.databaseBuilder(requireContext(), FavoriteListItemHelper::class.java, "favorite_list")
             .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
             .build()
     }
 
@@ -33,13 +30,14 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
         val station = requireArguments().getString("station_name")
         val parking = requireArguments().getString("parking_bike")
         val rack = requireArguments().getString("rack_bike")
-        val adapter = FavoriteAdapter()
+        val no = station!!.split(".")[0].toLong()
+        val adapter = FavoriteListAdapter()
 
         view.station_name.text = station
         view.parking_bike.text = "자전거 : " + parking
         view.rack_bike.text = "주차 가능 : " + rack
         view.add_favorite_button.setOnClickListener {
-            val item = FavoriteListItem(station!!, parking!!, rack!!)
+            val item = FavoriteListItem(no, station!!, parking!!, rack!!)
             helper?.FavoriteListItemDAO()?.insert(item)
             adapter.listItem.clear()
             adapter.listItem.addAll(helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf())
