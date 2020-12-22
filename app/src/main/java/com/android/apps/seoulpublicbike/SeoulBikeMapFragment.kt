@@ -195,6 +195,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                             naverMap.moveCamera(cameraUpdate)
                             infoWindow.open(marker)
 
+                            //BottomSheetDialog에 데이터 전달
                             val bottomSheet = ShowBikeDataBottomSheet()
                             val bundle = Bundle()
                             bundle.apply {

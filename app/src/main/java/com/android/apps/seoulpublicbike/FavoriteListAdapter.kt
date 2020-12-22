@@ -28,6 +28,7 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var mItem: FavoriteListItem? = null
         init {
+            //즐겨찾기 삭제 버튼 - ROOM 데이터베이스에서 삭제
             itemView.delete_button.setOnClickListener {
                 helper?.FavoriteListItemDAO()?.delete(mItem!!)
                 listItem.remove(mItem)

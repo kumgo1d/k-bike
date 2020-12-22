@@ -2,9 +2,11 @@ package com.android.apps.seoulpublicbike
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.room.Room
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -41,11 +43,11 @@ class MainActivity : AppCompatActivity() {
         bottom_navigation_view.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.map_view -> {
-                    supportFragmentManager.beginTransaction().hide(activeFragment).show(seoulBikeMapFragment).commit()
+                    supportFragmentManager.beginTransaction().detach(activeFragment).show(seoulBikeMapFragment).commit()
                     activeFragment = seoulBikeMapFragment
                 }
                 R.id.favorite_list -> {
-                    supportFragmentManager.beginTransaction().hide(activeFragment).show(favoriteListFragment).commit()
+                    supportFragmentManager.beginTransaction().hide(activeFragment).attach(favoriteListFragment).show(favoriteListFragment).commit()
                     activeFragment = favoriteListFragment
                 }
             }

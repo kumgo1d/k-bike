@@ -36,6 +36,7 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
         view.station_name.text = station
         view.parking_bike.text = "자전거 : " + parking
         view.rack_bike.text = "주차 가능 : " + rack
+        //즐겨찾기 저장 - ROOM 저장
         view.add_favorite_button.setOnClickListener {
             val item = FavoriteListItem(no, station!!, parking!!, rack!!)
             helper?.FavoriteListItemDAO()?.insert(item)
