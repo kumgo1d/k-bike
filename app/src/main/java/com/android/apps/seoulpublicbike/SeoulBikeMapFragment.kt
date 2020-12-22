@@ -33,9 +33,9 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
 
     lateinit var seoulMapViewModel: SeoulMapViewModel
 
-    private var bike1: Bike? = null
-    private var bike2: Bike? = null
-    private var bike3: Bike? = null
+    var bike1: Bike? = null
+    var bike2: Bike? = null
+    var bike3: Bike? = null
 
     private var locationManager: LocationManager? = null
     //내 위치

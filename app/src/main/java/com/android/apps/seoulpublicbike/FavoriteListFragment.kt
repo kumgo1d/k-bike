@@ -14,7 +14,10 @@ import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModelFactory
 import kotlinx.android.synthetic.main.fragment_favorite_list.view.*
 
 class FavoriteListFragment : Fragment() {
+    lateinit var seoulMapViewModel: SeoulMapViewModel
+
     var helper: FavoriteListItemHelper? = null
+    var list = mutableListOf<FavoriteListItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +26,8 @@ class FavoriteListFragment : Fragment() {
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()
+
+        findChangedBikeData()
     }
 
     override fun onCreateView(
@@ -33,11 +38,62 @@ class FavoriteListFragment : Fragment() {
 
         val adapter = FavoriteListAdapter()
         adapter.helper = helper
-        adapter.listItem = helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf()
+        adapter.listItem = list
 
         view.favorite_list_view.adapter = adapter
         view.favorite_list_view.layoutManager = LinearLayoutManager(activity)
 
         return view
+    }
+
+    private fun findChangedBikeData() {
+        list = helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf()
+        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
+            SeoulMapViewModel::class.java)
+        seoulMapViewModel.getBikes1()!!.observe(this, Observer { bike ->
+            val bike1 = bike
+            for(b in bike1!!.rentBikeStatus.row) {
+                for(item in list) {
+                    if(b.stationName.split(".")[0].toLong() == item.no) {
+                        if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
+                            item.rackBike = b.rackTotCnt
+                            item.parkingBike = b.parkingBikeTotCnt
+                        }
+                    }
+                }
+            }
+        })
+        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
+            SeoulMapViewModel::class.java)
+        seoulMapViewModel.getBikes2()!!.observe(this, Observer { bike ->
+            val bike2 = bike
+            for(b in bike2!!.rentBikeStatus.row) {
+                for(item in list) {
+                    if(b.stationName.split(".")[0].toLong() == item.no) {
+                        if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
+                            item.rackBike = b.rackTotCnt
+                            item.parkingBike = b.parkingBikeTotCnt
+                        }
+                    }
+                }
+            }
+        })
+        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
+            SeoulMapViewModel::class.java)
+        seoulMapViewModel.getBikes3()!!.observe(this, Observer { bike ->
+            val bike3 = bike
+            for(b in bike3!!.rentBikeStatus.row) {
+                for(item in list) {
+                    if(b.stationName.split(".")[0].toLong() == item.no) {
+                        if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
+                            item.rackBike = b.rackTotCnt
+                            item.parkingBike = b.parkingBikeTotCnt
+                        }
+                    }
+                }
+            }
+        })
+
+
     }
 }
