@@ -33,24 +33,28 @@ class FavoriteListFragment : Fragment() {
             .fallbackToDestructiveMigration()
             .build()
 
-        findChangedBikeData()
+//        findChangedBikeData()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        
+        findChangedBikeData()
+
         _binding = FragmentFavoriteListBinding.inflate(inflater, container, false)
-        val view = binding.root
 
         val adapter = FavoriteListAdapter()
         adapter.helper = helper
         adapter.listItem = list
 
-        view.favorite_list_view.adapter = adapter
-        view.favorite_list_view.layoutManager = LinearLayoutManager(activity)
+        binding.favoriteListView.apply {
+            setAdapter(adapter)
+            layoutManager = LinearLayoutManager(activity)
+        }
 
-        return view
+        return binding.root
     }
 
     override fun onDestroyView() {
@@ -60,8 +64,8 @@ class FavoriteListFragment : Fragment() {
 
     private fun findChangedBikeData() {
         list = helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf()
-        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
-            SeoulMapViewModel::class.java)
+        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory())
+            .get(SeoulMapViewModel::class.java)
         seoulMapViewModel.getBikes1()!!.observe(this, Observer { bike ->
             val bike1 = bike
             for(b in bike1!!.rentBikeStatus.row) {
