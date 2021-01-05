@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.android.apps.seoulpublicbike.databinding.FragmentFavoriteListBinding
 import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModel
 import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModelFactory
 import kotlinx.android.synthetic.main.fragment_favorite_list.view.*
@@ -18,6 +19,11 @@ class FavoriteListFragment : Fragment() {
 
     var helper: FavoriteListItemHelper? = null
     var list = mutableListOf<FavoriteListItem>()
+
+    private var _binding: FragmentFavoriteListBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +40,8 @@ class FavoriteListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_favorite_list, container, false)
+        _binding = FragmentFavoriteListBinding.inflate(inflater, container, false)
+        val view = binding.root
 
         val adapter = FavoriteListAdapter()
         adapter.helper = helper
@@ -44,6 +51,11 @@ class FavoriteListFragment : Fragment() {
         view.favorite_list_view.layoutManager = LinearLayoutManager(activity)
 
         return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun findChangedBikeData() {
