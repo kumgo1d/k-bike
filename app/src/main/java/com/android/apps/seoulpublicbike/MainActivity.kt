@@ -2,11 +2,9 @@ package com.android.apps.seoulpublicbike
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
-import androidx.room.Room
+import com.android.apps.seoulpublicbike.favoritelist.FavoriteListFragment
+import com.android.apps.seoulpublicbike.seoul.SeoulBikeMapFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

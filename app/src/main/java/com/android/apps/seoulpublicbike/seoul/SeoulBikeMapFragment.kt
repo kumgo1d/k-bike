@@ -1,4 +1,4 @@
-package com.android.apps.seoulpublicbike
+package com.android.apps.seoulpublicbike.seoul
 
 import android.Manifest
 import android.content.Context.LOCATION_SERVICE
@@ -16,11 +16,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.android.apps.seoulpublicbike.R
 import com.android.apps.seoulpublicbike.data.Bike
 import com.android.apps.seoulpublicbike.databinding.FragmentBikeMapBinding
-import com.android.apps.seoulpublicbike.databinding.FragmentFavoriteListBinding
-import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModel
-import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModelFactory
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow

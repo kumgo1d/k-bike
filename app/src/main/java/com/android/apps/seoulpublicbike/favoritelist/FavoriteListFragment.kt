@@ -1,4 +1,4 @@
-package com.android.apps.seoulpublicbike
+package com.android.apps.seoulpublicbike.favoritelist
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,7 +12,6 @@ import androidx.room.Room
 import com.android.apps.seoulpublicbike.databinding.FragmentFavoriteListBinding
 import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModel
 import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModelFactory
-import kotlinx.android.synthetic.main.fragment_favorite_list.view.*
 
 class FavoriteListFragment : Fragment() {
     lateinit var seoulMapViewModel: SeoulMapViewModel

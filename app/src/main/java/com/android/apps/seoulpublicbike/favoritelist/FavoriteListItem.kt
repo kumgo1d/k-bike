@@ -1,4 +1,4 @@
-package com.android.apps.seoulpublicbike
+package com.android.apps.seoulpublicbike.favoritelist
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

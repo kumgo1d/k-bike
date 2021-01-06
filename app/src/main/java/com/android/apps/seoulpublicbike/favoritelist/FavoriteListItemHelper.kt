@@ -1,4 +1,4 @@
-package com.android.apps.seoulpublicbike
+package com.android.apps.seoulpublicbike.favoritelist
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

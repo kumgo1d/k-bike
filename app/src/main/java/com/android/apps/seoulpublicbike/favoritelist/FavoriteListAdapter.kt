@@ -1,9 +1,10 @@
-package com.android.apps.seoulpublicbike
+package com.android.apps.seoulpublicbike.favoritelist
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.android.apps.seoulpublicbike.R
 import kotlinx.android.synthetic.main.item_favorite_list.view.*
 
 class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {

@@ -1,14 +1,15 @@
-package com.android.apps.seoulpublicbike
+package com.android.apps.seoulpublicbike.seoul
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.room.Room
-import com.android.apps.seoulpublicbike.databinding.FragmentFavoriteListBinding
 import com.android.apps.seoulpublicbike.databinding.FragmentShowBikeDataBinding
+import com.android.apps.seoulpublicbike.favoritelist.FavoriteListAdapter
+import com.android.apps.seoulpublicbike.favoritelist.FavoriteListItem
+import com.android.apps.seoulpublicbike.favoritelist.FavoriteListItemHelper
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_show_bike_data.view.*
 
 class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
 

@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/seoulBikeMapFragment"
-        android:name="com.android.apps.seoulpublicbike.SeoulBikeMapFragment"
+        android:name="com.android.apps.seoulpublicbike.seoul.SeoulBikeMapFragment"
         android:label="fragment_bike_map"
         tools:layout="@layout/fragment_bike_map" />
     <fragment
         android:id="@+id/favoriteListFragment"
-        android:name="com.android.apps.seoulpublicbike.FavoriteListFragment"
+        android:name="com.android.apps.seoulpublicbike.favoritelist.FavoriteListFragment"
         android:label="fragment_favorite_list"
         tools:layout="@layout/fragment_favorite_list" />
 </navigation>
