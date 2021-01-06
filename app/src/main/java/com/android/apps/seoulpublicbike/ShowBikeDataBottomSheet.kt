@@ -5,10 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.room.Room
+import com.android.apps.seoulpublicbike.databinding.FragmentFavoriteListBinding
+import com.android.apps.seoulpublicbike.databinding.FragmentShowBikeDataBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_show_bike_data.view.*
 
 class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
+
+    private var _binding: FragmentShowBikeDataBinding? = null
+    private val binding get() = _binding!!
+
     var helper: FavoriteListItemHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +31,8 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.fragment_show_bike_data, container, false)
+
+        _binding = FragmentShowBikeDataBinding.inflate(inflater, container, false)
 
         val station = requireArguments().getString("station_name")
         val parking = requireArguments().getString("parking_bike")
@@ -33,20 +40,26 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
         val no = station!!.split(".")[0].toLong()
         val adapter = FavoriteListAdapter()
 
-        view.station_name.text = station
-        view.parking_bike.text = "자전거 : " + parking
-        view.rack_bike.text = "주차 가능 : " + rack
-        //즐겨찾기 저장 - ROOM 저장
-        view.add_favorite_button.setOnClickListener {
-            val item = FavoriteListItem(no, station!!, parking!!, rack!!)
-            helper?.FavoriteListItemDAO()?.insert(item)
-            adapter.listItem.clear()
-            adapter.listItem.addAll(helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf())
-            adapter.notifyDataSetChanged()
+        binding.apply {
+            stationName.text = station
+            parkingBike.text = "자전거 : $parking"
+            rackBike.text = "주차 가능 : $rack"
+            binding.addFavoriteButton.setOnClickListener {
+                val item = FavoriteListItem(no, station!!, parking!!, rack!!)
+                helper?.FavoriteListItemDAO()?.insert(item)
+                adapter.listItem.clear()
+                adapter.listItem.addAll(helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf())
+                adapter.notifyDataSetChanged()
 
-            dismiss()
+                dismiss()
+            }
         }
 
-        return view
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

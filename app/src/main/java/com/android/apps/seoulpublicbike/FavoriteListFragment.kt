@@ -20,9 +20,8 @@ class FavoriteListFragment : Fragment() {
     var helper: FavoriteListItemHelper? = null
     var list = mutableListOf<FavoriteListItem>()
 
+    // This property is only valid between onCreateView and onDestroyView.
     private var _binding: FragmentFavoriteListBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,15 +31,13 @@ class FavoriteListFragment : Fragment() {
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()
-
-//        findChangedBikeData()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        
+
         findChangedBikeData()
 
         _binding = FragmentFavoriteListBinding.inflate(inflater, container, false)
@@ -66,6 +63,7 @@ class FavoriteListFragment : Fragment() {
         list = helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf()
         seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory())
             .get(SeoulMapViewModel::class.java)
+        
         seoulMapViewModel.getBikes1()!!.observe(this, Observer { bike ->
             val bike1 = bike
             for(b in bike1!!.rentBikeStatus.row) {

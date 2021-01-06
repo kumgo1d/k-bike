@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.android.apps.seoulpublicbike.data.Bike
+import com.android.apps.seoulpublicbike.databinding.FragmentBikeMapBinding
+import com.android.apps.seoulpublicbike.databinding.FragmentFavoriteListBinding
 import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModel
 import com.android.apps.seoulpublicbike.seoul.SeoulMapViewModelFactory
 import com.naver.maps.geometry.LatLng
@@ -45,6 +47,10 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private var bikeList = mutableSetOf<String>() //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
     private var curInfo = InfoWindow() //마커를 클릭했을 때 이전 infoWindow가 있다면 제거하기 위한 임시 변수
     private var isFirst = true
+
+    // This property is only valid between onCreateView and onDestroyView.
+    private var _binding: FragmentBikeMapBinding? = null
+    private val binding get() = _binding!!
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -98,8 +104,14 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bike_map, container, false)
+        _binding = FragmentBikeMapBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     @Override
