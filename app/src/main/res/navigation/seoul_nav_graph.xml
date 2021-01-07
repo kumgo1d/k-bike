@@ -9,7 +9,11 @@
         android:id="@+id/seoulBikeMapFragment"
         android:name="com.android.apps.seoulpublicbike.seoul.SeoulBikeMapFragment"
         android:label="fragment_bike_map"
-        tools:layout="@layout/fragment_bike_map" />
+        tools:layout="@layout/fragment_bike_map">
+        <action
+            android:id="@+id/seoulBikeMapFragmentToFavoriteListFragment"
+            app:destination="favoriteListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteListFragment"
         android:name="com.android.apps.seoulpublicbike.favoritelist.FavoriteListFragment"
