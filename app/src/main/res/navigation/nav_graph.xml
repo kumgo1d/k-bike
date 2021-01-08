@@ -2,17 +2,16 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/seoul_nav_graph"
-    app:startDestination="@id/seoulBikeMapFragment">
-
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/showBikeDataBottomSheet">
     <fragment
-        android:id="@+id/seoulBikeMapFragment"
-        android:name="com.android.apps.seoulpublicbike.seoul.SeoulBikeMapFragment"
-        android:label="fragment_bike_map"
-        tools:layout="@layout/fragment_bike_map">
+        android:id="@+id/showBikeDataBottomSheet"
+        android:name="com.android.apps.seoulpublicbike.seoul.ShowBikeDataBottomSheet"
+        android:label="fragment_show_bike_data"
+        tools:layout="@layout/fragment_show_bike_data" >
         <action
-            android:id="@+id/seoulBikeMapFragmentToFavoriteListFragment"
-            app:destination="favoriteListFragment" />
+            android:id="@+id/action_showBikeDataBottomSheet_to_favoriteListFragment"
+            app:destination="@id/favoriteListFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoriteListFragment"

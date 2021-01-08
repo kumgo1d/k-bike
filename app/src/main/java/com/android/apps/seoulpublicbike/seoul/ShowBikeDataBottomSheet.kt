@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.room.Room
 import com.android.apps.seoulpublicbike.databinding.FragmentShowBikeDataBinding
 import com.android.apps.seoulpublicbike.favoritelist.FavoriteListAdapter
