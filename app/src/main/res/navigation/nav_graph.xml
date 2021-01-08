@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/showBikeDataBottomSheet">
+    app:startDestination="@id/mainActivity">
     <fragment
         android:id="@+id/showBikeDataBottomSheet"
         android:name="com.android.apps.seoulpublicbike.seoul.ShowBikeDataBottomSheet"
@@ -18,4 +18,13 @@
         android:name="com.android.apps.seoulpublicbike.favoritelist.FavoriteListFragment"
         android:label="fragment_favorite_list"
         tools:layout="@layout/fragment_favorite_list" />
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.android.apps.seoulpublicbike.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" >
+        <action
+            android:id="@+id/action_mainActivity_to_favoriteListFragment"
+            app:destination="@id/favoriteListFragment" />
+    </activity>
 </navigation>

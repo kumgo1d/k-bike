@@ -63,7 +63,7 @@ class FavoriteListFragment : Fragment() {
         seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory())
             .get(SeoulMapViewModel::class.java)
         
-        seoulMapViewModel.getBikes1()!!.observe(this, Observer { bike ->
+        seoulMapViewModel.getBikes1()!!.observe(viewLifecycleOwner, Observer { bike ->
             val bike1 = bike
             for(b in bike1!!.rentBikeStatus.row) {
                 for(item in list) {
@@ -78,7 +78,7 @@ class FavoriteListFragment : Fragment() {
         })
         seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
             SeoulMapViewModel::class.java)
-        seoulMapViewModel.getBikes2()!!.observe(this, Observer { bike ->
+        seoulMapViewModel.getBikes2()!!.observe(viewLifecycleOwner, Observer { bike ->
             val bike2 = bike
             for(b in bike2!!.rentBikeStatus.row) {
                 for(item in list) {
@@ -93,7 +93,7 @@ class FavoriteListFragment : Fragment() {
         })
         seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
             SeoulMapViewModel::class.java)
-        seoulMapViewModel.getBikes3()!!.observe(this, Observer { bike ->
+        seoulMapViewModel.getBikes3()!!.observe(viewLifecycleOwner, Observer { bike ->
             val bike3 = bike
             for(b in bike3!!.rentBikeStatus.row) {
                 for(item in list) {

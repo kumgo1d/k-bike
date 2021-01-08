@@ -3,6 +3,7 @@ package com.android.apps.seoulpublicbike
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.android.apps.seoulpublicbike.favoritelist.FavoriteListFragment
 import com.android.apps.seoulpublicbike.seoul.SeoulBikeMapFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -29,10 +30,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addFragments() {
+        findNavController(R.id.nav_host_fragment).navigate(R.id.showBikeDataBottomSheet)
         val transaction = supportFragmentManager.beginTransaction()
         transaction.apply {
-            add(R.id.frameLayout, seoulBikeMapFragment, SEOUL)
-            add(R.id.frameLayout, favoriteListFragment, FAVORITE).hide(favoriteListFragment)
+            add(R.id.nav_host_fragment, seoulBikeMapFragment, SEOUL)
+            add(R.id.nav_host_fragment, favoriteListFragment, FAVORITE).hide(favoriteListFragment)
         }.commit()
     }
 
