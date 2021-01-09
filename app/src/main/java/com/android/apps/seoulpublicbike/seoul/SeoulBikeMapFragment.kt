@@ -58,9 +58,9 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         super.onCreate(savedInstanceState)
 
         //map fragment와 sync
-        val mapFragment = fragmentManager?.findFragmentById(R.id.map) as MapFragment?
+        val mapFragment = childFragmentManager?.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
-                fragmentManager?.beginTransaction()?.add(R.id.map, it)?.commit()
+                childFragmentManager?.beginTransaction()?.add(R.id.map, it)?.commit()
             }
         mapFragment.getMapAsync(this)
 

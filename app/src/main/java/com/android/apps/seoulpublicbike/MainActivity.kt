@@ -4,52 +4,32 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.android.apps.seoulpublicbike.favoritelist.FavoriteListFragment
+import com.android.apps.seoulpublicbike.home.HomeFragment
 import com.android.apps.seoulpublicbike.seoul.SeoulBikeMapFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private val SEOUL = "seoul"
-    private val FAVORITE = "favorite"
+    private val HOME = "home"
 
-    private val seoulBikeMapFragment = SeoulBikeMapFragment()
-    private val favoriteListFragment = FavoriteListFragment()
+    private val homeFragment = HomeFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         addFragments()
-        navigationFragments()
     }
 
     override fun onStop() {
         super.onStop()
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.detach(supportFragmentManager.findFragmentByTag("seoul")!!)
+        transaction.detach(supportFragmentManager.findFragmentByTag(HOME)!!)
     }
 
     private fun addFragments() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.apply {
-            add(R.id.frameLayout, seoulBikeMapFragment, SEOUL)
-            add(R.id.frameLayout, favoriteListFragment, FAVORITE).hide(favoriteListFragment)
+            add(R.id.fragment_container_view, homeFragment, HOME)
         }.commit()
-    }
-
-    private fun navigationFragments() {
-        var activeFragment: Fragment = seoulBikeMapFragment
-        bottom_navigation_view.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.map_view -> {
-                    supportFragmentManager.beginTransaction().detach(activeFragment).show(seoulBikeMapFragment).commit()
-                    activeFragment = seoulBikeMapFragment
-                }
-                R.id.favorite_list -> {
-                    supportFragmentManager.beginTransaction().hide(activeFragment).attach(favoriteListFragment).show(favoriteListFragment).commit()
-                    activeFragment = favoriteListFragment
-                }
-            }
-            true
-        }
     }
 }
