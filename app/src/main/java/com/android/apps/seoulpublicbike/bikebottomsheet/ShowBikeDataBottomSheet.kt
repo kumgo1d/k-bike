@@ -1,9 +1,10 @@
-package com.android.apps.seoulpublicbike.seoul
+package com.android.apps.seoulpublicbike.bikebottomsheet
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.room.Room
 import com.android.apps.seoulpublicbike.databinding.FragmentShowBikeDataBinding
 import com.android.apps.seoulpublicbike.favoritelist.FavoriteListAdapter
@@ -15,6 +16,7 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: FragmentShowBikeDataBinding? = null
     private val binding get() = _binding!!
+    private val viewModel = ShowBikeDataBottomSheetViewModel()
 
     var helper: FavoriteListItemHelper? = null
 
@@ -36,24 +38,15 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
         _binding = FragmentShowBikeDataBinding.inflate(inflater, container, false)
 
         val station = requireArguments().getString("station_name")
-        val parking = requireArguments().getString("parking_bike")
-        val rack = requireArguments().getString("rack_bike")
+        val parking = "자전거 : " + requireArguments().getString("parking_bike")
+        val rack = "주차가능 : " + requireArguments().getString("rack_bike")
         val no = station!!.split(".")[0].toLong()
-        val adapter = FavoriteListAdapter()
+        val bikeData = BottomSheetBikeData(no, station, parking!!, rack!!)
 
-        binding.apply {
-            stationName.text = station
-            parkingBike.text = "자전거 : $parking"
-            rackBike.text = "주차 가능 : $rack"
-            binding.addFavoriteButton.setOnClickListener {
-                val item = FavoriteListItem(no, station!!, parking!!, rack!!)
-                helper?.FavoriteListItemDAO()?.insert(item)
-                adapter.listItem.clear()
-                adapter.listItem.addAll(helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf())
-                adapter.notifyDataSetChanged()
-
-                dismiss()
-            }
+        viewModel.bottomSheetBikeData(bikeData)
+        binding.viewModel = viewModel
+        binding.addFavoriteButton.setOnClickListener {
+            addFavoriteButton(bikeData)
         }
 
         return binding.root
@@ -62,5 +55,18 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun addFavoriteButton(bikeData: BottomSheetBikeData) {
+        val adapter = FavoriteListAdapter()
+        val item = FavoriteListItem(bikeData.stationNumber, bikeData.stationName, bikeData.parkingBike, bikeData.rackBike)
+        helper?.FavoriteListItemDAO()?.insert(item)
+        adapter.listItem.clear()
+        adapter.listItem.addAll(helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf())
+        adapter.notifyDataSetChanged()
+
+        dismiss()
+
+        Toast.makeText(context, "즐겨찾기에 추가되었습니다.", Toast.LENGTH_SHORT).show()
     }
 }

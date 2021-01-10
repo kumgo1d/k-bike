@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.android.apps.seoulpublicbike.R
+import com.android.apps.seoulpublicbike.bikebottomsheet.BottomSheetBikeData
+import com.android.apps.seoulpublicbike.bikebottomsheet.ShowBikeDataBottomSheet
 import com.android.apps.seoulpublicbike.data.Bike
 import com.android.apps.seoulpublicbike.databinding.FragmentBikeMapBinding
 import com.naver.maps.geometry.LatLng
@@ -214,7 +216,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                                 putString("rack_bike", b.rackTotCnt)
                             }
                             bottomSheet.arguments = bundle
-                            bottomSheet.show(requireFragmentManager(), bottomSheet.tag)
+                            bottomSheet.show(childFragmentManager, bottomSheet.tag)
 
                             curInfo = infoWindow
                         } else {

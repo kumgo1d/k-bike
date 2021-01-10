@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.android.apps.seoulpublicbike.R
 import com.android.apps.seoulpublicbike.databinding.FragmentBikeMapBinding
 import com.android.apps.seoulpublicbike.databinding.FragmentHomeBinding
+import com.android.apps.seoulpublicbike.favoritelist.FavoriteListFragment
 import com.android.apps.seoulpublicbike.seoul.SeoulBikeMapFragment
 
 class HomeFragment : Fragment() {
@@ -16,6 +17,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val seoulBikeMapFragment = SeoulBikeMapFragment()
+    private val favoriteListFragment = FavoriteListFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +33,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         addFragments()
+        navigationFragments()
     }
 
     override fun onDestroyView() {
@@ -42,23 +45,24 @@ class HomeFragment : Fragment() {
         val transaction = childFragmentManager.beginTransaction()
         transaction.apply {
             add(R.id.fragment_container_view, seoulBikeMapFragment, "seoul")
+            add(R.id.fragment_container_view, favoriteListFragment, "favorite").hide(favoriteListFragment)
         }.commit()
     }
-//
-//    private fun navigationFragments() {
-//        var activeFragment: Fragment = seoulBikeMapFragment
-//        bottom_navigation_view.setOnNavigationItemSelectedListener {
-//            when(it.itemId) {
-//                R.id.map_view -> {
-//                    supportFragmentManager.beginTransaction().detach(activeFragment).show(seoulBikeMapFragment).commit()
-//                    activeFragment = seoulBikeMapFragment
-//                }
-//                R.id.favorite_list -> {
-//                    supportFragmentManager.beginTransaction().hide(activeFragment).attach(favoriteListFragment).show(favoriteListFragment).commit()
-//                    activeFragment = favoriteListFragment
-//                }
-//            }
-//            true
-//        }
-//    }
+
+    private fun navigationFragments() {
+        var activeFragment: Fragment = seoulBikeMapFragment
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.map_view -> {
+                    childFragmentManager.beginTransaction().detach(activeFragment).show(seoulBikeMapFragment).commit()
+                    activeFragment = seoulBikeMapFragment
+                }
+                R.id.favorite_list -> {
+                    childFragmentManager.beginTransaction().hide(activeFragment).attach(favoriteListFragment).show(favoriteListFragment).commit()
+                    activeFragment = favoriteListFragment
+                }
+            }
+            true
+        }
+    }
 }

@@ -22,8 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.detach(supportFragmentManager.findFragmentByTag(HOME)!!)
+        supportFragmentManager.beginTransaction().detach(supportFragmentManager.findFragmentByTag(HOME)!!)
     }
 
     private fun addFragments() {
