@@ -35,15 +35,16 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        _binding = FragmentShowBikeDataBinding.inflate(inflater, container, false)
-
         val station = requireArguments().getString("station_name")
         val parking = "자전거 : " + requireArguments().getString("parking_bike")
         val rack = "주차가능 : " + requireArguments().getString("rack_bike")
         val no = station!!.split(".")[0].toLong()
         val bikeData = BottomSheetBikeData(no, station, parking!!, rack!!)
 
+        _binding = FragmentShowBikeDataBinding.inflate(inflater, container, false)
+
         viewModel.bottomSheetBikeData(bikeData)
+
         binding.viewModel = viewModel
         binding.addFavoriteButton.setOnClickListener {
             addFavoriteButton(bikeData)

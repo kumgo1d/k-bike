@@ -190,22 +190,22 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                     && naverMap.contentBounds.westLongitude <= b.stationLongitude.toDouble() && b.stationLongitude.toDouble() <= naverMap.contentBounds.eastLongitude) {
                     bikeList.add(b.stationId)
                     val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
-                    val infoWindow = InfoWindow()
-                    infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
-                        override fun getText(infoWindow: InfoWindow): CharSequence {
-                            return "자전거 : ${b.parkingBikeTotCnt} \n주차가능 : ${b.rackTotCnt}"
-                        }
-                    }
+//                    val infoWindow = InfoWindow()
+//                    infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
+//                        override fun getText(infoWindow: InfoWindow): CharSequence {
+//                            return "자전거 : ${b.parkingBikeTotCnt} \n주차가능 : ${b.rackTotCnt}"
+//                        }
+//                    }
 
                     val listener = Overlay.OnClickListener { overlay ->
                         val marker = overlay as Marker
                         if (marker.infoWindow == null) {
-                            curInfo.close()
+//                            curInfo.close()
                             // 현재 마커에 정보 창이 열려있지 않을 경우 엶
                             val cameraUpdate = CameraUpdate.scrollTo(pos)
                                 .animate(CameraAnimation.Fly, 1000)
                             naverMap.moveCamera(cameraUpdate)
-                            infoWindow.open(marker)
+//                            infoWindow.open(marker)
 
                             //BottomSheetDialog에 데이터 전달
                             val bottomSheet = ShowBikeDataBottomSheet()
@@ -218,15 +218,15 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                             bottomSheet.arguments = bundle
                             bottomSheet.show(childFragmentManager, bottomSheet.tag)
 
-                            curInfo = infoWindow
+//                            curInfo = infoWindow
                         } else {
-                            curInfo.close()
-                            // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
-                            infoWindow.close()
+//                            curInfo.close()
+//                            // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
+//                            infoWindow.close()
                         }
-                        naverMap.setOnMapClickListener { pointF, latLng ->
-                            infoWindow.close()
-                        }
+//                        naverMap.setOnMapClickListener { pointF, latLng ->
+//                            infoWindow.close()
+//                        }
                         true
                     }
 
