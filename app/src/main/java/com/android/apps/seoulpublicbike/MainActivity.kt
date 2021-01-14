@@ -2,11 +2,7 @@ package com.android.apps.seoulpublicbike
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import com.android.apps.seoulpublicbike.favoritelist.FavoriteListFragment
 import com.android.apps.seoulpublicbike.home.HomeFragment
-import com.android.apps.seoulpublicbike.seoul.SeoulBikeMapFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private val HOME = "home"

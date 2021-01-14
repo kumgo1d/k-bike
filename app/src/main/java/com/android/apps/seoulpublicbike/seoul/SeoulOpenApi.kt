@@ -4,6 +4,7 @@ import com.android.apps.seoulpublicbike.data.Bike
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Url
 
 class SeoulOpenApi {
     companion object {
@@ -15,6 +16,8 @@ class SeoulOpenApi {
 }
 
 interface SeoulOpenService {
-    @GET("{api_key}")
-    fun getBike(@Path("api_key") key: String): Call<Bike>
+//    @GET("{api_key}")
+//    fun getBike(@Path("api_key") key: String): Call<Bike>
+    @GET
+    fun getBike(@Url url: String): Call<Bike>
 }
