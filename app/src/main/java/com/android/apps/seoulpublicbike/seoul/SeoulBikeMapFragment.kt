@@ -123,7 +123,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
 
         if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
-            var cameraPosition = CameraPosition(LatLng(latitude, longitude), 16.0)
+            var cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
             naverMap.cameraPosition = cameraPosition
             initMapSettings()
         } else {
@@ -159,6 +159,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private fun initMapSettings() {
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
 
         naverMap.addOnCameraIdleListener {
             naverMap.locationTrackingMode = LocationTrackingMode.Follow

@@ -2,6 +2,7 @@ package com.android.apps.seoulpublicbike
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.android.apps.seoulpublicbike.base.BaseFragment
 import com.android.apps.seoulpublicbike.home.HomeFragment
 
 class MainActivity : AppCompatActivity() {
