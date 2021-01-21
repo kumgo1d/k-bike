@@ -1,47 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.flexbox.FlexboxLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".home.HomeFragment"
-        app:flexDirection="column"
-        app:alignContent="flex_start">
+        android:layout_height="match_parent">
 
-        <com.google.android.flexbox.FlexboxLayout
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:flexDirection="row"
-            app:flexWrap="wrap"
-            app:alignContent="flex_start">
+            android:layout_height="match_parent" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            <Button
-                android:id="@+id/seoul_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="서울"/>
-
-            <Button
-                android:id="@+id/changwon_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="창원"/>
-
-            <Button
-                android:id="@+id/chunan_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="천안"/>
-
-        </com.google.android.flexbox.FlexboxLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/good_cycle_place"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </com.google.android.flexbox.FlexboxLayout>
 </layout>
+
