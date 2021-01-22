@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
-
+    <fragment
+        android:id="@+id/seoulBikeMapFragment"
+        android:name="com.android.apps.seoulpublicbike.seoul.SeoulBikeMapFragment"
+        tools:layout="@layout/fragment_bike_map" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.android.apps.seoulpublicbike.home.HomeFragment"
-        android:label="HomeFragment" />
+        android:name="com.android.apps.seoulpublicbike.home.HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_seoulBikeMapFragment"
+            app:destination="@id/seoulBikeMapFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_favoriteListFragment"
+            app:destination="@id/favoriteListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteListFragment"
+        android:name="com.android.apps.seoulpublicbike.favoritelist.FavoriteListFragment"
+        android:label="fragment_favorite_list"
+        tools:layout="@layout/fragment_favorite_list" />
 </navigation>
