@@ -45,7 +45,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private var latitude: Double = 0.0
 
     private var bikeList = mutableSetOf<String>() //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
-    private var curInfo = InfoWindow() //마커를 클릭했을 때 이전 infoWindow가 있다면 제거하기 위한 임시 변수
     private var isFirst = true
 
     // This property is only valid between onCreateView and onDestroyView.
@@ -70,6 +69,16 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         //내 위치를 알기 위한 location manager
         locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentBikeMapBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
     override fun onRequestPermissionsResult(
@@ -97,16 +106,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     override fun onStop() {
         super.onStop()
         locationManager?.removeUpdates(this)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentBikeMapBinding.inflate(inflater, container, false)
-
-        return binding.root
     }
 
     override fun onDestroyView() {
@@ -191,24 +190,14 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                     && naverMap.contentBounds.westLongitude <= b.stationLongitude.toDouble() && b.stationLongitude.toDouble() <= naverMap.contentBounds.eastLongitude) {
                     bikeList.add(b.stationId)
                     val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
-//                    val infoWindow = InfoWindow()
-//                    infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
-//                        override fun getText(infoWindow: InfoWindow): CharSequence {
-//                            return "자전거 : ${b.parkingBikeTotCnt} \n주차가능 : ${b.rackTotCnt}"
-//                        }
-//                    }
 
                     val listener = Overlay.OnClickListener { overlay ->
                         val marker = overlay as Marker
                         if (marker.infoWindow == null) {
-//                            curInfo.close()
-                            // 현재 마커에 정보 창이 열려있지 않을 경우 엶
                             val cameraUpdate = CameraUpdate.scrollTo(pos)
                                 .animate(CameraAnimation.Fly, 1000)
                             naverMap.moveCamera(cameraUpdate)
-//                            infoWindow.open(marker)
 
-                            //BottomSheetDialog에 데이터 전달
                             val bottomSheet = ShowBikeDataBottomSheet()
                             val bundle = Bundle()
                             bundle.apply {
@@ -218,16 +207,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                             }
                             bottomSheet.arguments = bundle
                             bottomSheet.show(childFragmentManager, bottomSheet.tag)
-
-//                            curInfo = infoWindow
-                        } else {
-//                            curInfo.close()
-//                            // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
-//                            infoWindow.close()
                         }
-//                        naverMap.setOnMapClickListener { pointF, latLng ->
-//                            infoWindow.close()
-//                        }
                         true
                     }
 

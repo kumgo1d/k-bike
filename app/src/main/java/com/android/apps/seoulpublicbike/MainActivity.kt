@@ -2,7 +2,9 @@ package com.android.apps.seoulpublicbike
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.findNavController
 import com.android.apps.seoulpublicbike.home.HomeFragment
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private val HOME = "home"
