@@ -11,10 +11,14 @@
         android:name="com.android.apps.seoulpublicbike.home.HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_seoulBikeMapFragment"
-            app:destination="@id/seoulBikeMapFragment" />
+            app:destination="@id/seoulBikeMapFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit" />
         <action
             android:id="@+id/action_homeFragment_to_favoriteListFragment"
-            app:destination="@id/favoriteListFragment" />
+            app:destination="@id/favoriteListFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit" />
     </fragment>
     <fragment
         android:id="@+id/favoriteListFragment"

@@ -61,7 +61,9 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
     private fun addFavoriteButton(bikeData: BottomSheetBikeData) {
         val adapter = FavoriteListAdapter()
         val item = FavoriteListItem(bikeData.stationNumber, bikeData.stationName, bikeData.parkingBike, bikeData.rackBike)
+
         helper?.FavoriteListItemDAO()?.insert(item)
+
         adapter.listItem.clear()
         adapter.listItem.addAll(helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf())
         adapter.notifyDataSetChanged()

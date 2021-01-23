@@ -19,7 +19,6 @@ class FavoriteListFragment : Fragment() {
     var helper: FavoriteListItemHelper? = null
     var list = mutableListOf<FavoriteListItem>()
 
-    // This property is only valid between onCreateView and onDestroyView.
     private var _binding: FragmentFavoriteListBinding? = null
     private val binding get() = _binding!!
 

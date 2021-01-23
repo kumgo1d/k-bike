@@ -16,8 +16,6 @@ class SeoulOpenApi {
 }
 
 interface SeoulOpenService {
-//    @GET("{api_key}")
-//    fun getBike(@Path("api_key") key: String): Call<Bike>
     @GET
     fun getBike(@Url url: String): Call<Bike>
 }

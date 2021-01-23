@@ -44,10 +44,10 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private var longitude: Double = 0.0
     private var latitude: Double = 0.0
 
-    private var bikeList = mutableSetOf<String>() //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
+    //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
+    private var bikeList = mutableSetOf<String>()
     private var isFirst = true
 
-    // This property is only valid between onCreateView and onDestroyView.
     private var _binding: FragmentBikeMapBinding? = null
     private val binding get() = _binding!!
 
@@ -58,16 +58,13 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //map fragment와 sync
-        val mapFragment = childFragmentManager?.findFragmentById(R.id.map) as MapFragment?
-            ?: MapFragment.newInstance().also {
+        val mapFragment = childFragmentManager?.findFragmentById(R.id.map)
+                as MapFragment? ?: MapFragment.newInstance().also {
                 childFragmentManager?.beginTransaction()?.add(R.id.map, it)?.commit()
             }
         mapFragment.getMapAsync(this)
 
-        //권한 설정 여부와 지도 위 위치 표시를 위한 location source
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-        //내 위치를 알기 위한 location manager
         locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
     }
 
@@ -87,7 +84,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        //권한을 거부한 뒤에 다시 허용을 눌렀을 때, 정상 작동하기 위한 if문
+
         if(!isFirst && locationManager != null && ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -131,8 +128,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             naverMap.locationTrackingMode = LocationTrackingMode.None
         }
 
-        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
-            SeoulMapViewModel::class.java)
+        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(SeoulMapViewModel::class.java)
         seoulMapViewModel.getBikes1()!!.observe(this, Observer { bike ->
             bike1 = bike
             showBikeList(bike)
@@ -228,7 +224,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     }
 
     override fun onLocationChanged(location: Location?) {
-        //현재 위치를 저장하는 변수에 값을 할당한다.
         longitude = location!!.longitude
         latitude = location!!.latitude
     }

@@ -3,9 +3,9 @@
     <item
         android:id="@+id/map_view"
         android:title="map"
-        android:icon="@drawable/ic_baseline_map_24"/>
+        android:icon="@drawable/ic_bottom_nav_map"/>
     <item
         android:id="@+id/favorite_list"
         android:title="favorite"
-        android:icon="@drawable/ic_baseline_star_24"/>
+        android:icon="@drawable/ic_bottom_nav_star"/>
 </menu>
