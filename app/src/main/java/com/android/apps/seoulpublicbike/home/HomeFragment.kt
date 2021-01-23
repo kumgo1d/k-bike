@@ -26,28 +26,8 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        navigationFragments()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun navigationFragments() {
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.map_view -> {
-                    findNavController().navigate(R.id.seoulBikeMapFragment)
-                }
-                R.id.favorite_list -> {
-                    findNavController().navigate(R.id.favoriteListFragment)
-                }
-            }
-            true
-        }
     }
 }
