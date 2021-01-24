@@ -28,6 +28,7 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var mItem: FavoriteListItem? = null
+
         init {
 
             itemView.delete_button.setOnClickListener {
@@ -36,6 +37,7 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
                 notifyDataSetChanged()
             }
         }
+
         fun setList(item: FavoriteListItem) {
             itemView.item_station.text = item.station
             itemView.item_parking.text = "자전거 : " + item.parkingBike

@@ -32,8 +32,7 @@ import com.naver.maps.map.util.FusedLocationSource
 class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
-
-    lateinit var seoulMapViewModel: SeoulMapViewModel
+    private lateinit var seoulMapViewModel: SeoulMapViewModel
 
     var bike1: Bike? = null
     var bike2: Bike? = null
@@ -80,12 +79,15 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if(!isFirst && locationManager != null && ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED) {
+        if(!isFirst && locationManager != null && ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             initMapSettings()
+        }
+
+        if(ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
+            Toast.makeText(context, "설정에서 위치 서비스를 활성화할 수 있습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -160,15 +162,15 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
             requireContext(),
             Manifest.permission.ACCESS_FINE_LOCATION
         )
+
         requestPermissions(
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
             LOCATION_PERMISSION_REQUEST_CODE
         )
+
         if(locationPermission == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
-            Toast.makeText(context, "위치 추적이 활성화됩니다.", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(context, "설정에서 위치 서비스를 활성화할 수 있습니다.", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "위치 추적이 활성화됩니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
