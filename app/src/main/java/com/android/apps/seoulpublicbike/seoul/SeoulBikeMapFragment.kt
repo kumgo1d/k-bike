@@ -55,25 +55,20 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val mapFragment = childFragmentManager?.findFragmentById(R.id.map)
-                as MapFragment? ?: MapFragment.newInstance().also {
-                childFragmentManager?.beginTransaction()?.add(R.id.map, it)?.commit()
-            }
-        mapFragment.getMapAsync(this)
-
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-        locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentBikeMapBinding.inflate(inflater, container, false)
+
+        val mapFragment = childFragmentManager?.findFragmentById(R.id.map)
+                as MapFragment? ?: MapFragment.newInstance().also {
+            childFragmentManager?.beginTransaction()?.add(R.id.map, it)?.commit()
+        }
+        mapFragment.getMapAsync(this)
+
+        locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
 
         return binding.root
     }
@@ -90,7 +85,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
-            locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
             initMapSettings()
         }
     }
@@ -114,8 +108,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     override fun onMapReady(naverMap: NaverMap) {
         isFirst = false
         this.naverMap = naverMap
-        val uiSettings = naverMap.uiSettings
-        uiSettings.isLogoClickEnabled = false
 
         if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
@@ -152,6 +144,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     }
 
     private fun initMapSettings() {
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
