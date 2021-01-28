@@ -17,7 +17,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.android.apps.seoulpublicbike"
+        applicationId "com.goldcompany.apps.koreabike"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1

@@ -5,10 +5,10 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/seoulBikeMapFragment"
-        android:name="com.android.apps.seoulpublicbike.seoul.SeoulBikeMapFragment" />
+        android:name="com.goldcompany.apps.koreabike.seoul.SeoulBikeMapFragment" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.android.apps.seoulpublicbike.home.HomeFragment" >
+        android:name="com.goldcompany.apps.koreabike.home.HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_seoulBikeMapFragment"
             app:destination="@id/seoulBikeMapFragment"
@@ -22,6 +22,6 @@
     </fragment>
     <fragment
         android:id="@+id/favoriteListFragment"
-        android:name="com.android.apps.seoulpublicbike.favoritelist.FavoriteListFragment" />
+        android:name="com.goldcompany.apps.koreabike.favoritelist.FavoriteListFragment" />
 
 </navigation>
