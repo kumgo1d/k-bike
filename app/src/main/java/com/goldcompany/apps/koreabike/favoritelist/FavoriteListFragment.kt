@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
@@ -34,11 +33,13 @@ class FavoriteListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        _binding = FragmentFavoriteListBinding.inflate(inflater, container, false)
+
+        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory())
+            .get(SeoulMapViewModel::class.java)
 
         findChangedBikeData()
-
-        _binding = FragmentFavoriteListBinding.inflate(inflater, container, false)
 
         val adapter = FavoriteListAdapter()
         adapter.helper = helper
@@ -59,14 +60,11 @@ class FavoriteListFragment : Fragment() {
 
     private fun findChangedBikeData() {
         list = helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf()
-        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory())
-            .get(SeoulMapViewModel::class.java)
-        
-        seoulMapViewModel.getBikes1()!!.observe(viewLifecycleOwner, Observer { bike ->
-            val bike1 = bike
-            for(b in bike1!!.rentBikeStatus.row) {
+
+        seoulMapViewModel.getBikes1()!!.observe(viewLifecycleOwner, { bike ->
+            for(b in bike!!.getStationListHist.row) {
                 for(item in list) {
-                    if(b.stationName.split(".")[0].toLong() == item.no) {
+                    if(b.stationName == item.station) {
                         if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
                             item.rackBike = b.rackTotCnt
                             item.parkingBike = b.parkingBikeTotCnt
@@ -75,13 +73,11 @@ class FavoriteListFragment : Fragment() {
                 }
             }
         })
-        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
-            SeoulMapViewModel::class.java)
-        seoulMapViewModel.getBikes2()!!.observe(viewLifecycleOwner, Observer { bike ->
-            val bike2 = bike
-            for(b in bike2!!.rentBikeStatus.row) {
+
+        seoulMapViewModel.getBikes2()!!.observe(viewLifecycleOwner, { bike ->
+            for(b in bike!!.getStationListHist.row) {
                 for(item in list) {
-                    if(b.stationName.split(".")[0].toLong() == item.no) {
+                    if(b.stationName == item.station) {
                         if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
                             item.rackBike = b.rackTotCnt
                             item.parkingBike = b.parkingBikeTotCnt
@@ -90,13 +86,11 @@ class FavoriteListFragment : Fragment() {
                 }
             }
         })
-        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
-            SeoulMapViewModel::class.java)
-        seoulMapViewModel.getBikes3()!!.observe(viewLifecycleOwner, Observer { bike ->
-            val bike3 = bike
-            for(b in bike3!!.rentBikeStatus.row) {
+
+        seoulMapViewModel.getBikes3()!!.observe(viewLifecycleOwner, { bike ->
+            for(b in bike!!.getStationListHist.row) {
                 for(item in list) {
-                    if(b.stationName.split(".")[0].toLong() == item.no) {
+                    if(b.stationName == item.station) {
                         if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
                             item.rackBike = b.rackTotCnt
                             item.parkingBike = b.parkingBikeTotCnt

@@ -1,5 +1,6 @@
 package com.goldcompany.apps.koreabike.favoritelist
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        val data = listItem.get(position)
+        val data = listItem[position]
         holder.setList(data)
     }
 
@@ -38,6 +39,7 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
             }
         }
 
+        @SuppressLint("SetTextI18n")
         fun setList(item: FavoriteListItem) {
             itemView.item_station.text = item.station
             itemView.item_parking.text = "자전거 : " + item.parkingBike

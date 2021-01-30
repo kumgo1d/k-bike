@@ -1,35 +1,27 @@
 package com.goldcompany.apps.koreabike.seoul
 
 import android.Manifest
-import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.bikebottomsheet.BottomSheetBikeData
 import com.goldcompany.apps.koreabike.bikebottomsheet.ShowBikeDataBottomSheet
-import com.goldcompany.apps.koreabike.data.Bike
+import com.goldcompany.apps.koreabike.seoulbikedata.Bike
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
-import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 
 
-class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
+class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
     private lateinit var seoulMapViewModel: SeoulMapViewModel
@@ -38,7 +30,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     var bike2: Bike? = null
     var bike3: Bike? = null
 
-    private var locationManager: LocationManager? = null
     //내 위치
     private var longitude: Double = 0.0
     private var latitude: Double = 0.0
@@ -58,16 +49,17 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentBikeMapBinding.inflate(inflater, container, false)
 
-        val mapFragment = childFragmentManager?.findFragmentById(R.id.map)
+        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
+            SeoulMapViewModel::class.java)
+
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map)
                 as MapFragment? ?: MapFragment.newInstance().also {
-            childFragmentManager?.beginTransaction()?.add(R.id.map, it)?.commit()
+            childFragmentManager.beginTransaction().add(R.id.map, it).commit()
         }
         mapFragment.getMapAsync(this)
-
-        locationManager = (activity as AppCompatActivity).getSystemService(LOCATION_SERVICE) as LocationManager?
 
         return binding.root
     }
@@ -79,9 +71,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if(!isFirst && locationManager != null && ContextCompat.checkSelfPermission(requireContext(),
+        if(!isFirst && ContextCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             initMapSettings()
         }
 
@@ -96,11 +87,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         checkPermissions()
     }
 
-    override fun onStop() {
-        super.onStop()
-        locationManager?.removeUpdates(this)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -112,32 +98,29 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         this.naverMap = naverMap
 
         if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
-            var cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+            val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
             naverMap.cameraPosition = cameraPosition
             initMapSettings()
         } else {
-            var cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
+            val cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
             naverMap.cameraPosition = cameraPosition
             naverMap.locationTrackingMode = LocationTrackingMode.None
         }
 
-        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
-            SeoulMapViewModel::class.java)
-        seoulMapViewModel.getBikes1()!!.observe(this, Observer { bike ->
+        seoulMapViewModel.getBikes1()!!.observe(this, { bike ->
             bike1 = bike
             showBikeList(bike)
         })
-        seoulMapViewModel.getBikes2()!!.observe(this, Observer { bike ->
+        seoulMapViewModel.getBikes2()!!.observe(this, { bike ->
             bike2 = bike
             showBikeList(bike)
         })
-        seoulMapViewModel.getBikes3()!!.observe(this, Observer { bike ->
+        seoulMapViewModel.getBikes3()!!.observe(this, { bike ->
             bike3 = bike
             showBikeList(bike)
         })
 
-        naverMap.addOnCameraChangeListener { reason, animated ->
+        naverMap.addOnCameraChangeListener { _, _ ->
             if(bike1 != null && bike2 != null && bike3 != null) {
                 showBikeList(bike1!!)
                 showBikeList(bike2!!)
@@ -170,17 +153,19 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
         )
 
         if(locationPermission == PackageManager.PERMISSION_GRANTED) {
-            locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             Toast.makeText(context, "위치 추적이 활성화됩니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun showBikeList(bike: Bike) {
         //현재 위치와 자전거 대여소의 위치를 비교하여 내 위치 주변 대여소만 보여준다.
-        for(b in bike.rentBikeStatus.row) {
+        for(b in bike.getStationListHist.row) {
             if(!bikeList.contains(b.stationId)) {
-                if(naverMap.contentBounds.southLatitude <= b.stationLatitude.toDouble() && b.stationLatitude.toDouble() <= naverMap.contentBounds.northLatitude
-                    && naverMap.contentBounds.westLongitude <= b.stationLongitude.toDouble() && b.stationLongitude.toDouble() <= naverMap.contentBounds.eastLongitude) {
+                if(naverMap.contentBounds.southLatitude <= b.stationLatitude.toDouble() &&
+                    b.stationLatitude.toDouble() <= naverMap.contentBounds.northLatitude &&
+                    naverMap.contentBounds.westLongitude <= b.stationLongitude.toDouble() &&
+                    b.stationLongitude.toDouble() <= naverMap.contentBounds.eastLongitude) {
+
                     bikeList.add(b.stationId)
                     val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
 
@@ -218,22 +203,5 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback, LocationListener {
                 }
             }
         }
-    }
-
-    override fun onLocationChanged(location: Location?) {
-        longitude = location!!.longitude
-        latitude = location!!.latitude
-    }
-
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-
-    }
-
-    override fun onProviderEnabled(provider: String?) {
-
-    }
-
-    override fun onProviderDisabled(provider: String?) {
-
     }
 }
