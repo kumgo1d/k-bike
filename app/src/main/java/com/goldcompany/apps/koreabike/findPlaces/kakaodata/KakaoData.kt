@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.findrestaurants.kakaodata
+package com.goldcompany.apps.koreabike.findPlaces.kakaodata
 
 data class KakaoData(
     val documents: List<Document>,

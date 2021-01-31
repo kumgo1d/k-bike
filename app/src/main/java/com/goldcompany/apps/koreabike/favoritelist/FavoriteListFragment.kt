@@ -11,6 +11,7 @@ import androidx.room.Room
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoriteListBinding
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModel
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModelFactory
+import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
 
 class FavoriteListFragment : Fragment() {
     lateinit var seoulMapViewModel: SeoulMapViewModel
@@ -62,44 +63,28 @@ class FavoriteListFragment : Fragment() {
         list = helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf()
 
         seoulMapViewModel.getBikes1()!!.observe(viewLifecycleOwner, { bike ->
-            for(b in bike!!.getStationListHist.row) {
-                for(item in list) {
-                    if(b.stationName == item.station) {
-                        if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
-                            item.rackBike = b.rackTotCnt
-                            item.parkingBike = b.parkingBikeTotCnt
-                        }
-                    }
-                }
-            }
+            observeBike(bike)
         })
 
         seoulMapViewModel.getBikes2()!!.observe(viewLifecycleOwner, { bike ->
-            for(b in bike!!.getStationListHist.row) {
-                for(item in list) {
-                    if(b.stationName == item.station) {
-                        if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
-                            item.rackBike = b.rackTotCnt
-                            item.parkingBike = b.parkingBikeTotCnt
-                        }
-                    }
-                }
-            }
+            observeBike(bike)
         })
 
         seoulMapViewModel.getBikes3()!!.observe(viewLifecycleOwner, { bike ->
-            for(b in bike!!.getStationListHist.row) {
-                for(item in list) {
-                    if(b.stationName == item.station) {
-                        if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
-                            item.rackBike = b.rackTotCnt
-                            item.parkingBike = b.parkingBikeTotCnt
-                        }
+            observeBike(bike)
+        })
+    }
+
+    private fun observeBike(bike: SeoulBike) {
+        for(b in bike.stationList.stationInfo) {
+            for(item in list) {
+                if(b.stationName == item.station) {
+                    if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
+                        item.rackBike = b.rackTotCnt
+                        item.parkingBike = b.parkingBikeTotCnt
                     }
                 }
             }
-        })
-
-
+        }
     }
 }

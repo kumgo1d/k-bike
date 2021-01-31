@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.findrestaurants.kakaodata
+package com.goldcompany.apps.koreabike.findPlaces.kakaodata
 
 data class Meta(
     val is_end: Boolean,

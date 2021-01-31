@@ -1,6 +1,6 @@
 package com.goldcompany.apps.koreabike.seoulbikedata
 
-data class Row(
+data class StationInfo(
     val parkingBikeTotCnt: String,
     val rackTotCnt: String,
     val shared: String,

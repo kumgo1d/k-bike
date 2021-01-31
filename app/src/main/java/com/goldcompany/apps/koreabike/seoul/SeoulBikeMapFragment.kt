@@ -12,8 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.bikebottomsheet.ShowBikeDataBottomSheet
-import com.goldcompany.apps.koreabike.seoulbikedata.Bike
+import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
+import com.goldcompany.apps.koreabike.seoulbikedata.StationInfo
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -23,26 +24,36 @@ import com.naver.maps.map.util.FusedLocationSource
 
 class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource
-    private lateinit var naverMap: NaverMap
     private lateinit var seoulMapViewModel: SeoulMapViewModel
 
-    var bike1: Bike? = null
-    var bike2: Bike? = null
-    var bike3: Bike? = null
+    private lateinit var naverMap: NaverMap
 
-    //내 위치
-    private var longitude: Double = 0.0
-    private var latitude: Double = 0.0
+    private lateinit var bike1: SeoulBike
+    private lateinit var bike2: SeoulBike
+    private lateinit var bike3: SeoulBike
 
     //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
     private var bikeList = mutableSetOf<String>()
     private var isFirst = true
+
+    private var locationPermission: Int? = null
 
     private var _binding: FragmentBikeMapBinding? = null
     private val binding get() = _binding!!
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        locationPermission = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+
+        checkPermissions()
     }
 
     override fun onCreateView(
@@ -64,27 +75,18 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         return binding.root
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        if(!isFirst && ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            initMapSettings()
-        }
-
-        if(ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
-            Toast.makeText(context, "설정에서 위치 서비스를 활성화할 수 있습니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        checkPermissions()
+        seoulMapViewModel.getBikes1()!!.observe(viewLifecycleOwner, { bike ->
+            bike1 = bike
+        })
+        seoulMapViewModel.getBikes2()!!.observe(viewLifecycleOwner, { bike ->
+            bike2 = bike
+        })
+        seoulMapViewModel.getBikes3()!!.observe(viewLifecycleOwner, { bike ->
+            bike3 = bike
+        })
     }
 
     override fun onDestroyView() {
@@ -92,40 +94,19 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         _binding = null
     }
 
-    @Override
-    override fun onMapReady(naverMap: NaverMap) {
-        isFirst = false
-        this.naverMap = naverMap
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
-            naverMap.cameraPosition = cameraPosition
+        if(!isFirst && locationPermission == PackageManager.PERMISSION_GRANTED) {
             initMapSettings()
-        } else {
-            val cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
-            naverMap.cameraPosition = cameraPosition
-            naverMap.locationTrackingMode = LocationTrackingMode.None
         }
 
-        seoulMapViewModel.getBikes1()!!.observe(this, { bike ->
-            bike1 = bike
-            showBikeList(bike)
-        })
-        seoulMapViewModel.getBikes2()!!.observe(this, { bike ->
-            bike2 = bike
-            showBikeList(bike)
-        })
-        seoulMapViewModel.getBikes3()!!.observe(this, { bike ->
-            bike3 = bike
-            showBikeList(bike)
-        })
-
-        naverMap.addOnCameraChangeListener { _, _ ->
-            if(bike1 != null && bike2 != null && bike3 != null) {
-                showBikeList(bike1!!)
-                showBikeList(bike2!!)
-                showBikeList(bike3!!)
-            }
+        if(locationPermission == PackageManager.PERMISSION_DENIED){
+            Toast.makeText(context, R.string.go_set_location, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -141,25 +122,46 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun checkPermissions() {
-        val locationPermission = ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
+    @Override
+    override fun onMapReady(naverMap: NaverMap) {
+        isFirst = false
+        this.naverMap = naverMap
 
+        setCameraPosition()
+
+        naverMap.addOnCameraChangeListener { _, _ ->
+            showBikeList(bike1)
+            showBikeList(bike2)
+            showBikeList(bike3)
+        }
+    }
+
+    private fun setCameraPosition() {
+        if(locationPermission == PackageManager.PERMISSION_GRANTED) {
+            val cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
+            naverMap.cameraPosition = cameraPosition
+            initMapSettings()
+        } else {
+            val cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
+            naverMap.cameraPosition = cameraPosition
+            naverMap.locationTrackingMode = LocationTrackingMode.None
+        }
+    }
+
+    private fun checkPermissions() {
         requestPermissions(
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
             LOCATION_PERMISSION_REQUEST_CODE
         )
 
         if(locationPermission == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context, "위치 추적이 활성화됩니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.enable_location_service, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun showBikeList(bike: Bike) {
+    private fun showBikeList(bike: SeoulBike) {
         //현재 위치와 자전거 대여소의 위치를 비교하여 내 위치 주변 대여소만 보여준다.
-        for(b in bike.getStationListHist.row) {
+        for(b in bike.stationList.stationInfo) {
             if(!bikeList.contains(b.stationId)) {
                 if(naverMap.contentBounds.southLatitude <= b.stationLatitude.toDouble() &&
                     b.stationLatitude.toDouble() <= naverMap.contentBounds.northLatitude &&
@@ -169,25 +171,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
                     bikeList.add(b.stationId)
                     val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
 
-                    val listener = Overlay.OnClickListener { overlay ->
-                        val marker = overlay as Marker
-                        if (marker.infoWindow == null) {
-                            val cameraUpdate = CameraUpdate.scrollTo(pos)
-                                .animate(CameraAnimation.Fly, 1000)
-                            naverMap.moveCamera(cameraUpdate)
-
-                            val bottomSheet = ShowBikeDataBottomSheet()
-                            val bundle = Bundle()
-                            bundle.apply {
-                                putString("station_name", b.stationName)
-                                putString("parking_bike", b.parkingBikeTotCnt)
-                                putString("rack_bike", b.rackTotCnt)
-                            }
-                            bottomSheet.arguments = bundle
-                            bottomSheet.show(childFragmentManager, bottomSheet.tag)
-                        }
-                        true
-                    }
+                    val listener = markerListener(b, pos)
 
                     val marker = Marker()
                     marker.apply {
@@ -202,6 +186,28 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
                     bikeList.remove(b.stationId)
                 }
             }
+        }
+    }
+
+    private fun markerListener(b: StationInfo, pos: LatLng): Overlay.OnClickListener {
+        return Overlay.OnClickListener { overlay ->
+            val marker = overlay as Marker
+            if (marker.infoWindow == null) {
+                val cameraUpdate = CameraUpdate.scrollTo(pos)
+                    .animate(CameraAnimation.Fly, 1000)
+                naverMap.moveCamera(cameraUpdate)
+
+                val bottomSheet = ShowBikeDataBottomSheet()
+                val bundle = Bundle()
+                bundle.apply {
+                    putString("station_name", b.stationName)
+                    putString("parking_bike", b.parkingBikeTotCnt)
+                    putString("rack_bike", b.rackTotCnt)
+                }
+                bottomSheet.arguments = bundle
+                bottomSheet.show(childFragmentManager, bottomSheet.tag)
+            }
+            true
         }
     }
 }

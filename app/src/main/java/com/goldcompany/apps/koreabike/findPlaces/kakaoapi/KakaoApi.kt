@@ -1,6 +1,6 @@
-package com.goldcompany.apps.koreabike.findrestaurants.kakaoapi
+package com.goldcompany.apps.koreabike.findPlaces.kakaoapi
 
-import com.goldcompany.apps.koreabike.findrestaurants.kakaodata.KakaoData
+import com.goldcompany.apps.koreabike.findPlaces.kakaodata.KakaoData
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -9,7 +9,7 @@ import retrofit2.http.Query
 class KakaoApi {
     companion object {
         const val BASE_URL = "https://dapi.kakao.com/"
-        const val API_KEY = "09ab5a332869126358f643b6ff26abc8"
+        const val API_KEY = "KakaoAK 09ab5a332869126358f643b6ff26abc8"
     }
 }
 
