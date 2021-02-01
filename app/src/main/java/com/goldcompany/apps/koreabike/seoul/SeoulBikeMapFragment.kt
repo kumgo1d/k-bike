@@ -72,12 +72,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         }
         mapFragment.getMapAsync(this)
 
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         seoulMapViewModel.getBikes1()!!.observe(viewLifecycleOwner, { bike ->
             bike1 = bike
         })
@@ -87,6 +81,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         seoulMapViewModel.getBikes3()!!.observe(viewLifecycleOwner, { bike ->
             bike3 = bike
         })
+
+        return binding.root
     }
 
     override fun onDestroyView() {
@@ -116,6 +112,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
+        naverMap.uiSettings.isZoomControlEnabled = false
 
         naverMap.addOnCameraIdleListener {
             naverMap.locationTrackingMode = LocationTrackingMode.Follow
@@ -157,6 +154,24 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         if(locationPermission == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(context, R.string.enable_location_service, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun addListener() {
+        binding.fab.setOnClickListener {
+
+        }
+    }
+
+    private fun showIn(v: View) {
+        v.visibility = View.VISIBLE
+        v.alpha = 0f
+        v.translationY = -50f
+
+        v.animate()
+            .setDuration(500)
+            .translationY(0f)
+            .alpha(1f)
+            .start()
     }
 
     private fun showBikeList(bike: SeoulBike) {

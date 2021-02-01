@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.seoul
+package com.goldcompany.apps.koreabike.seoul.seoulapi
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData

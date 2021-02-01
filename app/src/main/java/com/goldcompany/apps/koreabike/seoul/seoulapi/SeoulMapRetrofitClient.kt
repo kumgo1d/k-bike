@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.seoul
+package com.goldcompany.apps.koreabike.seoul.seoulapi
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

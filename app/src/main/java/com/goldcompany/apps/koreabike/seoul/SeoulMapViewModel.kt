@@ -1,18 +1,11 @@
 package com.goldcompany.apps.koreabike.seoul
 
-import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.goldcompany.apps.koreabike.bikebottomsheet.ShowBikeDataBottomSheet
+import com.goldcompany.apps.koreabike.seoul.seoulapi.SeoulRepository
 import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
-import com.goldcompany.apps.koreabike.seoulbikedata.StationInfo
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraAnimation
-import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.Overlay
 
 class SeoulMapViewModel : ViewModel() {
     var bikes1: MutableLiveData<SeoulBike>? = null
