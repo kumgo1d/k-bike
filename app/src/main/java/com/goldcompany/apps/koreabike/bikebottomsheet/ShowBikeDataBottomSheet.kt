@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeDataBottomSheetBinding
@@ -14,10 +15,9 @@ import com.goldcompany.apps.koreabike.favoritelist.FavoriteListItemHelper
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
+    private lateinit var binding: FragmentBikeDataBottomSheetBinding
 
-    private var _binding: FragmentBikeDataBottomSheetBinding? = null
-    private val binding get() = _binding!!
-    private val viewModel = ShowBikeDataBottomSheetViewModel()
+    private lateinit var viewModel: ShowBikeDataBottomSheetViewModel
 
     var helper: FavoriteListItemHelper? = null
 
@@ -35,7 +35,9 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        _binding = FragmentBikeDataBottomSheetBinding.inflate(inflater, container, false)
+        binding = FragmentBikeDataBottomSheetBinding.inflate(inflater, container, false)
+
+        viewModel = ViewModelProvider(this).get(ShowBikeDataBottomSheetViewModel::class.java)
 
         val station = requireArguments().getString("station_name")
         val parking = "자전거 : " + requireArguments().getString("parking_bike")
@@ -51,11 +53,6 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
         }
 
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun addFavoriteButton(bikeData: BottomSheetBikeData) {

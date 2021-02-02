@@ -21,6 +21,9 @@
         android:layout_margin="16dp"
         android:elevation="6dp"
         android:src="@drawable/ic_floating_add"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
         app:backgroundTint="@color/colorPrimary" />
 
 </FrameLayout>

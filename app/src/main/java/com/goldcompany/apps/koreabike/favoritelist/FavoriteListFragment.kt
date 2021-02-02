@@ -6,21 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoriteListBinding
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModel
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModelFactory
 import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
+import kotlinx.coroutines.launch
 
 class FavoriteListFragment : Fragment() {
-    lateinit var seoulMapViewModel: SeoulMapViewModel
+    private lateinit var viewModel: SeoulMapViewModel
+    private lateinit var binding: FragmentFavoriteListBinding
 
     var helper: FavoriteListItemHelper? = null
     var list = mutableListOf<FavoriteListItem>()
-
-    private var _binding: FragmentFavoriteListBinding? = null
-    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +35,19 @@ class FavoriteListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFavoriteListBinding.inflate(inflater, container, false)
+        binding = FragmentFavoriteListBinding.inflate(inflater, container, false)
 
-        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory())
+        viewModel = ViewModelProvider(this, SeoulMapViewModelFactory())
             .get(SeoulMapViewModel::class.java)
 
         findChangedBikeData()
 
+        addListener()
+
+        return binding.root
+    }
+
+    private fun addListener() {
         val adapter = FavoriteListAdapter()
         adapter.helper = helper
         adapter.listItem = list
@@ -50,29 +56,24 @@ class FavoriteListFragment : Fragment() {
             setAdapter(adapter)
             layoutManager = LinearLayoutManager(activity)
         }
-
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun findChangedBikeData() {
         list = helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf()
 
-        seoulMapViewModel.getBikes1()!!.observe(viewLifecycleOwner, { bike ->
-            observeBike(bike)
-        })
+        lifecycleScope.launch {
+            viewModel.getBikes1()!!.observe(viewLifecycleOwner, { bike ->
+                observeBike(bike)
+            })
 
-        seoulMapViewModel.getBikes2()!!.observe(viewLifecycleOwner, { bike ->
-            observeBike(bike)
-        })
+            viewModel.getBikes2()!!.observe(viewLifecycleOwner, { bike ->
+                observeBike(bike)
+            })
 
-        seoulMapViewModel.getBikes3()!!.observe(viewLifecycleOwner, { bike ->
-            observeBike(bike)
-        })
+            viewModel.getBikes3()!!.observe(viewLifecycleOwner, { bike ->
+                observeBike(bike)
+            })
+        }
     }
 
     private fun observeBike(bike: SeoulBike) {

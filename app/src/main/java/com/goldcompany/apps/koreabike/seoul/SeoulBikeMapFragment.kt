@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.bikebottomsheet.ShowBikeDataBottomSheet
 import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
@@ -20,11 +21,13 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.coroutines.launch
 
 
 class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource
-    private lateinit var seoulMapViewModel: SeoulMapViewModel
+    private lateinit var viewModel: SeoulMapViewModel
+    private lateinit var binding: FragmentBikeMapBinding
 
     private lateinit var naverMap: NaverMap
 
@@ -37,9 +40,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     private var isFirst = true
 
     private var locationPermission: Int? = null
-
-    private var _binding: FragmentBikeMapBinding? = null
-    private val binding get() = _binding!!
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -61,9 +61,9 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentBikeMapBinding.inflate(inflater, container, false)
+        binding = FragmentBikeMapBinding.inflate(inflater, container, false)
 
-        seoulMapViewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
+        viewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
             SeoulMapViewModel::class.java)
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map)
@@ -72,22 +72,19 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         }
         mapFragment.getMapAsync(this)
 
-        seoulMapViewModel.getBikes1()!!.observe(viewLifecycleOwner, { bike ->
-            bike1 = bike
-        })
-        seoulMapViewModel.getBikes2()!!.observe(viewLifecycleOwner, { bike ->
-            bike2 = bike
-        })
-        seoulMapViewModel.getBikes3()!!.observe(viewLifecycleOwner, { bike ->
-            bike3 = bike
-        })
+        lifecycleScope.launch {
+            viewModel.getBikes1()!!.observe(viewLifecycleOwner, { bike ->
+                bike1 = bike
+            })
+            viewModel.getBikes2()!!.observe(viewLifecycleOwner, { bike ->
+                bike2 = bike
+            })
+            viewModel.getBikes3()!!.observe(viewLifecycleOwner, { bike ->
+                bike3 = bike
+            })
+        }
 
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     override fun onRequestPermissionsResult(
@@ -154,24 +151,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         if(locationPermission == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(context, R.string.enable_location_service, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun addListener() {
-        binding.fab.setOnClickListener {
-
-        }
-    }
-
-    private fun showIn(v: View) {
-        v.visibility = View.VISIBLE
-        v.alpha = 0f
-        v.translationY = -50f
-
-        v.animate()
-            .setDuration(500)
-            .translationY(0f)
-            .alpha(1f)
-            .start()
     }
 
     private fun showBikeList(bike: SeoulBike) {

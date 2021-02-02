@@ -12,17 +12,17 @@ class SeoulMapViewModel : ViewModel() {
     var bikes2: MutableLiveData<SeoulBike>? = null
     var bikes3: MutableLiveData<SeoulBike>? = null
 
-    fun getBikes1(): LiveData<SeoulBike>? {
+    suspend fun getBikes1(): LiveData<SeoulBike>? {
         bikes1 = SeoulRepository.getBikeData1()
         return bikes1
     }
 
-    fun getBikes2(): LiveData<SeoulBike>? {
+    suspend fun getBikes2(): LiveData<SeoulBike>? {
         bikes2 = SeoulRepository.getBikeData2()
         return bikes2
     }
 
-    fun getBikes3(): LiveData<SeoulBike>? {
+    suspend fun getBikes3(): LiveData<SeoulBike>? {
         bikes3 = SeoulRepository.getBikeData3()
         return bikes3
     }
