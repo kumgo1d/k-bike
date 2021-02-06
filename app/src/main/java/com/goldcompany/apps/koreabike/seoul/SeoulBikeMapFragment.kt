@@ -73,13 +73,13 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         lifecycleScope.launch {
-            viewModel.getBikes1()!!.observe(viewLifecycleOwner, { bike ->
+            viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
                 bike1 = bike
             })
-            viewModel.getBikes2()!!.observe(viewLifecycleOwner, { bike ->
+            viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
                 bike2 = bike
             })
-            viewModel.getBikes3()!!.observe(viewLifecycleOwner, { bike ->
+            viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
                 bike3 = bike
             })
         }

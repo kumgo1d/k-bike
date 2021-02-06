@@ -1,6 +1,7 @@
 package com.goldcompany.apps.koreabike.seoul.seoulapi
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
 import retrofit2.Call
@@ -18,6 +19,7 @@ object SeoulRepository {
     private val timestamp = SimpleDateFormat("yyyyMMddHH")
 
     fun getBikeData1(): MutableLiveData<SeoulBike> {
+        Log.i("timestamp", "${timestamp.toLocalizedPattern()}")
         val call = SeoulMapRetrofitClient.seoulOpenService
 
         call.getBike(SeoulOpenApi.API_KEY1 + timestamp).enqueue(object : Callback<SeoulBike> {

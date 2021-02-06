@@ -8,15 +8,14 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.databinding.FragmentBikeDataBottomSheetBinding
+import com.goldcompany.apps.koreabike.databinding.FragmentBikeBottomSheetItemBinding
 import com.goldcompany.apps.koreabike.favoritelist.FavoriteListAdapter
 import com.goldcompany.apps.koreabike.favoritelist.FavoriteListItem
 import com.goldcompany.apps.koreabike.favoritelist.FavoriteListItemHelper
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
-    private lateinit var binding: FragmentBikeDataBottomSheetBinding
-
+    private lateinit var binding: FragmentBikeBottomSheetItemBinding
     private lateinit var viewModel: ShowBikeDataBottomSheetViewModel
 
     var helper: FavoriteListItemHelper? = null
@@ -35,7 +34,7 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding = FragmentBikeDataBottomSheetBinding.inflate(inflater, container, false)
+        binding = FragmentBikeBottomSheetItemBinding.inflate(inflater, container, false)
 
         viewModel = ViewModelProvider(this).get(ShowBikeDataBottomSheetViewModel::class.java)
 

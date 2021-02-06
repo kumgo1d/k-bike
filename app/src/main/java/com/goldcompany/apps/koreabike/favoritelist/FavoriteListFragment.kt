@@ -62,15 +62,15 @@ class FavoriteListFragment : Fragment() {
         list = helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf()
 
         lifecycleScope.launch {
-            viewModel.getBikes1()!!.observe(viewLifecycleOwner, { bike ->
+            viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
                 observeBike(bike)
             })
 
-            viewModel.getBikes2()!!.observe(viewLifecycleOwner, { bike ->
+            viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
                 observeBike(bike)
             })
 
-            viewModel.getBikes3()!!.observe(viewLifecycleOwner, { bike ->
+            viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
                 observeBike(bike)
             })
         }

@@ -8,21 +8,21 @@ import com.goldcompany.apps.koreabike.seoul.seoulapi.SeoulRepository
 import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
 
 class SeoulMapViewModel : ViewModel() {
-    var bikes1: MutableLiveData<SeoulBike>? = null
-    var bikes2: MutableLiveData<SeoulBike>? = null
-    var bikes3: MutableLiveData<SeoulBike>? = null
+    var bikes1 = MutableLiveData<SeoulBike>()
+    var bikes2 = MutableLiveData<SeoulBike>()
+    var bikes3 = MutableLiveData<SeoulBike>()
 
-    suspend fun getBikes1(): LiveData<SeoulBike>? {
+    fun getBikes1(): LiveData<SeoulBike> {
         bikes1 = SeoulRepository.getBikeData1()
         return bikes1
     }
 
-    suspend fun getBikes2(): LiveData<SeoulBike>? {
+    fun getBikes2(): LiveData<SeoulBike> {
         bikes2 = SeoulRepository.getBikeData2()
         return bikes2
     }
 
-    suspend fun getBikes3(): LiveData<SeoulBike>? {
+    fun getBikes3(): LiveData<SeoulBike> {
         bikes3 = SeoulRepository.getBikeData3()
         return bikes3
     }

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.R
-import kotlinx.android.synthetic.main.item_favorite_list.view.*
+import kotlinx.android.synthetic.main.sub_favorite_list_item.view.*
 
 class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
     var helper: FavoriteListItemHelper? = null
@@ -14,7 +14,7 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_favorite_list, parent, false)
+            .inflate(R.layout.sub_favorite_list_item, parent, false)
         return Holder(view)
     }
 
