@@ -26,6 +26,8 @@
         android:theme="@style/AppTheme"
         android:background="@android:color/white"
         app:menu="@menu/bottom_navigation_menu"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:itemIconTint="@color/bottom_nav_color"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
