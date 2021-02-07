@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.goldcompany.apps.koreabike.seoul.seoulapi.SeoulRepository
-import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
+import com.goldcompany.apps.koreabike.seoul.seoul_api.SeoulRepository
+import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
 
 class SeoulMapViewModel : ViewModel() {
     var bikes1 = MutableLiveData<SeoulBike>()

@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.bikebottomsheet
+package com.goldcompany.apps.koreabike.bike_bottom_sheet
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

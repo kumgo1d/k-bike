@@ -1,6 +1,6 @@
-package com.goldcompany.apps.koreabike.findPlaces.kakaoapi
+package com.goldcompany.apps.koreabike.find_places.kakaoapi
 
-import com.goldcompany.apps.koreabike.findPlaces.kakaodata.KakaoData
+import com.goldcompany.apps.koreabike.find_places.kakaodata.KakaoData
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

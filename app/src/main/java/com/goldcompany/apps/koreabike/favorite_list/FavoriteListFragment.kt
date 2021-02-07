@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.favoritelist
+package com.goldcompany.apps.koreabike.favorite_list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,7 +12,7 @@ import androidx.room.Room
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoriteListBinding
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModel
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModelFactory
-import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
+import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
 import kotlinx.coroutines.launch
 
 class FavoriteListFragment : Fragment() {

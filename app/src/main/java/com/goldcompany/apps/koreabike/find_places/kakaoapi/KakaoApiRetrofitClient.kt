@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.findPlaces.kakaoapi
+package com.goldcompany.apps.koreabike.find_places.kakaoapi
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

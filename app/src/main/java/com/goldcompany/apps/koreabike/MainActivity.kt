@@ -2,7 +2,6 @@ package com.goldcompany.apps.koreabike
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.navigation.findNavController
 import com.goldcompany.apps.koreabike.databinding.ActivityMainBinding
 
@@ -22,10 +21,10 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.map_view -> {
-                    findNavController(R.id.fragment_container_view).navigate(R.id.seoulBikeMapFragment)
+                    findNavController(R.id.fragment_container_view).navigate(R.id.seoul_bike_map_fragment)
                 }
                 R.id.favorite_list -> {
-                    findNavController(R.id.fragment_container_view).navigate(R.id.favoriteListFragment)
+                    findNavController(R.id.fragment_container_view).navigate(R.id.favorite_list_fragment)
                 }
             }
             true

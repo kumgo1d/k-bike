@@ -1,6 +1,6 @@
-package com.goldcompany.apps.koreabike.seoul.seoulapi
+package com.goldcompany.apps.koreabike.seoul.seoul_api
 
-import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
+import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Url

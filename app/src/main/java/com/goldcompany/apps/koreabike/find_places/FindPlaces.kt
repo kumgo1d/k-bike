@@ -1,9 +1,9 @@
-package com.goldcompany.apps.koreabike.findPlaces
+package com.goldcompany.apps.koreabike.find_places
 
 import androidx.lifecycle.MutableLiveData
-import com.goldcompany.apps.koreabike.findPlaces.kakaoapi.KakaoApi
-import com.goldcompany.apps.koreabike.findPlaces.kakaoapi.KakaoApiRetrofitClient
-import com.goldcompany.apps.koreabike.findPlaces.kakaodata.KakaoData
+import com.goldcompany.apps.koreabike.find_places.kakaoapi.KakaoApi
+import com.goldcompany.apps.koreabike.find_places.kakaoapi.KakaoApiRetrofitClient
+import com.goldcompany.apps.koreabike.find_places.kakaodata.KakaoData
 import retrofit2.Call
 import retrofit2.Response
 import java.lang.Exception

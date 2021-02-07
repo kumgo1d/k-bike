@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.bikebottomsheet
+package com.goldcompany.apps.koreabike.bike_bottom_sheet
 
 data class BottomSheetBikeData(
     val stationNumber: Long,

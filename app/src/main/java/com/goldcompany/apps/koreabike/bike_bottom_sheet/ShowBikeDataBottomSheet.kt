@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.bikebottomsheet
+package com.goldcompany.apps.koreabike.bike_bottom_sheet
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeBottomSheetItemBinding
-import com.goldcompany.apps.koreabike.favoritelist.FavoriteListAdapter
-import com.goldcompany.apps.koreabike.favoritelist.FavoriteListItem
-import com.goldcompany.apps.koreabike.favoritelist.FavoriteListItemHelper
+import com.goldcompany.apps.koreabike.favorite_list.FavoriteListAdapter
+import com.goldcompany.apps.koreabike.favorite_list.FavoriteListItem
+import com.goldcompany.apps.koreabike.favorite_list.FavoriteListItemHelper
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {

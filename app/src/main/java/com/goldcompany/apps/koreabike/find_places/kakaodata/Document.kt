@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.findPlaces.kakaodata
+package com.goldcompany.apps.koreabike.find_places.kakaodata
 
 data class Document(
     val address_name: String,

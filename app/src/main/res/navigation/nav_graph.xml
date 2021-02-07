@@ -1,39 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/home_fragment">
 
     <fragment
-        android:id="@+id/seoulBikeMapFragment"
+        android:id="@+id/seoul_bike_map_fragment"
         android:name="com.goldcompany.apps.koreabike.seoul.SeoulBikeMapFragment" >
         <action
-            android:id="@+id/action_seoulBikeMapFragment_to_showBikeDataBottomSheet"
-            app:destination="@id/showBikeDataBottomSheet" />
+            android:id="@+id/action_seoul_bike_map_fragment_to_show_bike_data_bottom_sheet"
+            app:destination="@id/show_bike_data_bottom_sheet" />
+        <action
+            android:id="@+id/action_seoul_bike_map_fragment_to_search_address_fragment"
+            app:destination="@id/search_address_fragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/home_fragment"
         android:name="com.goldcompany.apps.koreabike.home.HomeFragment" >
         <action
-            android:id="@+id/action_homeFragment_to_seoulBikeMapFragment"
-            app:destination="@id/seoulBikeMapFragment"
+            android:id="@+id/action_home_fragment_to_seoul_bike_map_fragment"
+            app:destination="@id/seoul_bike_map_fragment"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit" />
         <action
-            android:id="@+id/action_homeFragment_to_favoriteListFragment"
-            app:destination="@id/favoriteListFragment"
+            android:id="@+id/action_home_fragment_to_favorite_list_fragment"
+            app:destination="@id/favorite_list_fragment"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit" />
     </fragment>
 
     <fragment
-        android:id="@+id/favoriteListFragment"
-        android:name="com.goldcompany.apps.koreabike.favoritelist.FavoriteListFragment" />
+        android:id="@+id/favorite_list_fragment"
+        android:name="com.goldcompany.apps.koreabike.favorite_list.FavoriteListFragment" />
 
     <dialog
-        android:id="@+id/showBikeDataBottomSheet"
-        android:name="com.goldcompany.apps.koreabike.bikebottomsheet.ShowBikeDataBottomSheet"
+        android:id="@+id/show_bike_data_bottom_sheet"
+        android:name="com.goldcompany.apps.koreabike.bike_bottom_sheet.ShowBikeDataBottomSheet"
         android:label="ShowBikeDataBottomSheet" />
+    <fragment
+        android:id="@+id/search_address_fragment"
+        android:name="com.goldcompany.apps.koreabike.search_address.SearchAddressFragment"
+        android:label="fragment_search_address"
+        tools:layout="@layout/fragment_search_address" />
 
 </navigation>

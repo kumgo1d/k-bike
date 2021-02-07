@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.favoritelist
+package com.goldcompany.apps.koreabike.favorite_list
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.seoulbikedata
+package com.goldcompany.apps.koreabike.seoul_bike_data
 
 import com.google.gson.annotations.SerializedName
 

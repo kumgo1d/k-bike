@@ -1,21 +1,26 @@
 package com.goldcompany.apps.koreabike.seoul
 
 import android.Manifest
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.bikebottomsheet.ShowBikeDataBottomSheet
-import com.goldcompany.apps.koreabike.seoulbikedata.SeoulBike
+import com.goldcompany.apps.koreabike.bike_bottom_sheet.ShowBikeDataBottomSheet
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
-import com.goldcompany.apps.koreabike.seoulbikedata.StationInfo
+import com.goldcompany.apps.koreabike.find_places.FindPlaces
+import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
+import com.goldcompany.apps.koreabike.seoul_bike_data.StationInfo
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -61,10 +66,11 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentBikeMapBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
 
         viewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
-            SeoulMapViewModel::class.java)
+            SeoulMapViewModel::class.java
+        )
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map)
                 as MapFragment? ?: MapFragment.newInstance().also {
@@ -83,6 +89,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
                 bike3 = bike
             })
         }
+
+        addListener()
 
         return binding.root
     }
@@ -103,6 +111,12 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun addListener() {
+        binding.searchAddressButton.setOnClickListener {
+            findNavController().navigate(SeoulBikeMapFragmentDirections.actionSeoulBikeMapFragmentToSearchAddressFragment())
+        }
+    }
+
     private fun initMapSettings() {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
@@ -111,9 +125,9 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
         naverMap.uiSettings.isZoomControlEnabled = false
 
-        naverMap.addOnCameraIdleListener {
-            naverMap.locationTrackingMode = LocationTrackingMode.Follow
-        }
+//        naverMap.addOnCameraIdleListener {
+//            naverMap.locationTrackingMode = LocationTrackingMode.Follow
+//        }
     }
 
     @Override
@@ -187,9 +201,9 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         return Overlay.OnClickListener { overlay ->
             val marker = overlay as Marker
             if (marker.infoWindow == null) {
-                val cameraUpdate = CameraUpdate.scrollTo(pos)
-                    .animate(CameraAnimation.Fly, 1000)
-                naverMap.moveCamera(cameraUpdate)
+//                val cameraUpdate = CameraUpdate.scrollTo(pos)
+//                    .animate(CameraAnimation.Fly, 1000)
+//                naverMap.moveCamera(cameraUpdate)
 
                 val bottomSheet = ShowBikeDataBottomSheet()
                 val bundle = Bundle()

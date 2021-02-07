@@ -19,7 +19,7 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        findNavController().navigate(R.id.seoulBikeMapFragment)
+        findNavController().navigate(R.id.seoul_bike_map_fragment)
 
         return binding.root
     }
