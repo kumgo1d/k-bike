@@ -19,6 +19,7 @@ import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.bike_bottom_sheet.ShowBikeDataBottomSheet
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.goldcompany.apps.koreabike.find_places.FindPlaces
+import com.goldcompany.apps.koreabike.home.HomeFragmentDirections
 import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
 import com.goldcompany.apps.koreabike.seoul_bike_data.StationInfo
 import com.naver.maps.geometry.LatLng
@@ -78,17 +79,17 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         }
         mapFragment.getMapAsync(this)
 
-        lifecycleScope.launch {
-            viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
-                bike1 = bike
-            })
-            viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
-                bike2 = bike
-            })
-            viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
-                bike3 = bike
-            })
-        }
+//        lifecycleScope.launch {
+//            viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
+//                bike1 = bike
+//            })
+//            viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
+//                bike2 = bike
+//            })
+//            viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
+//                bike3 = bike
+//            })
+//        }
 
         addListener()
 
@@ -113,7 +114,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
     private fun addListener() {
         binding.searchAddressButton.setOnClickListener {
-            findNavController().navigate(SeoulBikeMapFragmentDirections.actionSeoulBikeMapFragmentToSearchAddressFragment())
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchAddressFragment())
         }
     }
 
@@ -138,9 +139,11 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         setCameraPosition()
 
         naverMap.addOnCameraChangeListener { _, _ ->
-            showBikeList(bike1)
-            showBikeList(bike2)
-            showBikeList(bike3)
+            lifecycleScope.launch {
+                showBikeList(bike1)
+                showBikeList(bike2)
+                showBikeList(bike3)
+            }
         }
     }
 

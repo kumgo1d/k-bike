@@ -7,27 +7,8 @@ import com.goldcompany.apps.koreabike.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        navigationFragments()
-    }
-
-    private fun navigationFragments() {
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.map_view -> {
-                    findNavController(R.id.fragment_container_view).navigate(R.id.seoul_bike_map_fragment)
-                }
-                R.id.favorite_list -> {
-                    findNavController(R.id.fragment_container_view).navigate(R.id.favorite_list_fragment)
-                }
-            }
-            true
-        }
+        setContentView(R.layout.activity_main)
     }
 }
