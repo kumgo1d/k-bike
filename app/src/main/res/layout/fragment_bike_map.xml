@@ -27,16 +27,16 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="8dp"
-                android:elevation="5dp"
                 app:flexDirection="row">
 
                 <com.google.android.material.card.MaterialCardView
                     android:theme="@style/AppTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:layout_marginEnd="18dp"
-                    android:elevation="10dp"
-                    app:cardCornerRadius="18dp"
+                    app:cardElevation="5dp"
+                    app:cardCornerRadius="3dp"
                     app:layout_alignSelf="center"
                     app:layout_flexGrow="1">
 

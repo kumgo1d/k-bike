@@ -73,23 +73,23 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
             SeoulMapViewModel::class.java
         )
 
+        lifecycleScope.launch {
+            viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
+                bike1 = bike
+            })
+            viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
+                bike2 = bike
+            })
+            viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
+                bike3 = bike
+            })
+        }
+
         val mapFragment = childFragmentManager.findFragmentById(R.id.map)
                 as MapFragment? ?: MapFragment.newInstance().also {
             childFragmentManager.beginTransaction().add(R.id.map, it).commit()
         }
         mapFragment.getMapAsync(this)
-
-//        lifecycleScope.launch {
-//            viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
-//                bike1 = bike
-//            })
-//            viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
-//                bike2 = bike
-//            })
-//            viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
-//                bike3 = bike
-//            })
-//        }
 
         addListener()
 
