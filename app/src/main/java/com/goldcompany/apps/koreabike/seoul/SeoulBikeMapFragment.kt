@@ -113,6 +113,10 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun addListener() {
+        binding.searchAddress.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchAddressFragment())
+        }
+
         binding.searchAddressButton.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchAddressFragment())
         }
@@ -122,13 +126,9 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
         naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
         naverMap.uiSettings.isZoomControlEnabled = false
-
-//        naverMap.addOnCameraIdleListener {
-//            naverMap.locationTrackingMode = LocationTrackingMode.Follow
-//        }
     }
 
     @Override
@@ -204,9 +204,9 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         return Overlay.OnClickListener { overlay ->
             val marker = overlay as Marker
             if (marker.infoWindow == null) {
-//                val cameraUpdate = CameraUpdate.scrollTo(pos)
-//                    .animate(CameraAnimation.Fly, 1000)
-//                naverMap.moveCamera(cameraUpdate)
+                val cameraUpdate = CameraUpdate.scrollTo(pos)
+                    .animate(CameraAnimation.Fly, 1000)
+                naverMap.moveCamera(cameraUpdate)
 
                 val bottomSheet = ShowBikeDataBottomSheet()
                 val bundle = Bundle()

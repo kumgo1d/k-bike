@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 
@@ -19,6 +20,14 @@ class SearchAddressFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_address, container, false)
 
+        addListener()
+
         return binding.root
+    }
+
+    private fun addListener() {
+        binding.navigationBackButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 }
