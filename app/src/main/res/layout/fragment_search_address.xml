@@ -49,25 +49,48 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="즐겨찾기"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"/>
+            android:paddingVertical="16dp"
+            app:flexDirection="row">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="집"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="회사"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="즐겨찾기"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
+
+        </com.google.android.flexbox.FlexboxLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_address_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     </LinearLayout>
 
