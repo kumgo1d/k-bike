@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
+    android:paddingTop="8dp"
     android:orientation="vertical"
     android:focusable="true"
     android:clickable="true"
@@ -33,7 +33,8 @@
                 android:layout_marginBottom="8dp"
                 android:text="강남역"
                 android:textColor="@color/black"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:maxLines="1"/>
 
             <TextView
                 android:id="@+id/item_address"
@@ -41,7 +42,8 @@
                 android:layout_height="wrap_content"
                 android:text="서울시 강남구 반포동"
                 android:textSize="14sp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp"
+                android:maxLines="1"/>
 
         </LinearLayout>
 
