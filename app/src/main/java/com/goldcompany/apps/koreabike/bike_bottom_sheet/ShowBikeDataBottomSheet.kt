@@ -10,20 +10,20 @@ import androidx.room.Room
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeBottomSheetItemBinding
 import com.goldcompany.apps.koreabike.favorite_list.FavoriteListAdapter
-import com.goldcompany.apps.koreabike.favorite_list.FavoriteListItem
-import com.goldcompany.apps.koreabike.favorite_list.FavoriteListItemHelper
+import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
+import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBikeBottomSheetItemBinding
     private lateinit var viewModel: ShowBikeDataBottomSheetViewModel
 
-    var helper: FavoriteListItemHelper? = null
+    var helper: KBikeDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        helper = Room.databaseBuilder(requireContext(), FavoriteListItemHelper::class.java, "favorite_list")
+        helper = Room.databaseBuilder(requireContext(), KBikeDatabase::class.java, "favorite_list")
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()

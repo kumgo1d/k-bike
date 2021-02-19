@@ -10,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoriteListBinding
+import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
+import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModel
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModelFactory
 import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
@@ -19,13 +21,13 @@ class FavoriteListFragment : Fragment() {
     private lateinit var viewModel: SeoulMapViewModel
     private lateinit var binding: FragmentFavoriteListBinding
 
-    var helper: FavoriteListItemHelper? = null
+    var helper: KBikeDatabase? = null
     var list = mutableListOf<FavoriteListItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        helper = Room.databaseBuilder(requireContext(), FavoriteListItemHelper::class.java, "favorite_list")
+        helper = Room.databaseBuilder(requireContext(), KBikeDatabase::class.java, "favorite_list")
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()

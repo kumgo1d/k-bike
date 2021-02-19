@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.favorite_list
+package com.goldcompany.apps.koreabike.db.item
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -14,5 +14,4 @@ class FavoriteListItem(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo
     var no: Long? = no
-
 }

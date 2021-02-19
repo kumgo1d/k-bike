@@ -1,7 +1,8 @@
-package com.goldcompany.apps.koreabike.favorite_list
+package com.goldcompany.apps.koreabike.db.dao
 
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
+import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 
 @Dao
 interface FavoriteListItemDAO {

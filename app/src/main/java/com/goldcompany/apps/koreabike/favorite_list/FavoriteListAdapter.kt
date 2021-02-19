@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.R
+import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
+import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import kotlinx.android.synthetic.main.sub_favorite_list_item.view.*
 
 class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
-    var helper: FavoriteListItemHelper? = null
+    var helper: KBikeDatabase? = null
     var listItem = mutableListOf<FavoriteListItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {

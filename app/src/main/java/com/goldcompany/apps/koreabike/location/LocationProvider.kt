@@ -29,6 +29,12 @@ object LocationProvider {
     }
 
     private fun requestLocationUpdate() {
-
+        //위치 서비스 활성화시
+        //저장된 주소가 없다면 Fused Location으로 설정
+        //저장된 주소가 있다면 가장 마지막으로 지정한 주소를 현재 주소로 설정
+        //주소를 저장하는 데이터베이스 추가
+        //저장된 주소는 즐겨찾기에서 확인 가능
+        //즐겨찾기 목록 편집 가능
+        
     }
 }
