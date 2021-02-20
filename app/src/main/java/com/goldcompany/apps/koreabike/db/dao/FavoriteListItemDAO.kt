@@ -6,7 +6,7 @@ import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 
 @Dao
 interface FavoriteListItemDAO {
-    @Query("select * from list_item")
+    @Query("select * from list_item ORDER BY date DESC")
     fun getAll(): MutableList<FavoriteListItem>
 
     @Insert(onConflict = REPLACE)
