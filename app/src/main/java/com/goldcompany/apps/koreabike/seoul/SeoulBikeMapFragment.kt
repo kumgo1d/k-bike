@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.bike_bottom_sheet.ShowBikeDataBottomSheet
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
+import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import com.goldcompany.apps.koreabike.find_places.FindPlaces
 import com.goldcompany.apps.koreabike.home.HomeFragmentDirections
 import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
@@ -41,6 +42,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var bike2: SeoulBike
     private lateinit var bike3: SeoulBike
 
+    private var helper: KBikeDatabase? = null
     //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
     private var bikeList = mutableSetOf<String>()
     private var isFirst = true
@@ -123,7 +125,14 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initMapSettings() {
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        //address 데이터베이스에 값이 있다면 제일 최근 값 불러오기
+        //값이 없다면 현재 기기 위치 가져오기
+        //추가적으로 권한 deny 되었을 경우 로직 구성하기
+        if(helper != null && helper?.UserAddressDAO()?.getAddress() != null) {
+            
+        } else {
+            locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        }
 
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
