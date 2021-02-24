@@ -13,19 +13,29 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
+import com.goldcompany.apps.koreabike.db.KBikeDatabase
+import com.goldcompany.apps.koreabike.db.item.UserAddress
 import com.goldcompany.apps.koreabike.find_places.FindPlaces
 import com.goldcompany.apps.koreabike.find_places.kakaodata.KakaoData
 
 class SearchAddressFragment : Fragment() {
     private lateinit var binding: FragmentSearchAddressBinding
 
+    var helper: KBikeDatabase? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_address, container, false)
+
+        helper = Room.databaseBuilder(requireContext(), KBikeDatabase::class.java, "favorite_list")
+            .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
 
         addListener()
 
@@ -41,7 +51,6 @@ class SearchAddressFragment : Fragment() {
 
         binding.navigationBackButton.setOnClickListener {
             hideKeyboard()
-
             findNavController().popBackStack()
         }
 
@@ -58,7 +67,9 @@ class SearchAddressFragment : Fragment() {
                 return@callKakaoKeyword
             }
 
-            binding.searchAddressList.adapter = SearchAddressAdapter(data)
+            binding.searchAddressList.adapter = SearchAddressAdapter(data) {
+                helper?.UserAddressDAO()?.insert(it)
+            }
         }
 
         hideKeyboard()
@@ -72,8 +83,13 @@ class SearchAddressFragment : Fragment() {
     }
 }
 
-class SearchAddressAdapter(private val dataSet: KakaoData): RecyclerView.Adapter<SearchAddressAdapter.ViewHolder>() {
+class SearchAddressAdapter(private val dataSet: KakaoData, private val addUserAddress: (UserAddress) -> Unit): RecyclerView.Adapter<SearchAddressAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        init {
+            itemView.setOnClickListener {
+
+            }
+        }
         val keyword: TextView = view.findViewById(R.id.item_keyword)
         val address: TextView = view.findViewById(R.id.item_address)
     }
@@ -88,6 +104,17 @@ class SearchAddressAdapter(private val dataSet: KakaoData): RecyclerView.Adapter
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.keyword.text = dataSet.documents[position].place_name
         holder.address.text = dataSet.documents[position].address_name
+
+        holder.itemView.setOnClickListener {
+            val result = UserAddress(
+                latitude = dataSet.documents[position].y.toDouble(),
+                longitude = dataSet.documents[position].x.toDouble(),
+                address = dataSet.documents[position].address_name,
+                selected = false
+            )
+
+            addUserAddress(result)
+        }
     }
 
     override fun getItemCount() = dataSet.documents.size

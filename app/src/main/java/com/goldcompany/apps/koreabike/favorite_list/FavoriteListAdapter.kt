@@ -33,7 +33,6 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
         var mItem: FavoriteListItem? = null
 
         init {
-
             itemView.delete_button.setOnClickListener {
                 helper?.FavoriteListItemDAO()?.delete(mItem!!)
                 listItem.remove(mItem)

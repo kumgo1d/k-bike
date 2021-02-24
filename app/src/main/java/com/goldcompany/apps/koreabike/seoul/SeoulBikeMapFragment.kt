@@ -129,7 +129,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         //값이 없다면 현재 기기 위치 가져오기
         //추가적으로 권한 deny 되었을 경우 로직 구성하기
         if(helper != null && helper?.UserAddressDAO()?.getAddress() != null) {
-            
+
         } else {
             locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         }

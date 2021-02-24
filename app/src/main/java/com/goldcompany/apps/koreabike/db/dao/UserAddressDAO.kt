@@ -12,8 +12,8 @@ interface UserAddressDAO {
     fun getAddress(): List<UserAddress?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(item: UserAddress)
+    fun insert(item: UserAddress)
 
     @Delete
-    suspend fun delete(item: UserAddress)
+    fun delete(item: UserAddress)
 }
