@@ -57,6 +57,10 @@ class SearchAddressFragment : Fragment() {
         binding.searchAddressButton.setOnClickListener {
             searchAddress()
         }
+
+        binding.favoriteAddressButton.setOnClickListener {
+            findNavController().navigate(SearchAddressFragmentDirections.actionSearchAddressFragmentToFavoritePlaceFragment())
+        }
     }
 
     private fun searchAddress() {
@@ -85,11 +89,6 @@ class SearchAddressFragment : Fragment() {
 
 class SearchAddressAdapter(private val dataSet: KakaoData, private val addUserAddress: (UserAddress) -> Unit): RecyclerView.Adapter<SearchAddressAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        init {
-            itemView.setOnClickListener {
-
-            }
-        }
         val keyword: TextView = view.findViewById(R.id.item_keyword)
         val address: TextView = view.findViewById(R.id.item_address)
     }
