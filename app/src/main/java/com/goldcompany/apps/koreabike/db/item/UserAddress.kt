@@ -12,5 +12,6 @@ class UserAddress(
     @ColumnInfo var latitude: Double,
     @ColumnInfo var longitude: Double,
     @ColumnInfo var address: String,
+    @ColumnInfo var keyword: String,
     @ColumnInfo(defaultValue = "0") var selected: Boolean
 )

@@ -109,6 +109,7 @@ class SearchAddressAdapter(private val dataSet: KakaoData, private val addUserAd
                 latitude = dataSet.documents[position].y.toDouble(),
                 longitude = dataSet.documents[position].x.toDouble(),
                 address = dataSet.documents[position].address_name,
+                keyword = dataSet.documents[position].place_name,
                 selected = false
             )
 

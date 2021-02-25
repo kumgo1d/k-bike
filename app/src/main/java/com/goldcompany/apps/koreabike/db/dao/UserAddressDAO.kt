@@ -9,7 +9,7 @@ interface UserAddressDAO {
     fun getAll(): MutableList<UserAddress>
 
     @Query("select * from user_address WHERE selected = 1 LIMIT 1")
-    fun getAddress(): List<UserAddress?>
+    suspend fun getAddress(): List<UserAddress>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(item: UserAddress)

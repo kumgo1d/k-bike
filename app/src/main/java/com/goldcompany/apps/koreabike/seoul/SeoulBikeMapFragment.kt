@@ -125,14 +125,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initMapSettings() {
-        //address 데이터베이스에 값이 있다면 제일 최근 값 불러오기
-        //값이 없다면 현재 기기 위치 가져오기
-        //추가적으로 권한 deny 되었을 경우 로직 구성하기
-        if(helper != null && helper?.UserAddressDAO()?.getAddress() != null) {
-
-        } else {
-            locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-        }
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
