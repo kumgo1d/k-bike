@@ -35,6 +35,7 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentBikeBottomSheetItemBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
 
         viewModel = ViewModelProvider(this).get(ShowBikeDataBottomSheetViewModel::class.java)
 

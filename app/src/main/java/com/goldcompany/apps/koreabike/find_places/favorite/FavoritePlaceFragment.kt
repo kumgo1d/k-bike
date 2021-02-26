@@ -8,15 +8,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoritePlaceBinding
 import com.goldcompany.apps.koreabike.db.item.UserAddress
 import com.goldcompany.apps.koreabike.find_places.kakaodata.KakaoData
+import kotlinx.coroutines.launch
 
 class FavoritePlaceFragment : Fragment() {
     private lateinit var binding: FragmentFavoritePlaceBinding
+    private lateinit var viewModel: FavoritePlaceViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,9 +27,11 @@ class FavoritePlaceFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_favorite_place, container, false)
 
-        val viewModel = ViewModelProvider(this).get(FavoritePlaceViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(FavoritePlaceViewModel::class.java)
 
-        binding.favoriteAddressList.adapter = FavoritePlaceAdapter(viewModel.getAddress().value)
+        viewModel.getAddress().observe(viewLifecycleOwner, {
+            binding.favoriteAddressList.adapter = FavoritePlaceAdapter(it)
+        })
 
         addListener()
 
@@ -54,6 +59,9 @@ class FavoritePlaceAdapter(private val dataSet: List<UserAddress>?): RecyclerVie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+        holder.keyword.text = dataSet?.get(position)?.keyword
+        holder.address.text = dataSet?.get(position)?.address
 
         holder.itemView.setOnClickListener {
 
