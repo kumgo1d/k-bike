@@ -6,28 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.room.Room
+import androidx.lifecycle.lifecycleScope
+import com.goldcompany.apps.koreabike.KBikeApplication
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeBottomSheetItemBinding
 import com.goldcompany.apps.koreabike.favorite_list.FavoriteListAdapter
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
-import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 
 class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBikeBottomSheetItemBinding
     private lateinit var viewModel: ShowBikeDataBottomSheetViewModel
-
-    var helper: KBikeDatabase? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        helper = Room.databaseBuilder(requireContext(), KBikeDatabase::class.java, "favorite_list")
-            .allowMainThreadQueries()
-            .fallbackToDestructiveMigration()
-            .build()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,22 +39,18 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
 
         binding.viewModel = viewModel
         binding.addFavoriteButton.setOnClickListener {
-            addFavoriteButton(bikeData)
+            lifecycleScope.launch {
+                addFavoriteButton(bikeData)
+            }
         }
 
         return binding.root
     }
 
-    private fun addFavoriteButton(bikeData: BottomSheetBikeData) {
-        val adapter = FavoriteListAdapter()
+    private suspend fun addFavoriteButton(bikeData: BottomSheetBikeData) {
         val item = FavoriteListItem(bikeData.stationNumber, bikeData.stationName, bikeData.parkingBike, bikeData.rackBike)
 
-        helper?.FavoriteListItemDAO()?.insert(item)
-
-        adapter.listItem.clear()
-        adapter.listItem.addAll(helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf())
-        adapter.notifyDataSetChanged()
-
+        KBikeApplication.instance.database.FavoriteListItemDAO().insert(item)
         dismiss()
 
         Toast.makeText(context, R.string.add_favorite_item, Toast.LENGTH_SHORT).show()

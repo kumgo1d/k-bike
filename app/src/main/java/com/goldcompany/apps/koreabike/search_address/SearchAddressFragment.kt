@@ -27,7 +27,7 @@ import kotlinx.coroutines.coroutineScope
 class SearchAddressFragment : Fragment() {
     private lateinit var binding: FragmentSearchAddressBinding
 
-    private var viewModel: SearchAddressViewModel? = null
+    private lateinit var viewModel: SearchAddressViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -116,7 +116,6 @@ class SearchAddressAdapter(private val dataSet: KakaoData,
             )
 
             viewModel.insertAddress(userAddress)
-            popbackstack
         }
     }
 

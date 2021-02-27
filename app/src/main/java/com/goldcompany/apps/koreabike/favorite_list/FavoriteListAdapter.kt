@@ -5,15 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.goldcompany.apps.koreabike.KBikeApplication
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import kotlinx.android.synthetic.main.sub_favorite_list_item.view.*
 
-class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
-    var helper: KBikeDatabase? = null
-    var listItem = mutableListOf<FavoriteListItem>()
-
+class FavoriteListAdapter(private val list: List<FavoriteListItem>) : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.sub_favorite_list_item, parent, false)
@@ -21,11 +19,11 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
     }
 
     override fun getItemCount(): Int {
-        return listItem.size
+        return list.size
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        val data = listItem[position]
+        val data = list[position]
         holder.setList(data)
     }
 
@@ -34,8 +32,7 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
 
         init {
             itemView.delete_button.setOnClickListener {
-                helper?.FavoriteListItemDAO()?.delete(mItem!!)
-                listItem.remove(mItem)
+                //TODO delete item
                 notifyDataSetChanged()
             }
         }

@@ -7,31 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
+import com.goldcompany.apps.koreabike.KBikeApplication
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoriteListBinding
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
-import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModel
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModelFactory
 import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
 import kotlinx.coroutines.launch
 
 class FavoriteListFragment : Fragment() {
-    private lateinit var viewModel: SeoulMapViewModel
+    private lateinit var seoulMap: SeoulMapViewModel
+    private lateinit var viewModel: FavoriteListViewModel
     private lateinit var binding: FragmentFavoriteListBinding
 
-    var helper: KBikeDatabase? = null
     var list = mutableListOf<FavoriteListItem>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        helper = Room.databaseBuilder(requireContext(), KBikeDatabase::class.java, "favorite_list")
-            .allowMainThreadQueries()
-            .fallbackToDestructiveMigration()
-            .build()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,40 +28,31 @@ class FavoriteListFragment : Fragment() {
     ): View {
         binding = FragmentFavoriteListBinding.inflate(inflater, container, false)
 
-        viewModel = ViewModelProvider(this, SeoulMapViewModelFactory())
+        seoulMap = ViewModelProvider(this, SeoulMapViewModelFactory())
             .get(SeoulMapViewModel::class.java)
 
-        findChangedBikeData()
+        viewModel = ViewModelProvider(this).get(FavoriteListViewModel::class.java)
 
-        addListener()
+        viewModel.getList().observe(viewLifecycleOwner) {
+            binding.favoriteListView.adapter = FavoriteListAdapter(it!!)
+        }
+
+        findChangedBikeData()
 
         return binding.root
     }
 
-    private fun addListener() {
-        val adapter = FavoriteListAdapter()
-        adapter.helper = helper
-        adapter.listItem = list
-
-        binding.favoriteListView.apply {
-            setAdapter(adapter)
-            layoutManager = LinearLayoutManager(activity)
-        }
-    }
-
     private fun findChangedBikeData() {
-        list = helper?.FavoriteListItemDAO()?.getAll() ?: mutableListOf()
-
         lifecycleScope.launch {
-            viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
+            seoulMap.getBikes1().observe(viewLifecycleOwner, { bike ->
                 observeBike(bike)
             })
 
-            viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
+            seoulMap.getBikes2().observe(viewLifecycleOwner, { bike ->
                 observeBike(bike)
             })
 
-            viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
+            seoulMap.getBikes3().observe(viewLifecycleOwner, { bike ->
                 observeBike(bike)
             })
         }

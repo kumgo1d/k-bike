@@ -64,7 +64,10 @@ class FavoritePlaceAdapter(private val dataSet: List<UserAddress>?): RecyclerVie
         holder.address.text = dataSet?.get(position)?.address
 
         holder.itemView.setOnClickListener {
-
+            //selected가 바뀌어야 하고
+            //좌표를 보내줘야 하고
+            //map fragment로 이동해야 함
+            
         }
     }
 
