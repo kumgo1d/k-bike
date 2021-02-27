@@ -11,7 +11,8 @@ import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import kotlinx.android.synthetic.main.sub_favorite_list_item.view.*
 
-class FavoriteListAdapter(private val list: List<FavoriteListItem>) : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
+class FavoriteListAdapter(private val list: MutableList<FavoriteListItem>,
+                          private val deleteItem: (FavoriteListItem) -> Unit) : RecyclerView.Adapter<FavoriteListAdapter.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.sub_favorite_list_item, parent, false)
@@ -32,7 +33,8 @@ class FavoriteListAdapter(private val list: List<FavoriteListItem>) : RecyclerVi
 
         init {
             itemView.delete_button.setOnClickListener {
-                //TODO delete item
+                deleteItem(mItem!!)
+                list.remove(mItem)
                 notifyDataSetChanged()
             }
         }

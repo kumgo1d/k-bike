@@ -34,12 +34,16 @@ class FavoriteListFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(FavoriteListViewModel::class.java)
 
         viewModel.getList().observe(viewLifecycleOwner) {
-            binding.favoriteListView.adapter = FavoriteListAdapter(it!!)
+            binding.favoriteListView.adapter = FavoriteListAdapter(it, ::deleteItem)
         }
 
         findChangedBikeData()
 
         return binding.root
+    }
+
+    private fun deleteItem(item: FavoriteListItem) {
+        viewModel.deleteListItem(item)
     }
 
     private fun findChangedBikeData() {

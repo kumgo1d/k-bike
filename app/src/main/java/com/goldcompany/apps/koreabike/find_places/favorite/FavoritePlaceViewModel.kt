@@ -9,9 +9,9 @@ import com.goldcompany.apps.koreabike.db.item.UserAddress
 import kotlinx.coroutines.launch
 
 class FavoritePlaceViewModel: ViewModel() {
-    private val addressList = MutableLiveData<List<UserAddress>?>()
+    private val addressList = MutableLiveData<MutableList<UserAddress>?>()
 
-    fun getAddress(): LiveData<List<UserAddress>?> {
+    fun getAddress(): LiveData<MutableList<UserAddress>?> {
         loadAddress()
         return addressList
     }

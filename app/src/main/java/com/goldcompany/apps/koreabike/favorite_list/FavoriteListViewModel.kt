@@ -9,9 +9,9 @@ import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 import kotlinx.coroutines.launch
 
 class FavoriteListViewModel: ViewModel() {
-    private var list = MutableLiveData<List<FavoriteListItem>?>()
+    private var list = MutableLiveData<MutableList<FavoriteListItem>>()
 
-    fun getList(): LiveData<List<FavoriteListItem>?> {
+    fun getList(): LiveData<MutableList<FavoriteListItem>> {
         loadFavoriteList()
         return list
     }
