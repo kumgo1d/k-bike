@@ -8,14 +8,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoritePlaceBinding
 import com.goldcompany.apps.koreabike.db.item.UserAddress
-import com.goldcompany.apps.koreabike.find_places.kakaodata.KakaoData
-import kotlinx.coroutines.launch
+
 
 class FavoritePlaceFragment : Fragment() {
     private lateinit var binding: FragmentFavoritePlaceBinding
@@ -47,13 +45,13 @@ class FavoritePlaceFragment : Fragment() {
 
 class FavoritePlaceAdapter(private val dataSet: List<UserAddress>?): RecyclerView.Adapter<FavoritePlaceAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val keyword: TextView = view.findViewById(R.id.item_keyword)
-        val address: TextView = view.findViewById(R.id.item_address)
+        val keyword: TextView = view.findViewById(R.id.place_item_keyword)
+        val address: TextView = view.findViewById(R.id.place_item_address)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.sub_search_address_item, parent, false)
+            .inflate(R.layout.sub_favorite_place_list_item, parent, false)
 
         return ViewHolder(view)
     }

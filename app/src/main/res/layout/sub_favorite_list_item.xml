@@ -12,6 +12,7 @@
         android:id="@+id/flexboxLayout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
         android:layout_marginBottom="18dp"
         app:flexDirection="row">
 
@@ -39,6 +40,7 @@
         android:id="@+id/flexboxLayout_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
         android:layout_marginBottom="20dp"
         app:flexDirection="row"
         app:justifyContent="flex_start">
@@ -65,6 +67,6 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@android:color/black"/>
+        android:background="@android:color/darker_gray"/>
 
 </com.google.android.flexbox.FlexboxLayout>

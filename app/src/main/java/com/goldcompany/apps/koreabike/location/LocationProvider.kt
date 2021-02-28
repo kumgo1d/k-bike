@@ -1,6 +1,5 @@
 package com.goldcompany.apps.koreabike.location
 
-import androidx.lifecycle.MutableLiveData
 import com.goldcompany.apps.koreabike.KBikeApplication
 import com.goldcompany.apps.koreabike.db.item.UserAddress
 
