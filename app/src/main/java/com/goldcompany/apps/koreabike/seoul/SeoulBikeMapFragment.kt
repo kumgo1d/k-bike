@@ -1,13 +1,11 @@
 package com.goldcompany.apps.koreabike.seoul
 
 import android.Manifest
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -18,9 +16,8 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.bike_bottom_sheet.ShowBikeDataBottomSheet
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
-import com.goldcompany.apps.koreabike.db.KBikeDatabase
-import com.goldcompany.apps.koreabike.find_places.FindPlaces
 import com.goldcompany.apps.koreabike.home.HomeFragmentDirections
+import com.goldcompany.apps.koreabike.location.LocationProvider
 import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
 import com.goldcompany.apps.koreabike.seoul_bike_data.StationInfo
 import com.naver.maps.geometry.LatLng
@@ -42,7 +39,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var bike2: SeoulBike
     private lateinit var bike3: SeoulBike
 
-    private var helper: KBikeDatabase? = null
     //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
     private var bikeList = mutableSetOf<String>()
     private var isFirst = true
@@ -125,10 +121,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initMapSettings() {
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
+//        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+//        naverMap.locationSource = locationSource
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
         naverMap.uiSettings.isZoomControlEnabled = false
     }
@@ -150,14 +144,19 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setCameraPosition() {
-        if(locationPermission == PackageManager.PERMISSION_GRANTED) {
-            val cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
-            naverMap.cameraPosition = cameraPosition
-            initMapSettings()
-        } else {
-            val cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
-            naverMap.cameraPosition = cameraPosition
-            naverMap.locationTrackingMode = LocationTrackingMode.None
+        lifecycleScope.launch {
+            val latitude = LocationProvider.getUserAddress().latitude
+            val longitude = LocationProvider.getUserAddress().longitude
+
+            if(locationPermission == PackageManager.PERMISSION_GRANTED) {
+                val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+                naverMap.cameraPosition = cameraPosition
+                initMapSettings()
+            } else {
+                val cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
+                naverMap.cameraPosition = cameraPosition
+                naverMap.locationTrackingMode = LocationTrackingMode.None
+            }
         }
     }
 

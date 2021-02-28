@@ -1,16 +1,18 @@
 package com.goldcompany.apps.koreabike.seoul
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
+import com.goldcompany.apps.koreabike.db.item.UserAddress
+import com.goldcompany.apps.koreabike.location.LocationProvider
 import com.goldcompany.apps.koreabike.seoul.seoul_api.SeoulRepository
 import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
+import kotlinx.coroutines.launch
 
 class SeoulMapViewModel : ViewModel() {
-    var bikes1 = MutableLiveData<SeoulBike>()
-    var bikes2 = MutableLiveData<SeoulBike>()
-    var bikes3 = MutableLiveData<SeoulBike>()
+    private var bikes1 = MutableLiveData<SeoulBike>()
+    private var bikes2 = MutableLiveData<SeoulBike>()
+    private var bikes3 = MutableLiveData<SeoulBike>()
+
+    private var recentAddress: UserAddress? = null
 
     fun getBikes1(): LiveData<SeoulBike> {
         bikes1 = SeoulRepository.getBikeData1()
@@ -25,6 +27,17 @@ class SeoulMapViewModel : ViewModel() {
     fun getBikes3(): LiveData<SeoulBike> {
         bikes3 = SeoulRepository.getBikeData3()
         return bikes3
+    }
+
+    fun getRecentAddress(): UserAddress? {
+        loadUserAddress()
+        return recentAddress
+    }
+
+    private fun loadUserAddress() {
+        viewModelScope.launch {
+            recentAddress = LocationProvider.getUserAddress()
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 package com.goldcompany.apps.koreabike.db.dao
 
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.goldcompany.apps.koreabike.db.item.UserAddress
 
@@ -9,7 +10,7 @@ interface UserAddressDAO {
     suspend fun getAll(): MutableList<UserAddress>
 
     @Query("select * from user_address WHERE selected = 1 LIMIT 1")
-    suspend fun getAddress(): List<UserAddress>?
+    suspend fun getAddress(): UserAddress
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: UserAddress)
