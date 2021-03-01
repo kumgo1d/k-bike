@@ -31,6 +31,16 @@
 
     <fragment
         android:id="@+id/favorite_place_fragment"
-        android:name="com.goldcompany.apps.koreabike.find_places.favorite.FavoritePlaceFragment" />
+        android:name="com.goldcompany.apps.koreabike.find_places.favorite.FavoritePlaceFragment" >
+        <action
+            android:id="@+id/action_favorite_place_fragment_to_home_fragment"
+            app:destination="@id/home_fragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/home_fragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"/>
+    </fragment>
 
 </navigation>

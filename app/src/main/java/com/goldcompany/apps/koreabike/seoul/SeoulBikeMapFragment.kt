@@ -145,11 +145,14 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
     private fun setCameraPosition() {
         lifecycleScope.launch {
-            val latitude = LocationProvider.getUserAddress().latitude
-            val longitude = LocationProvider.getUserAddress().longitude
+            //TODO 데이터베이스가 비어있을 경우 처리
+            val addressList = LocationProvider.getUserAddress()
 
-            if(locationPermission == PackageManager.PERMISSION_GRANTED) {
+            if(locationPermission == PackageManager.PERMISSION_GRANTED && addressList != null) {
+                val latitude = addressList.latitude
+                val longitude = addressList.longitude
                 val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+
                 naverMap.cameraPosition = cameraPosition
                 initMapSettings()
             } else {
@@ -165,10 +168,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
             LOCATION_PERMISSION_REQUEST_CODE
         )
-
-        if(locationPermission == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context, R.string.enable_location_service, Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun showBikeList(bike: SeoulBike) {

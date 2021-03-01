@@ -5,14 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.goldcompany.apps.koreabike.KBikeApplication
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoritePlaceBinding
 import com.goldcompany.apps.koreabike.db.item.UserAddress
+import kotlinx.android.synthetic.main.sub_favorite_place_list_item.view.*
+import kotlinx.coroutines.launch
 
 
 class FavoritePlaceFragment : Fragment() {
@@ -28,12 +34,48 @@ class FavoritePlaceFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(FavoritePlaceViewModel::class.java)
 
         viewModel.getAddress().observe(viewLifecycleOwner, {
-            binding.favoriteAddressList.adapter = FavoritePlaceAdapter(it)
+            binding.favoriteAddressList.adapter = FavoritePlaceAdapter(it, ::deleteItem, ::updateItem)
         })
 
         addListener()
 
         return binding.root
+    }
+
+    private fun deleteItem(address: UserAddress) {
+        lifecycleScope.launch {
+            KBikeApplication.instance.database.UserAddressDAO().delete(address)
+        }
+    }
+
+    private fun updateItem(address: UserAddress) {
+        lifecycleScope.launch {
+            val dao = KBikeApplication.instance.database.UserAddressDAO()
+            val current = dao.getAddress()
+
+            val unSelected = UserAddress(
+                date = current.date,
+                longitude = current.longitude,
+                latitude = current.latitude,
+                address = current.address,
+                keyword = current.keyword,
+                selected = false
+            )
+
+            dao.insert(unSelected)
+
+            val selected = UserAddress(
+                date = address.date,
+                longitude = address.longitude,
+                latitude = address.latitude,
+                address = address.address,
+                keyword = address.keyword,
+                selected = true
+            )
+
+            dao.insert(selected)
+        }
+        findNavController().navigate(FavoritePlaceFragmentDirections.actionFavoritePlaceFragmentToHomeFragment())
     }
 
     private fun addListener() {
@@ -43,10 +85,30 @@ class FavoritePlaceFragment : Fragment() {
     }
 }
 
-class FavoritePlaceAdapter(private val dataSet: List<UserAddress>?): RecyclerView.Adapter<FavoritePlaceAdapter.ViewHolder>() {
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val keyword: TextView = view.findViewById(R.id.place_item_keyword)
-        val address: TextView = view.findViewById(R.id.place_item_address)
+class FavoritePlaceAdapter(private val list: MutableList<UserAddress>?,
+                           private val deleteItem: (UserAddress) -> Unit,
+                           private val updateItem: (UserAddress) -> Unit): RecyclerView.Adapter<FavoritePlaceAdapter.ViewHolder>() {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var item: UserAddress? = null
+
+        init {
+            itemView.place_item_delete.setOnClickListener {
+                deleteItem(item!!)
+                list?.remove(item!!)
+                notifyDataSetChanged()
+            }
+
+            itemView.setOnClickListener {
+                updateItem(item!!)
+            }
+        }
+
+        fun setList(item: UserAddress) {
+            itemView.place_item_keyword.text = item.keyword
+            itemView.place_item_address.text = item.address
+
+            this.item = item
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -57,17 +119,8 @@ class FavoritePlaceAdapter(private val dataSet: List<UserAddress>?): RecyclerVie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        holder.keyword.text = dataSet?.get(position)?.keyword
-        holder.address.text = dataSet?.get(position)?.address
-
-        holder.itemView.setOnClickListener {
-            //selected가 바뀌어야 하고
-            //좌표를 보내줘야 하고
-            //map fragment로 이동해야 함
-            
-        }
+        holder.setList(list?.get(position)!!)
     }
 
-    override fun getItemCount() = dataSet?.size ?: 0
+    override fun getItemCount() = list?.size ?: 0
 }

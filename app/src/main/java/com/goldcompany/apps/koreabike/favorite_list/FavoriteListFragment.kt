@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.goldcompany.apps.koreabike.KBikeApplication
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoriteListBinding
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModel

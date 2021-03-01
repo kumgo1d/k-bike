@@ -71,9 +71,7 @@ class SearchAddressFragment : Fragment() {
                 return@callKakaoKeyword
             }
 
-            binding.searchAddressList.adapter = SearchAddressAdapter(data, viewModel!!) {
-                findNavController().popBackStack()
-            }
+            binding.searchAddressList.adapter = SearchAddressAdapter(data, viewModel)
         }
 
         hideKeyboard()
@@ -88,9 +86,8 @@ class SearchAddressFragment : Fragment() {
 }
 
 class SearchAddressAdapter(private val dataSet: KakaoData,
-                           private val viewModel: SearchAddressViewModel,
-                           private val popbackstack: (Unit) -> Unit): RecyclerView.Adapter<SearchAddressAdapter.ViewHolder>() {
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+                           private val viewModel: SearchAddressViewModel): RecyclerView.Adapter<SearchAddressAdapter.ViewHolder>() {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val keyword: TextView = view.findViewById(R.id.item_keyword)
         val address: TextView = view.findViewById(R.id.item_address)
     }

@@ -16,5 +16,5 @@ interface UserAddressDAO {
     suspend fun insert(item: UserAddress)
 
     @Delete
-    fun delete(item: UserAddress)
+    suspend fun delete(item: UserAddress)
 }

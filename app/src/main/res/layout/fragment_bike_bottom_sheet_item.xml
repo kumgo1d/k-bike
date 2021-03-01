@@ -28,13 +28,16 @@
                 android:text="@{viewModel.bottomSheetBikeData.stationName}"
                 android:textSize="20sp"
                 android:textColor="@android:color/black"
+                android:singleLine="true"
+                android:maxLines="1"
                 app:layout_alignSelf="center"
-                app:layout_flexGrow="10"/>
+                app:layout_flexGrow="1"/>
 
             <ImageButton
                 android:id="@+id/add_favorite_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:onClick="addFavoriteButton"
                 android:background="@drawable/ic_add_button"
                 android:backgroundTint="?attr/colorSecondary"/>
