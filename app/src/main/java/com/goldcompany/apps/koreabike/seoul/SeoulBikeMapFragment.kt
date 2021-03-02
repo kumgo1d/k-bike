@@ -2,6 +2,7 @@ package com.goldcompany.apps.koreabike.seoul
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +25,9 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 import kotlinx.coroutines.launch
 
 
@@ -154,13 +157,22 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
                 val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
 
                 naverMap.cameraPosition = cameraPosition
+                setUserLocationMarker(latitude, longitude)
                 initMapSettings()
             } else {
                 val cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
+                setUserLocationMarker(37.5643, 126.9801)
                 naverMap.cameraPosition = cameraPosition
                 naverMap.locationTrackingMode = LocationTrackingMode.None
             }
         }
+    }
+
+    private fun setUserLocationMarker(latitude: Double, longitude: Double) {
+        val marker = Marker()
+        marker.position = LatLng(latitude, longitude)
+        marker.icon = MarkerIcons.BLUE
+        marker.map = naverMap
     }
 
     private fun checkPermissions() {
