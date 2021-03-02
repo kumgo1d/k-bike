@@ -21,4 +21,27 @@ class FavoritePlaceViewModel: ViewModel() {
             addressList.value = KBikeApplication.instance.database.UserAddressDAO().getAll()
         }
     }
+
+    fun setCurrentAddress(address: UserAddress) {
+        viewModelScope.launch {
+            val dao = KBikeApplication.instance.database.UserAddressDAO()
+            val current = dao.getAddress()
+
+            if(current.date == address.date) {
+                return@launch
+            }
+
+            val unSelected = UserAddress(
+                date = current.date,
+                longitude = current.longitude,
+                latitude = current.latitude,
+                address = current.address,
+                keyword = current.keyword,
+                selected = false
+            )
+
+            dao.insert(unSelected)
+            dao.insert(address)
+        }
+    }
 }

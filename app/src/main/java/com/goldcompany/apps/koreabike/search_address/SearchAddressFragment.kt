@@ -21,12 +21,14 @@ import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import com.goldcompany.apps.koreabike.db.item.UserAddress
 import com.goldcompany.apps.koreabike.find_places.FindPlaces
+import com.goldcompany.apps.koreabike.find_places.kakaodata.Document
 import com.goldcompany.apps.koreabike.find_places.kakaodata.KakaoData
+import com.goldcompany.apps.koreabike.location.LocationProvider
+import kotlinx.android.synthetic.main.sub_search_address_item.view.*
 import kotlinx.coroutines.coroutineScope
 
 class SearchAddressFragment : Fragment() {
     private lateinit var binding: FragmentSearchAddressBinding
-
     private lateinit var viewModel: SearchAddressViewModel
 
     override fun onCreateView(
@@ -71,10 +73,14 @@ class SearchAddressFragment : Fragment() {
                 return@callKakaoKeyword
             }
 
-            binding.searchAddressList.adapter = SearchAddressAdapter(data, viewModel)
+            binding.searchAddressList.adapter = SearchAddressAdapter(data, viewModel, ::navigateHome)
         }
 
         hideKeyboard()
+    }
+
+    private fun navigateHome() {
+        findNavController().popBackStack()
     }
 
     private fun hideKeyboard() {
@@ -86,7 +92,8 @@ class SearchAddressFragment : Fragment() {
 }
 
 class SearchAddressAdapter(private val dataSet: KakaoData,
-                           private val viewModel: SearchAddressViewModel): RecyclerView.Adapter<SearchAddressAdapter.ViewHolder>() {
+                           private val viewModel: SearchAddressViewModel,
+                           private val navigate: () -> Unit): RecyclerView.Adapter<SearchAddressAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val keyword: TextView = view.findViewById(R.id.item_keyword)
         val address: TextView = view.findViewById(R.id.item_address)
@@ -112,7 +119,9 @@ class SearchAddressAdapter(private val dataSet: KakaoData,
                 selected = true
             )
 
-            viewModel.insertAddress(userAddress)
+            viewModel.setCurrentAddress(userAddress)
+
+            navigate()
         }
     }
 

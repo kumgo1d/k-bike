@@ -40,6 +40,9 @@ class HomeFragment : Fragment() {
                         .replace(R.id.fragment_container_view, FavoriteListFragment(), "list")
                         .commit()
                 }
+                R.id.webview -> {
+
+                }
             }
             true
         }

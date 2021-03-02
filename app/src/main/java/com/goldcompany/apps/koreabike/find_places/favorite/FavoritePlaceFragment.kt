@@ -5,9 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -49,32 +46,17 @@ class FavoritePlaceFragment : Fragment() {
     }
 
     private fun updateItem(address: UserAddress) {
-        lifecycleScope.launch {
-            val dao = KBikeApplication.instance.database.UserAddressDAO()
-            val current = dao.getAddress()
+        val selected = UserAddress(
+            date = address.date,
+            longitude = address.longitude,
+            latitude = address.latitude,
+            address = address.address,
+            keyword = address.keyword,
+            selected = true
+        )
 
-            val unSelected = UserAddress(
-                date = current.date,
-                longitude = current.longitude,
-                latitude = current.latitude,
-                address = current.address,
-                keyword = current.keyword,
-                selected = false
-            )
+        viewModel.setCurrentAddress(selected)
 
-            dao.insert(unSelected)
-
-            val selected = UserAddress(
-                date = address.date,
-                longitude = address.longitude,
-                latitude = address.latitude,
-                address = address.address,
-                keyword = address.keyword,
-                selected = true
-            )
-
-            dao.insert(selected)
-        }
         findNavController().navigate(FavoritePlaceFragmentDirections.actionFavoritePlaceFragmentToHomeFragment())
     }
 
@@ -109,6 +91,13 @@ class FavoritePlaceAdapter(private val list: MutableList<UserAddress>?,
 
             this.item = item
         }
+
+        fun setDrawable(item: UserAddress) {
+            if(item.selected) {
+                itemView.place_item_drawable.setImageResource(R.drawable.ic_baseline_check)
+                itemView.place_item_delete.visibility = View.INVISIBLE
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -120,6 +109,7 @@ class FavoritePlaceAdapter(private val list: MutableList<UserAddress>?,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setList(list?.get(position)!!)
+        holder.setDrawable(list[position])
     }
 
     override fun getItemCount() = list?.size ?: 0
