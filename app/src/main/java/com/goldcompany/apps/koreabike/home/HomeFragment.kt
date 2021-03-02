@@ -9,6 +9,7 @@ import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentHomeBinding
 import com.goldcompany.apps.koreabike.favorite_list.FavoriteListFragment
 import com.goldcompany.apps.koreabike.seoul.SeoulBikeMapFragment
+import com.goldcompany.apps.koreabike.webview.WebViewFragment
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -41,7 +42,9 @@ class HomeFragment : Fragment() {
                         .commit()
                 }
                 R.id.webview -> {
-
+                    childFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container_view, WebViewFragment(), "web")
+                        .commit()
                 }
             }
             true
