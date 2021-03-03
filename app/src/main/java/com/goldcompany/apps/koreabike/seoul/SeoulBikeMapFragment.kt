@@ -29,6 +29,8 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.lang.NullPointerException
 
 
 class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
@@ -136,19 +138,23 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         this.naverMap = naverMap
 
         setCameraPosition()
-
+        
+        //TODO 만약 서울 API에서 NULL이 넘어왔을 경우 리스너 호출 X, Dialog 생성
         naverMap.addOnCameraChangeListener { _, _ ->
             lifecycleScope.launch {
-                showBikeList(bike1)
-                showBikeList(bike2)
-                showBikeList(bike3)
+                try {
+                    showBikeList(bike1)
+                    showBikeList(bike2)
+                    showBikeList(bike3)
+                } catch (e: NullPointerException) {
+                    Timber.i("서울 api -> null")
+                }
             }
         }
     }
 
     private fun setCameraPosition() {
         lifecycleScope.launch {
-            //TODO 데이터베이스가 비어있을 경우 처리
             val addressList = LocationProvider.getUserAddress()
 
             if(locationPermission == PackageManager.PERMISSION_GRANTED && addressList != null) {

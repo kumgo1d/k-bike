@@ -13,6 +13,7 @@ import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModel
 import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModelFactory
 import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
 import kotlinx.coroutines.launch
+import java.lang.NullPointerException
 
 class FavoriteListFragment : Fragment() {
     private lateinit var seoulMap: SeoulMapViewModel
@@ -62,15 +63,20 @@ class FavoriteListFragment : Fragment() {
     }
 
     private fun observeBike(bike: SeoulBike) {
-        for(b in bike.stationList.stationInfo) {
-            for(item in list) {
-                if(b.stationName == item.station) {
-                    if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
-                        item.rackBike = b.rackTotCnt
-                        item.parkingBike = b.parkingBikeTotCnt
+        try {
+            for(b in bike.stationList.stationInfo) {
+                for(item in list) {
+                    if(b.stationName == item.station) {
+                        if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
+                            item.rackBike = b.rackTotCnt
+                            item.parkingBike = b.parkingBikeTotCnt
+                        }
                     }
                 }
             }
+        } catch(e: NullPointerException) {
+
+
         }
     }
 }
