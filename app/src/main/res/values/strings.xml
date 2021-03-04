@@ -10,6 +10,7 @@
     <string name="enable_location_service">위치 추적이 활성화됩니다.</string>
 
     <string name="favorite_list">즐겨찾기</string>
+    <string name="search_list">검색목록</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

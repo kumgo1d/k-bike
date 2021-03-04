@@ -11,7 +11,7 @@ import com.goldcompany.apps.koreabike.db.dao.UserAddressDAO
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 import com.goldcompany.apps.koreabike.db.item.UserAddress
 
-@Database(entities = [FavoriteListItem::class, UserAddress::class], version = 4, exportSchema = false)
+@Database(entities = [FavoriteListItem::class, UserAddress::class], version = 5, exportSchema = false)
 abstract class KBikeDatabase : RoomDatabase() {
     abstract fun FavoriteListItemDAO(): FavoriteListItemDAO
 
@@ -29,9 +29,25 @@ abstract class KBikeDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE new_address (`date` INTEGER NOT NULL," +
+                        " `latitude` REAL NOT NULL, `longitude` REAL NOT NULL," +
+                        " `address` TEXT NOT NULL, `keyword` TEXT NOT NULL, `selected` INTEGER NOT NULL DEFAULT 0," +
+                        " PRIMARY KEY(`latitude`, `longitude`))")
+
+                database.execSQL("INSERT INTO new_address(" +
+                        "`date`, `latitude`, `longitude`, `address`, `keyword`, `selected`) " +
+                        "SELECT `date`, `latitude`, `longitude`, `address`, `keyword`, `selected` FROM user_address")
+
+                database.execSQL("DROP TABLE user_address")
+                database.execSQL("ALTER TABLE new_address RENAME TO user_address")
+            }
+        }
+
         private fun buildDatabase(context: Context): KBikeDatabase {
             return Room.databaseBuilder(context, KBikeDatabase::class.java, "kbike_database")
-                .addMigrations(MIGRATION_3_4)
+                .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
                 .build()
         }
     }

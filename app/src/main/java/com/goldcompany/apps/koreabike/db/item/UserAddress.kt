@@ -5,9 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "user_address")
+@Entity(tableName = "user_address", primaryKeys = ["latitude", "longitude"])
 class UserAddress(
-    @PrimaryKey(autoGenerate = false)
     @ColumnInfo var date: Long = Date().time,
     @ColumnInfo var latitude: Double,
     @ColumnInfo var longitude: Double,

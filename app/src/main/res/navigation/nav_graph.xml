@@ -18,8 +18,7 @@
 
     <fragment
         android:id="@+id/search_address_fragment"
-        android:name="com.goldcompany.apps.koreabike.search_address.SearchAddressFragment"
-        android:label="즐겨찾기" >
+        android:name="com.goldcompany.apps.koreabike.search_address.SearchAddressFragment">
         <action
             android:id="@+id/action_search_address_fragment_to_favorite_place_fragment"
             app:destination="@id/favorite_place_fragment"
