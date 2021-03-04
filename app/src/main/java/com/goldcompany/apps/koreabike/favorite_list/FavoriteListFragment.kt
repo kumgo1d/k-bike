@@ -75,8 +75,7 @@ class FavoriteListFragment : Fragment() {
                 }
             }
         } catch(e: NullPointerException) {
-
-
+            //TODO 서울 api null값에 대한 dialog
         }
     }
 }

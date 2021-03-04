@@ -1,5 +1,6 @@
 package com.goldcompany.apps.koreabike.find_places.kakaoapi
 
+import com.goldcompany.apps.koreabike.find_places.CategoryGroup.CategoryGroup
 import com.goldcompany.apps.koreabike.find_places.kakaodata.KakaoData
 import retrofit2.Call
 import retrofit2.http.GET
@@ -19,4 +20,13 @@ interface KakaoApiService {
         @Header("Authorization") key: String,
         @Query("query") address: String
     ): Call<KakaoData>
+
+    @GET("v2/local/search/category.json")
+    fun getCategoryGroup(
+        @Header("Authorization") key: String,
+        @Query("category_group_code") code: String,
+        @Query("x") longitude: String,
+        @Query("y") latitude: String,
+        @Query("radius") radius: Int
+    ): Call<CategoryGroup>
 }

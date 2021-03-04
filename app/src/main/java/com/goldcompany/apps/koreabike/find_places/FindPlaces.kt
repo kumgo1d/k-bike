@@ -31,4 +31,8 @@ class FindPlaces {
                 }
             })
     }
+
+    fun callKakaoCategoryGroupItem() {
+
+    }
 }
