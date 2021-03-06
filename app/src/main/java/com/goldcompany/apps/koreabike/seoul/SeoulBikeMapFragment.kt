@@ -111,6 +111,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
         if(!isFirst && locationPermission == PackageManager.PERMISSION_GRANTED) {
             initMapSettings()
+            setCameraPositionToMyLocation()
         }
 
         if(locationPermission == PackageManager.PERMISSION_DENIED){
@@ -119,6 +120,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun addListener() {
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+
         binding.searchAddress.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchAddressFragment())
         }
@@ -128,30 +131,39 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.myLocation.setOnClickListener {
-            val cameraPosition = CameraPosition(LatLng(latitude!!, longitude!!), 15.0)
-            naverMap.cameraPosition = cameraPosition
+            if(locationPermission == PackageManager.PERMISSION_GRANTED) {
+                setCameraPositionToMyLocation()
+            }
+            else {
+                checkPermissions()
+            }
         }
 
         binding.pharmacy.setOnClickListener {
-            setCategoryMarker("PM9", longitude.toString(), latitude.toString(), Color.LTGRAY)
+            setCategoryMarker("PM9", longitude.toString(), latitude.toString(), R.drawable.ic_location_pharmacy)
         }
 
         binding.convenienceStore.setOnClickListener {
-            setCategoryMarker("CS2", longitude.toString(), latitude.toString(), Color.GRAY)
+            setCategoryMarker("CS2", longitude.toString(), latitude.toString(), R.drawable.ic_location_convenience_store)
         }
 
         binding.cafe.setOnClickListener {
-            setCategoryMarker("CE7", longitude.toString(), latitude.toString(), R.color.orange)
+            setCategoryMarker("CE7", longitude.toString(), latitude.toString(), R.drawable.ic_location_cafe)
         }
 
         binding.accommodation.setOnClickListener {
-            setCategoryMarker("AD5", longitude.toString(), latitude.toString(), Color.MAGENTA)
+            setCategoryMarker("AD5", longitude.toString(), latitude.toString(), R.drawable.ic_location_accommodation)
         }
+    }
+
+    private fun setCameraPositionToMyLocation() {
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
     var isMakred = false
     var markerList = mutableListOf<Marker>()
-    private fun setCategoryMarker(code: String, longitude: String, latitude: String, color: Int) {
+    private fun setCategoryMarker(code: String, longitude: String, latitude: String, resource: Int) {
         viewModel.getItem(code, longitude, latitude).observe(viewLifecycleOwner) {
             for(i in it.documents.indices) {
                 if(isMakred) {
@@ -162,8 +174,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
                     val marker = Marker()
 
                     marker.apply {
-                        iconTintColor = color
-                        width = 80
+                        icon = OverlayImage.fromResource(resource)
+                        width = 100
                         height = 100
                         position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
                         map = naverMap
@@ -176,10 +188,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initMapSettings() {
-//        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-//        naverMap.locationSource = locationSource
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
-//        naverMap.uiSettings.isZoomControlEnabled = false
+        naverMap.uiSettings.isZoomControlEnabled = false
         naverMap.minZoom = 13.0
     }
 
@@ -211,16 +221,15 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
             latitude = addressList?.latitude ?: 37.5643
             longitude = addressList?.longitude ?: 126.9801
 
-            if(locationPermission == PackageManager.PERMISSION_GRANTED && addressList != null) {
+            if(locationPermission == PackageManager.PERMISSION_GRANTED) {
+                setCameraPositionToMyLocation()
+            } else if(locationPermission == PackageManager.PERMISSION_GRANTED && addressList != null) {
                 val cameraPosition = CameraPosition(LatLng(latitude!!, longitude!!), 15.0)
 
                 naverMap.cameraPosition = cameraPosition
                 setUserLocationMarker(latitude!!, longitude!!)
                 initMapSettings()
-            } else if(locationPermission == PackageManager.PERMISSION_GRANTED) {
-
-            }
-            else {
+            } else {
                 val cameraPosition = CameraPosition(LatLng(latitude!!, longitude!!), 15.0)
                 setUserLocationMarker(latitude!!, longitude!!)
                 naverMap.cameraPosition = cameraPosition
