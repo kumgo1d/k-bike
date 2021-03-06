@@ -81,7 +81,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="내 위치"
-                        app:icon="@drawable/ic_gps_fixed" />
+                        android:textColor="@color/black"
+                        android:backgroundTint="@android:color/white"
+                        app:icon="@drawable/ic_gps_fixed"
+                        app:iconTint="@color/black"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/pharmacy"
@@ -89,7 +92,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="약국"
-                        app:icon="@drawable/ic_local_hospital" />
+                        android:textColor="@color/black"
+                        android:backgroundTint="@android:color/white"
+                        app:icon="@drawable/ic_local_hospital"
+                        app:iconTint="@color/black"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/convenience_store"
@@ -97,7 +103,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="편의점"
-                        app:icon="@drawable/ic_local_convenience_store" />
+                        android:textColor="@color/black"
+                        android:backgroundTint="@android:color/white"
+                        app:icon="@drawable/ic_local_convenience_store"
+                        app:iconTint="@color/black"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/cafe"
@@ -105,7 +114,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="카페"
-                        app:icon="@drawable/ic_local_cafe" />
+                        android:textColor="@color/black"
+                        android:backgroundTint="@android:color/white"
+                        app:icon="@drawable/ic_local_cafe"
+                        app:iconTint="@color/black"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/accommodation"
@@ -113,7 +125,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="8dp"
                         android:text="숙박"
-                        app:icon="@drawable/ic_king_bed" />
+                        android:textColor="@color/black"
+                        android:backgroundTint="@android:color/white"
+                        app:icon="@drawable/ic_king_bed"
+                        app:iconTint="@color/black"/>
 
                 </LinearLayout>
 

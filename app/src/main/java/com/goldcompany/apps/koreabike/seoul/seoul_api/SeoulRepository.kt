@@ -1,14 +1,12 @@
 package com.goldcompany.apps.koreabike.seoul.seoul_api
 
-import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.goldcompany.apps.koreabike.find_places.CategoryGroup.CategoryGroup
+import com.goldcompany.apps.koreabike.find_places.FindPlaces
 import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.SimpleDateFormat
-import java.util.*
 
 object SeoulRepository {
 
@@ -59,5 +57,9 @@ object SeoulRepository {
             }
         })
         return bike3
+    }
+
+    fun getCategoryItem(code: String, longitude: String, latitude: String): MutableLiveData<CategoryGroup> {
+        return FindPlaces().callKakaoCategoryGroupItem(code, longitude, latitude)
     }
 }

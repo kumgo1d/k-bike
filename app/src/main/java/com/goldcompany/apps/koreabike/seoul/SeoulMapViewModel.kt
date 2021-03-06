@@ -1,6 +1,7 @@
 package com.goldcompany.apps.koreabike.seoul
 
 import androidx.lifecycle.*
+import com.goldcompany.apps.koreabike.find_places.CategoryGroup.CategoryGroup
 import com.goldcompany.apps.koreabike.seoul.seoul_api.SeoulRepository
 import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
 
@@ -22,6 +23,10 @@ class SeoulMapViewModel : ViewModel() {
     fun getBikes3(): LiveData<SeoulBike> {
         bikes3 = SeoulRepository.getBikeData3()
         return bikes3
+    }
+
+    fun getItem(code: String, longitude: String, latitude: String): LiveData<CategoryGroup> {
+        return SeoulRepository.getCategoryItem(code, longitude, latitude)
     }
 }
 

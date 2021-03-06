@@ -1,6 +1,7 @@
 package com.goldcompany.apps.koreabike.find_places
 
 import androidx.lifecycle.MutableLiveData
+import com.goldcompany.apps.koreabike.find_places.CategoryGroup.CategoryGroup
 import com.goldcompany.apps.koreabike.find_places.kakaoapi.KakaoApi
 import com.goldcompany.apps.koreabike.find_places.kakaoapi.KakaoApiRetrofitClient
 import com.goldcompany.apps.koreabike.find_places.kakaodata.KakaoData
@@ -32,7 +33,23 @@ class FindPlaces {
             })
     }
 
-    fun callKakaoCategoryGroupItem() {
+    fun callKakaoCategoryGroupItem(code: String, longitude: String, latitude: String): MutableLiveData<CategoryGroup> {
+        val kakao = MutableLiveData<CategoryGroup>()
 
+        kakaoApi.getCategoryGroup(KakaoApi.API_KEY, code = code, longitude = longitude, latitude = latitude, radius = 10000)
+            .enqueue(object : retrofit2.Callback<CategoryGroup> {
+                override fun onResponse(
+                    call: Call<CategoryGroup>,
+                    response: Response<CategoryGroup>
+                ) {
+                    kakao.value = response.body()
+                }
+
+                override fun onFailure(call: Call<CategoryGroup>, t: Throwable) {
+
+                }
+            })
+
+        return kakao
     }
 }

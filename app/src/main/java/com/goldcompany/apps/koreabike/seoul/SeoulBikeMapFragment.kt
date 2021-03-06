@@ -50,6 +50,9 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
     private var locationPermission: Int? = null
 
+    var longitude: Double? = null
+    var latitude: Double? = null
+
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
@@ -123,13 +126,61 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         binding.searchAddressButton.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchAddressFragment())
         }
+
+        binding.myLocation.setOnClickListener {
+            val cameraPosition = CameraPosition(LatLng(latitude!!, longitude!!), 15.0)
+            naverMap.cameraPosition = cameraPosition
+        }
+
+        binding.pharmacy.setOnClickListener {
+            setCategoryMarker("PM9", longitude.toString(), latitude.toString(), Color.LTGRAY)
+        }
+
+        binding.convenienceStore.setOnClickListener {
+            setCategoryMarker("CS2", longitude.toString(), latitude.toString(), Color.GRAY)
+        }
+
+        binding.cafe.setOnClickListener {
+            setCategoryMarker("CE7", longitude.toString(), latitude.toString(), R.color.orange)
+        }
+
+        binding.accommodation.setOnClickListener {
+            setCategoryMarker("AD5", longitude.toString(), latitude.toString(), Color.MAGENTA)
+        }
+    }
+
+    var isMakred = false
+    var markerList = mutableListOf<Marker>()
+    private fun setCategoryMarker(code: String, longitude: String, latitude: String, color: Int) {
+        viewModel.getItem(code, longitude, latitude).observe(viewLifecycleOwner) {
+            for(i in it.documents.indices) {
+                if(isMakred) {
+                    markerList[0].map = null
+                    markerList.removeAt(0)
+                }
+                else {
+                    val marker = Marker()
+
+                    marker.apply {
+                        iconTintColor = color
+                        width = 80
+                        height = 100
+                        position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
+                        map = naverMap
+                    }
+                    markerList.add(marker)
+                }
+            }
+            isMakred = !isMakred
+        }
     }
 
     private fun initMapSettings() {
 //        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 //        naverMap.locationSource = locationSource
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
-        naverMap.uiSettings.isZoomControlEnabled = false
+//        naverMap.uiSettings.isZoomControlEnabled = false
+        naverMap.minZoom = 13.0
     }
 
     @Override
@@ -157,19 +208,24 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         lifecycleScope.launch {
             val addressList = LocationProvider.getUserAddress()
 
+            latitude = addressList?.latitude ?: 37.5643
+            longitude = addressList?.longitude ?: 126.9801
+
             if(locationPermission == PackageManager.PERMISSION_GRANTED && addressList != null) {
-                val latitude = addressList.latitude
-                val longitude = addressList.longitude
-                val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+                val cameraPosition = CameraPosition(LatLng(latitude!!, longitude!!), 15.0)
 
                 naverMap.cameraPosition = cameraPosition
-                setUserLocationMarker(latitude, longitude)
+                setUserLocationMarker(latitude!!, longitude!!)
                 initMapSettings()
-            } else {
-                val cameraPosition = CameraPosition(LatLng(37.5643, 126.9801), 15.0)
-                setUserLocationMarker(37.5643, 126.9801)
+            } else if(locationPermission == PackageManager.PERMISSION_GRANTED) {
+
+            }
+            else {
+                val cameraPosition = CameraPosition(LatLng(latitude!!, longitude!!), 15.0)
+                setUserLocationMarker(latitude!!, longitude!!)
                 naverMap.cameraPosition = cameraPosition
                 naverMap.locationTrackingMode = LocationTrackingMode.None
+                initMapSettings()
             }
         }
     }

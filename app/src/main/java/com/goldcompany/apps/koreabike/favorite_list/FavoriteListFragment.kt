@@ -1,6 +1,7 @@
 package com.goldcompany.apps.koreabike.favorite_list
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,14 +10,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoriteListBinding
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
-import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModel
-import com.goldcompany.apps.koreabike.seoul.SeoulMapViewModelFactory
 import com.goldcompany.apps.koreabike.seoul_bike_data.SeoulBike
 import kotlinx.coroutines.launch
 import java.lang.NullPointerException
 
 class FavoriteListFragment : Fragment() {
-    private lateinit var seoulMap: SeoulMapViewModel
     private lateinit var viewModel: FavoriteListViewModel
     private lateinit var binding: FragmentFavoriteListBinding
 
@@ -28,16 +26,13 @@ class FavoriteListFragment : Fragment() {
     ): View {
         binding = FragmentFavoriteListBinding.inflate(inflater, container, false)
 
-        seoulMap = ViewModelProvider(this, SeoulMapViewModelFactory())
-            .get(SeoulMapViewModel::class.java)
-
         viewModel = ViewModelProvider(this).get(FavoriteListViewModel::class.java)
 
         viewModel.getList().observe(viewLifecycleOwner) {
-            binding.favoriteListView.adapter = FavoriteListAdapter(it, ::deleteItem)
+            list = it
+            findChangedBikeData()
+            binding.favoriteListView.adapter = FavoriteListAdapter(list, ::deleteItem)
         }
-
-        findChangedBikeData()
 
         return binding.root
     }
@@ -48,15 +43,15 @@ class FavoriteListFragment : Fragment() {
 
     private fun findChangedBikeData() {
         lifecycleScope.launch {
-            seoulMap.getBikes1().observe(viewLifecycleOwner, { bike ->
+            viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
                 observeBike(bike)
             })
 
-            seoulMap.getBikes2().observe(viewLifecycleOwner, { bike ->
+            viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
                 observeBike(bike)
             })
 
-            seoulMap.getBikes3().observe(viewLifecycleOwner, { bike ->
+            viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
                 observeBike(bike)
             })
         }
@@ -70,6 +65,7 @@ class FavoriteListFragment : Fragment() {
                         if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
                             item.rackBike = b.rackTotCnt
                             item.parkingBike = b.parkingBikeTotCnt
+                            viewModel.insertItem(item)
                         }
                     }
                 }

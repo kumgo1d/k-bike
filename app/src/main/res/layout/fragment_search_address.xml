@@ -58,17 +58,48 @@
             android:paddingVertical="16dp"
             app:flexDirection="row">
 
-            <TextView
-                android:id="@+id/favorite_address_button"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/my_address_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:text="@string/search_list"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
+                android:layout_marginVertical="1dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackground"/>
+                android:background="?attr/selectableItemBackground"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="실제 위치"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/favorite_address_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="1dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="@string/search_list"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black" />
+
+            </com.google.android.material.card.MaterialCardView>
 
         </com.google.android.flexbox.FlexboxLayout>
 

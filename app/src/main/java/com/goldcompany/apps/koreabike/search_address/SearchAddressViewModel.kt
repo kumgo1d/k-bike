@@ -8,7 +8,7 @@ import com.goldcompany.apps.koreabike.location.LocationProvider
 import kotlinx.coroutines.launch
 
 class SearchAddressViewModel: ViewModel() {
-    fun insertAddress(userAddress: UserAddress) {
+    private fun insertAddress(userAddress: UserAddress) {
         viewModelScope.launch {
             KBikeApplication.instance.database.UserAddressDAO().insert(userAddress)
         }
