@@ -2,7 +2,6 @@ package com.goldcompany.apps.koreabike.seoul
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -46,26 +45,15 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
     //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
     private var bikeList = mutableSetOf<String>()
-    private var isFirst = true
 
-    private var locationPermission: Int? = null
-
-    var longitude: Double? = null
-    var latitude: Double? = null
+    //카테고리 검색 중복 제거
+    private var isMarked = false
+    private var markerList = mutableListOf<Marker>()
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-    }
 
-    override fun onStart() {
-        super.onStart()
-
-        locationPermission = ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-
-        checkPermissions()
+        private var isFirst = true
     }
 
     override fun onCreateView(
@@ -73,6 +61,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        checkPermissions()
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
 
         viewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
@@ -109,14 +99,29 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if(!isFirst && locationPermission == PackageManager.PERMISSION_GRANTED) {
+        if(!isFirst && ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED) {
+
             initMapSettings()
             setCameraPositionToMyLocation()
+
         }
 
-        if(locationPermission == PackageManager.PERMISSION_DENIED){
+        if(ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_DENIED){
             Toast.makeText(context, R.string.go_set_location, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun checkPermissions() {
+        requestPermissions(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
     }
 
     private fun addListener() {
@@ -131,7 +136,10 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.myLocation.setOnClickListener {
-            if(locationPermission == PackageManager.PERMISSION_GRANTED) {
+            if(ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED) {
                 setCameraPositionToMyLocation()
             }
             else {
@@ -140,19 +148,19 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.pharmacy.setOnClickListener {
-            setCategoryMarker("PM9", longitude.toString(), latitude.toString(), R.drawable.ic_location_pharmacy)
+            setCategoryMarker("PM9", naverMap.cameraPosition.target.longitude.toString(), naverMap.cameraPosition.target.latitude.toString(), R.drawable.ic_location_pharmacy)
         }
 
         binding.convenienceStore.setOnClickListener {
-            setCategoryMarker("CS2", longitude.toString(), latitude.toString(), R.drawable.ic_location_convenience_store)
+            setCategoryMarker("CS2", naverMap.cameraPosition.target.longitude.toString(), naverMap.cameraPosition.target.latitude.toString(), R.drawable.ic_location_convenience_store)
         }
 
         binding.cafe.setOnClickListener {
-            setCategoryMarker("CE7", longitude.toString(), latitude.toString(), R.drawable.ic_location_cafe)
+            setCategoryMarker("CE7", naverMap.cameraPosition.target.longitude.toString(), naverMap.cameraPosition.target.latitude.toString(), R.drawable.ic_location_cafe)
         }
 
         binding.accommodation.setOnClickListener {
-            setCategoryMarker("AD5", longitude.toString(), latitude.toString(), R.drawable.ic_location_accommodation)
+            setCategoryMarker("AD5", naverMap.cameraPosition.target.longitude.toString(), naverMap.cameraPosition.target.latitude.toString(), R.drawable.ic_location_accommodation)
         }
     }
 
@@ -161,12 +169,10 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
-    var isMakred = false
-    var markerList = mutableListOf<Marker>()
     private fun setCategoryMarker(code: String, longitude: String, latitude: String, resource: Int) {
         viewModel.getItem(code, longitude, latitude).observe(viewLifecycleOwner) {
             for(i in it.documents.indices) {
-                if(isMakred) {
+                if(isMarked) {
                     markerList[0].map = null
                     markerList.removeAt(0)
                 }
@@ -183,7 +189,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
                     markerList.add(marker)
                 }
             }
-            isMakred = !isMakred
+            isMarked = !isMarked
         }
     }
 
@@ -199,8 +205,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         this.naverMap = naverMap
 
         setCameraPosition()
-        
-        //TODO 만약 서울 API에서 NULL이 넘어왔을 경우 리스너 호출 X, Dialog 생성
+
         naverMap.addOnCameraChangeListener { _, _ ->
             lifecycleScope.launch {
                 try {
@@ -216,22 +221,32 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
     private fun setCameraPosition() {
         lifecycleScope.launch {
-            val addressList = LocationProvider.getUserAddress()
+            val address = LocationProvider.getUserAddress()
 
-            latitude = addressList?.latitude ?: 37.5643
-            longitude = addressList?.longitude ?: 126.9801
+            val latitude = address?.latitude ?: 37.5643
+            val longitude = address?.longitude ?: 126.9801
 
-            if(locationPermission == PackageManager.PERMISSION_GRANTED) {
-                setCameraPositionToMyLocation()
-            } else if(locationPermission == PackageManager.PERMISSION_GRANTED && addressList != null) {
-                val cameraPosition = CameraPosition(LatLng(latitude!!, longitude!!), 15.0)
+            if(ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED && address != null) {
+
+                val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
 
                 naverMap.cameraPosition = cameraPosition
-                setUserLocationMarker(latitude!!, longitude!!)
+                setUserLocationMarker(latitude, longitude)
                 initMapSettings()
+
+            } else if(ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED && address == null) {
+
+                setCameraPositionToMyLocation()
+
             } else {
-                val cameraPosition = CameraPosition(LatLng(latitude!!, longitude!!), 15.0)
-                setUserLocationMarker(latitude!!, longitude!!)
+                val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+                setUserLocationMarker(latitude, longitude)
                 naverMap.cameraPosition = cameraPosition
                 naverMap.locationTrackingMode = LocationTrackingMode.None
                 initMapSettings()
@@ -244,13 +259,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         marker.position = LatLng(latitude, longitude)
         marker.icon = MarkerIcons.BLUE
         marker.map = naverMap
-    }
-
-    private fun checkPermissions() {
-        requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            LOCATION_PERMISSION_REQUEST_CODE
-        )
     }
 
     private fun showBikeList(bike: SeoulBike) {
