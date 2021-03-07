@@ -10,6 +10,8 @@ import com.goldcompany.apps.koreabike.databinding.FragmentHomeBinding
 import com.goldcompany.apps.koreabike.favorite_list.FavoriteListFragment
 import com.goldcompany.apps.koreabike.seoul.SeoulBikeMapFragment
 import com.goldcompany.apps.koreabike.webview.WebViewFragment
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -23,9 +25,16 @@ class HomeFragment : Fragment() {
 
         childFragmentManager.beginTransaction().replace(R.id.fragment_container_view, SeoulBikeMapFragment(), "map").commit()
 
+        setBanner()
+
         navigationFragments()
 
         return binding.root
+    }
+
+    private fun setBanner() {
+        val adRequest = AdManagerAdRequest.Builder().build()
+        binding.publisherAdView.loadAd(adRequest)
     }
 
     private fun navigationFragments() {

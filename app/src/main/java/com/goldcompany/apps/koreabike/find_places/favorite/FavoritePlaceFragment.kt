@@ -91,13 +91,6 @@ class FavoritePlaceAdapter(private val list: MutableList<UserAddress>?,
 
             this.item = item
         }
-
-        fun setDrawable(item: UserAddress) {
-            if(item.selected) {
-                itemView.place_item_drawable.setImageResource(R.drawable.ic_baseline_check)
-                itemView.place_item_delete.visibility = View.INVISIBLE
-            }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -109,7 +102,6 @@ class FavoritePlaceAdapter(private val list: MutableList<UserAddress>?,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setList(list?.get(position)!!)
-        holder.setDrawable(list[position])
     }
 
     override fun getItemCount() = list?.size ?: 0

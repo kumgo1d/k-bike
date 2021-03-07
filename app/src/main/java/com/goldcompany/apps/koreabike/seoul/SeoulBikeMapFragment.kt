@@ -45,6 +45,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
     //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
     private var bikeList = mutableSetOf<String>()
+    private var isFirst = true
 
     //카테고리 검색 중복 제거
     private var isMarked = false
@@ -52,8 +53,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-
-        private var isFirst = true
     }
 
     override fun onCreateView(
@@ -98,16 +97,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if(!isFirst && ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED) {
-
-            initMapSettings()
-            setCameraPositionToMyLocation()
-
-        }
 
         if(ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -201,8 +190,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
     @Override
     override fun onMapReady(naverMap: NaverMap) {
-        isFirst = false
         this.naverMap = naverMap
+        isFirst = false
 
         setCameraPosition()
 
@@ -226,6 +215,8 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
             val latitude = address?.latitude ?: 37.5643
             val longitude = address?.longitude ?: 126.9801
 
+            initMapSettings()
+
             if(ContextCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -235,7 +226,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
                 naverMap.cameraPosition = cameraPosition
                 setUserLocationMarker(latitude, longitude)
-                initMapSettings()
 
             } else if(ContextCompat.checkSelfPermission(
                     requireContext(),
@@ -249,7 +239,6 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
                 setUserLocationMarker(latitude, longitude)
                 naverMap.cameraPosition = cameraPosition
                 naverMap.locationTrackingMode = LocationTrackingMode.None
-                initMapSettings()
             }
         }
     }
