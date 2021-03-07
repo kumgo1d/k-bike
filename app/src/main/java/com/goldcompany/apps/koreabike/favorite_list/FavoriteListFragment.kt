@@ -1,5 +1,6 @@
 package com.goldcompany.apps.koreabike.favorite_list
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -71,7 +72,18 @@ class FavoriteListFragment : Fragment() {
                 }
             }
         } catch(e: NullPointerException) {
-            //TODO 서울 api null값에 대한 dialog
+            val alertDialog: AlertDialog? = activity?.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setMessage("인터넷 연결 혹은 서울 공공 데이터에 문제가 생겼습니다.\n" +
+                            "Web으로 이용해주세요. 감사합니다.")
+                    setPositiveButton("확인") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                }
+                builder.create()
+            }
+            alertDialog!!.show()
         }
     }
 }

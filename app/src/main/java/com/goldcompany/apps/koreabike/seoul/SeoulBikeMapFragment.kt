@@ -1,6 +1,7 @@
 package com.goldcompany.apps.koreabike.seoul
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
