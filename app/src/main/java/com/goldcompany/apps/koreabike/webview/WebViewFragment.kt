@@ -33,7 +33,6 @@ class WebViewFragment : Fragment() {
         web.apply {
             loadUrl("https://www.bikeseoul.com/")
             webViewClient = WebViewClient()
-            webChromeClient = WebChromeClient()
 
             webChromeClient = object : WebChromeClient() {
                 override fun onGeolocationPermissionsShowPrompt(

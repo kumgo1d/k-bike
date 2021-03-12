@@ -65,25 +65,21 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
 
-        viewModel = ViewModelProvider(this, SeoulMapViewModelFactory()).get(
-            SeoulMapViewModel::class.java
-        )
+        viewModel = ViewModelProvider(this).get(SeoulMapViewModel::class.java)
 
-        lifecycleScope.launch {
-            viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
-                bike1 = bike
-            })
-            viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
-                bike2 = bike
-            })
-            viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
-                bike3 = bike
-            })
-        }
+        viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
+            bike1 = bike
+        })
+        viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
+            bike2 = bike
+        })
+        viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
+            bike3 = bike
+        })
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map)
                 as MapFragment? ?: MapFragment.newInstance().also {
-            childFragmentManager.beginTransaction().add(R.id.map, it).commit()
+            childFragmentManager.beginTransaction().replace(R.id.map, it).commit()
         }
         mapFragment.getMapAsync(this)
 
@@ -138,19 +134,19 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.pharmacy.setOnClickListener {
-            setCategoryMarker("PM9", naverMap.cameraPosition.target.longitude.toString(), naverMap.cameraPosition.target.latitude.toString(), R.drawable.ic_location_pharmacy)
+            setCategoryMarker("PM9", R.drawable.ic_location_pharmacy)
         }
 
         binding.convenienceStore.setOnClickListener {
-            setCategoryMarker("CS2", naverMap.cameraPosition.target.longitude.toString(), naverMap.cameraPosition.target.latitude.toString(), R.drawable.ic_location_convenience_store)
+            setCategoryMarker("CS2", R.drawable.ic_location_convenience_store)
         }
 
         binding.cafe.setOnClickListener {
-            setCategoryMarker("CE7", naverMap.cameraPosition.target.longitude.toString(), naverMap.cameraPosition.target.latitude.toString(), R.drawable.ic_location_cafe)
+            setCategoryMarker("CE7", R.drawable.ic_location_cafe)
         }
 
         binding.accommodation.setOnClickListener {
-            setCategoryMarker("AD5", naverMap.cameraPosition.target.longitude.toString(), naverMap.cameraPosition.target.latitude.toString(), R.drawable.ic_location_accommodation)
+            setCategoryMarker("AD5", R.drawable.ic_location_accommodation)
         }
     }
 
@@ -159,7 +155,10 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
-    private fun setCategoryMarker(code: String, longitude: String, latitude: String, resource: Int) {
+    private fun setCategoryMarker(code: String, resource: Int) {
+        val latitude = naverMap.cameraPosition.target.latitude.toString()
+        val longitude = naverMap.cameraPosition.target.longitude.toString()
+
         viewModel.getItem(code, longitude, latitude).observe(viewLifecycleOwner) {
             for(i in it.documents.indices) {
                 if(isMarked) {

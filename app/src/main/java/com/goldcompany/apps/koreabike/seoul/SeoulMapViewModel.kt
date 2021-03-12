@@ -29,9 +29,3 @@ class SeoulMapViewModel : ViewModel() {
         return SeoulRepository.getCategoryItem(code, longitude, latitude)
     }
 }
-
-class SeoulMapViewModelFactory(): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return SeoulMapViewModel() as T
-    }
-}
