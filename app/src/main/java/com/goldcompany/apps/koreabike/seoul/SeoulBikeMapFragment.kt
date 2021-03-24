@@ -201,7 +201,7 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
                     showBikeList(bike1)
                     showBikeList(bike2)
                     showBikeList(bike3)
-                } catch (e: NullPointerException) {
+                } catch (e: UninitializedPropertyAccessException) {
                     Timber.i("서울 api -> null")
                 }
             }
