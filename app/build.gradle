@@ -20,8 +20,8 @@ android {
         applicationId "com.goldcompany.apps.koreabike"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -55,6 +55,10 @@ dependencies {
 
     implementation 'com.naver.maps:map-sdk:3.10.0'
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    //rxjava
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.7'
 
     // Kotlin fragment navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
