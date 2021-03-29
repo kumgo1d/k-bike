@@ -288,14 +288,10 @@ class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {
                     .animate(CameraAnimation.Fly, 1000)
                 naverMap.moveCamera(cameraUpdate)
 
-                val bottomSheet = ShowBikeDataBottomSheet()
-                val bundle = Bundle()
-                bundle.apply {
-                    putString("station_name", b.stationName)
-                    putString("parking_bike", b.parkingBikeTotCnt)
-                    putString("rack_bike", b.rackTotCnt)
-                }
-                bottomSheet.arguments = bundle
+                val bottomSheet = ShowBikeDataBottomSheet(
+                    station = b.stationName,
+                    parkingToCnt = b.parkingBikeTotCnt,
+                    rackToCnt = b.rackTotCnt)
                 bottomSheet.show(childFragmentManager, bottomSheet.tag)
             }
             true

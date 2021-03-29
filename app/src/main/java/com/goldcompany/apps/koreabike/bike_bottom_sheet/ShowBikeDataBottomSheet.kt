@@ -13,9 +13,14 @@ import com.goldcompany.apps.koreabike.databinding.FragmentBikeBottomSheetItemBin
 import com.goldcompany.apps.koreabike.favorite_list.FavoriteListAdapter
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.android.synthetic.main.fragment_bike_bottom_sheet_item.*
 import kotlinx.coroutines.launch
 
-class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
+class ShowBikeDataBottomSheet(
+    private val station: String,
+    private val parkingToCnt: String,
+    private val rackToCnt: String
+) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBikeBottomSheetItemBinding
     private lateinit var viewModel: ShowBikeDataBottomSheetViewModel
 
@@ -29,10 +34,9 @@ class ShowBikeDataBottomSheet : BottomSheetDialogFragment() {
 
         viewModel = ViewModelProvider(this).get(ShowBikeDataBottomSheetViewModel::class.java)
 
-        val station = requireArguments().getString("station_name")
-        val parking = "자전거 : " + requireArguments().getString("parking_bike")
-        val rack = "주차가능 : " + requireArguments().getString("rack_bike")
-        val no = station!!.split(".")[0].toLong()
+        val parking = "자전거 : $parkingToCnt"
+        val rack = "주차가능 : $rackToCnt"
+        val no = station.split(".")[0].toLong()
         val bikeData = BottomSheetBikeData(no, station, parking, rack)
 
         viewModel.bottomSheetBikeData(bikeData)

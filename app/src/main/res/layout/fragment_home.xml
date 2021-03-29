@@ -26,7 +26,7 @@
         ads:adSize="BANNER"
         ads:adUnitId="/6499/example/banner"/>
 <!--        ads:adUnitId="ca-app-pub-7722749686662698/1468791859"-->
-
+<!--    ads:adUnitId="/6499/example/banner"-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
