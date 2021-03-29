@@ -1,7 +1,6 @@
 package com.goldcompany.apps.koreabike.seoul
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -30,7 +29,6 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.NullPointerException
 
 
 class SeoulBikeMapFragment : Fragment(), OnMapReadyCallback {

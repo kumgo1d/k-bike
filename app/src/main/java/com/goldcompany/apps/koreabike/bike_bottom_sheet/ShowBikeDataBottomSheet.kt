@@ -10,10 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import com.goldcompany.apps.koreabike.KBikeApplication
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeBottomSheetItemBinding
-import com.goldcompany.apps.koreabike.favorite_list.FavoriteListAdapter
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_bike_bottom_sheet_item.*
 import kotlinx.coroutines.launch
 
 class ShowBikeDataBottomSheet(
