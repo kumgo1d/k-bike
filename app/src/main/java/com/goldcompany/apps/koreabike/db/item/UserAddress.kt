@@ -2,7 +2,6 @@ package com.goldcompany.apps.koreabike.db.item
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity(tableName = "user_address", primaryKeys = ["latitude", "longitude"])
