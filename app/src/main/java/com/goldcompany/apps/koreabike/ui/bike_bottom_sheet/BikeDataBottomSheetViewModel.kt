@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.goldcompany.apps.koreabike.data.BottomSheetBikeData
 
-class ShowBikeDataBottomSheetViewModel: ViewModel() {
+class BikeDataBottomSheetViewModel: ViewModel() {
     private var bikeData = MutableLiveData<BottomSheetBikeData>()
 
     fun bottomSheetBikeData(data: BottomSheetBikeData) {

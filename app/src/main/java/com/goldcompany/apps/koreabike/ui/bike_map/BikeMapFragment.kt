@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.ui.bike_bottom_sheet.ShowBikeDataBottomSheet
+import com.goldcompany.apps.koreabike.ui.bike_bottom_sheet.BikeDataBottomSheet
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.goldcompany.apps.koreabike.location.LocationProvider
 import com.goldcompany.apps.koreabike.data.seoul.SeoulBike
@@ -286,7 +286,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                     .animate(CameraAnimation.Fly, 1000)
                 naverMap.moveCamera(cameraUpdate)
 
-                val bottomSheet = ShowBikeDataBottomSheet(
+                val bottomSheet = BikeDataBottomSheet(
                     station = b.stationName,
                     parkingToCnt = b.parkingBikeTotCnt,
                     rackToCnt = b.rackTotCnt)

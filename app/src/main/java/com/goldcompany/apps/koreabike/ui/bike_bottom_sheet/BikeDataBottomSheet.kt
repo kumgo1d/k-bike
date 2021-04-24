@@ -15,13 +15,13 @@ import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 
-class ShowBikeDataBottomSheet(
+class BikeDataBottomSheet(
     private val station: String,
     private val parkingToCnt: String,
     private val rackToCnt: String
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBikeBottomSheetItemBinding
-    private lateinit var viewModel: ShowBikeDataBottomSheetViewModel
+    private lateinit var viewModel: BikeDataBottomSheetViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +31,7 @@ class ShowBikeDataBottomSheet(
         binding = FragmentBikeBottomSheetItemBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
-        viewModel = ViewModelProvider(this).get(ShowBikeDataBottomSheetViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(BikeDataBottomSheetViewModel::class.java)
 
         val parking = "자전거 : $parkingToCnt"
         val rack = "주차가능 : $rackToCnt"

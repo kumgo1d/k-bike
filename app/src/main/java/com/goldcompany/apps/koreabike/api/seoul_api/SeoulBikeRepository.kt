@@ -8,14 +8,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-object SeoulRepository {
+object SeoulBikeRepository {
 
     val bike1 = MutableLiveData<SeoulBike>()
     val bike2 = MutableLiveData<SeoulBike>()
     val bike3 = MutableLiveData<SeoulBike>()
 
     fun getBikeData1(): MutableLiveData<SeoulBike> {
-        val call = SeoulMapRetrofitClient.seoulOpenService
+        val call = SeoulBikeRetrofitClient.seoulOpenService
 
         call.getBike(SeoulOpenApi.API_KEY1).enqueue(object : Callback<SeoulBike> {
             override fun onResponse(call: Call<SeoulBike>, response: Response<SeoulBike>) {
@@ -30,7 +30,7 @@ object SeoulRepository {
     }
 
     fun getBikeData2(): MutableLiveData<SeoulBike> {
-        val call = SeoulMapRetrofitClient.seoulOpenService
+        val call = SeoulBikeRetrofitClient.seoulOpenService
 
         call.getBike(SeoulOpenApi.API_KEY2).enqueue(object : Callback<SeoulBike> {
             override fun onResponse(call: Call<SeoulBike>, response: Response<SeoulBike>) {
@@ -45,7 +45,7 @@ object SeoulRepository {
     }
 
     fun getBikeData3(): MutableLiveData<SeoulBike> {
-        val call = SeoulMapRetrofitClient.seoulOpenService
+        val call = SeoulBikeRetrofitClient.seoulOpenService
 
         call.getBike(SeoulOpenApi.API_KEY3).enqueue(object : Callback<SeoulBike> {
             override fun onResponse(call: Call<SeoulBike>, response: Response<SeoulBike>) {

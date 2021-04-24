@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.goldcompany.apps.koreabike.KBikeApplication
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
-import com.goldcompany.apps.koreabike.api.seoul_api.SeoulRepository
+import com.goldcompany.apps.koreabike.api.seoul_api.SeoulBikeRepository
 import com.goldcompany.apps.koreabike.data.seoul.SeoulBike
 import kotlinx.coroutines.launch
 
@@ -18,17 +18,17 @@ class FavoriteBikeListViewModel: ViewModel() {
     private var bikes3 = MutableLiveData<SeoulBike>()
 
     fun getBikes1(): LiveData<SeoulBike> {
-        bikes1 = SeoulRepository.getBikeData1()
+        bikes1 = SeoulBikeRepository.getBikeData1()
         return bikes1
     }
 
     fun getBikes2(): LiveData<SeoulBike> {
-        bikes2 = SeoulRepository.getBikeData2()
+        bikes2 = SeoulBikeRepository.getBikeData2()
         return bikes2
     }
 
     fun getBikes3(): LiveData<SeoulBike> {
-        bikes3 = SeoulRepository.getBikeData3()
+        bikes3 = SeoulBikeRepository.getBikeData3()
         return bikes3
     }
 
