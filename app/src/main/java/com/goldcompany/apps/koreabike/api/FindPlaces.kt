@@ -5,6 +5,8 @@ import com.goldcompany.apps.koreabike.data.CategoryGroup.CategoryGroup
 import com.goldcompany.apps.koreabike.api.kakao_api.KakaoApi
 import com.goldcompany.apps.koreabike.api.kakao_api.KakaoApiRetrofitClient
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Response
 import java.lang.Exception
@@ -17,19 +19,13 @@ class FindPlaces {
         address: String,
         onComplete: (KakaoData?, Exception?) -> Unit
     ) {
-        val kakao = MutableLiveData<KakaoData>()
-
         kakaoApi.getKakaoAddress(KakaoApi.API_KEY, address = address)
-            .enqueue(object : retrofit2.Callback<KakaoData> {
-                override fun onResponse(call: Call<KakaoData>, response: Response<KakaoData>) {
-                    kakao.value = response.body()
-
-                    onComplete(kakao.value, null)
-                }
-
-                override fun onFailure(call: Call<KakaoData>, t: Throwable) {
-                    onComplete(null, NullPointerException(t.message))
-                }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                onComplete(it, null)
+            }, {
+                onComplete(null, NullPointerException(it.message))
             })
     }
 

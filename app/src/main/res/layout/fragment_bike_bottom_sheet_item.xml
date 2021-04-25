@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.goldcompany.apps.koreabike.bike_bottom_sheet.ShowBikeDataBottomSheetViewModel" />
+            type="com.goldcompany.apps.koreabike.ui.bike_bottom_sheet.BikeDataBottomSheetViewModel" />
     </data>
 
     <com.google.android.flexbox.FlexboxLayout
