@@ -65,6 +65,14 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
 
         viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
 
+        startMap()
+
+        addListener()
+
+        return binding.root
+    }
+
+    private fun startMap() {
         viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
             bike1 = bike
         })
@@ -80,10 +88,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             childFragmentManager.beginTransaction().replace(R.id.map, it).commit()
         }
         mapFragment.getMapAsync(this)
-
-        addListener()
-
-        return binding.root
     }
 
     override fun onRequestPermissionsResult(

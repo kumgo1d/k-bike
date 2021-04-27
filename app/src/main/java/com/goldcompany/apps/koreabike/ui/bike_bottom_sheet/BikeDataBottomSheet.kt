@@ -33,6 +33,12 @@ class BikeDataBottomSheet(
 
         viewModel = ViewModelProvider(this).get(BikeDataBottomSheetViewModel::class.java)
 
+        setData()
+
+        return binding.root
+    }
+
+    private fun setData() {
         val parking = "자전거 : $parkingToCnt"
         val rack = "주차가능 : $rackToCnt"
         val no = station.split(".")[0].toLong()
@@ -46,8 +52,6 @@ class BikeDataBottomSheet(
                 addFavoriteButton(bikeData)
             }
         }
-
-        return binding.root
     }
 
     private suspend fun addFavoriteButton(bikeData: BottomSheetBikeData) {
