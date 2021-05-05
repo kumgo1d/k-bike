@@ -66,7 +66,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
 
         startMap()
-
         addListener()
 
         return binding.root
