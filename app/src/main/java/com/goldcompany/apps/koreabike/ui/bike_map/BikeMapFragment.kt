@@ -111,6 +111,11 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         )
     }
 
+    private fun setCameraPositionToMyLocation() {
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+    }
+
     private fun addListener() {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
@@ -151,11 +156,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun setCameraPositionToMyLocation() {
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
-    }
-
     private fun setCategoryMarker(code: String, resource: Int) {
         val latitude = naverMap.cameraPosition.target.latitude.toString()
         val longitude = naverMap.cameraPosition.target.longitude.toString()
@@ -189,24 +189,11 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.minZoom = 13.0
     }
 
-    @Override
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-        isFirst = false
-
-        setCameraPosition()
-
-        naverMap.addOnCameraChangeListener { _, _ ->
-            lifecycleScope.launch {
-                try {
-                    showBikeList(bike1)
-                    showBikeList(bike2)
-                    showBikeList(bike3)
-                } catch (e: UninitializedPropertyAccessException) {
-                    Timber.i("서울 api -> null")
-                }
-            }
-        }
+    private fun setUserLocationMarker(latitude: Double, longitude: Double) {
+        val marker = Marker()
+        marker.position = LatLng(latitude, longitude)
+        marker.icon = MarkerIcons.BLUE
+        marker.map = naverMap
     }
 
     private fun setCameraPosition() {
@@ -244,11 +231,22 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun setUserLocationMarker(latitude: Double, longitude: Double) {
-        val marker = Marker()
-        marker.position = LatLng(latitude, longitude)
-        marker.icon = MarkerIcons.BLUE
-        marker.map = naverMap
+    private fun markerListener(b: StationInfo, pos: LatLng): Overlay.OnClickListener {
+        return Overlay.OnClickListener { overlay ->
+            val marker = overlay as Marker
+            if (marker.infoWindow == null) {
+                val cameraUpdate = CameraUpdate.scrollTo(pos)
+                    .animate(CameraAnimation.Fly, 1000)
+                naverMap.moveCamera(cameraUpdate)
+
+                val bottomSheet = BikeDataBottomSheet(
+                    station = b.stationName,
+                    parkingToCnt = b.parkingBikeTotCnt,
+                    rackToCnt = b.rackTotCnt)
+                bottomSheet.show(childFragmentManager, bottomSheet.tag)
+            }
+            true
+        }
     }
 
     private fun showBikeList(bike: SeoulBike) {
@@ -281,21 +279,24 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun markerListener(b: StationInfo, pos: LatLng): Overlay.OnClickListener {
-        return Overlay.OnClickListener { overlay ->
-            val marker = overlay as Marker
-            if (marker.infoWindow == null) {
-                val cameraUpdate = CameraUpdate.scrollTo(pos)
-                    .animate(CameraAnimation.Fly, 1000)
-                naverMap.moveCamera(cameraUpdate)
+    @Override
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+        viewModel.naverMap = naverMap
+        isFirst = false
 
-                val bottomSheet = BikeDataBottomSheet(
-                    station = b.stationName,
-                    parkingToCnt = b.parkingBikeTotCnt,
-                    rackToCnt = b.rackTotCnt)
-                bottomSheet.show(childFragmentManager, bottomSheet.tag)
+        setCameraPosition()
+
+        naverMap.addOnCameraChangeListener { _, _ ->
+            lifecycleScope.launch {
+                try {
+                    showBikeList(bike1)
+                    showBikeList(bike2)
+                    showBikeList(bike3)
+                } catch (e: UninitializedPropertyAccessException) {
+                    Timber.i("서울 api -> null")
+                }
             }
-            true
         }
     }
 }
