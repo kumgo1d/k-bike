@@ -25,7 +25,6 @@ class FavoriteBikeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFavoriteListBinding.inflate(inflater, container, false)
-
         viewModel = ViewModelProvider(this).get(FavoriteBikeListViewModel::class.java)
 
         setList()

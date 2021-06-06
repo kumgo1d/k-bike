@@ -27,7 +27,7 @@ class FavoriteBikeListAdapter(private val list: MutableList<FavoriteListItem>,
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var currentItem: FavoriteListItem? = null
+        private var currentItem: FavoriteListItem? = null
 
         init {
             itemView.delete_button.setOnClickListener {
