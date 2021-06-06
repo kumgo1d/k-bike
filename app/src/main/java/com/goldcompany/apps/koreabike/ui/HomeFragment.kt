@@ -21,11 +21,9 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-
         childFragmentManager.beginTransaction().replace(R.id.fragment_container_view, BikeMapFragment(), "map").commit()
 
         setBanner()
-
         navigationFragments()
 
         return binding.root

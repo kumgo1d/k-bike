@@ -61,7 +61,7 @@ class FavoritePlaceFragment : Fragment() {
     }
 
     private fun addListener() {
-        binding.navigationBackButton.setOnClickListener {
+        binding.appBar.navigationBackButton.setOnClickListener {
             findNavController().popBackStack()
         }
     }
