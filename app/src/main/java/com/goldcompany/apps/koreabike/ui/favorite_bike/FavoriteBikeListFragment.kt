@@ -62,17 +62,34 @@ class FavoriteBikeListFragment : Fragment() {
 
     private fun observeBike(bike: SeoulBike) {
         try {
-            for(b in bike.stationList.stationInfo) {
-                for(item in list) {
-                    if(b.stationName == item.station) {
-                        if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
-                            item.rackBike = b.rackTotCnt
-                            item.parkingBike = b.parkingBikeTotCnt
-                            viewModel.insertItem(item)
-                        }
-                    }
+//            for(b in bike.stationList.stationInfo) {
+//                for(item in list) {
+//                    if(b.stationName == item.station) {
+//                        if(b.parkingBikeTotCnt != item.parkingBike || b.rackTotCnt != item.rackBike) {
+//                            item.rackBike = b.rackTotCnt
+//                            item.parkingBike = b.parkingBikeTotCnt
+//                            viewModel.insertItem(item)
+//                        }
+//                    }
+//                }
+//            }
+
+            bike.stationList.stationInfo.forEach { bike ->
+                list.filter { item ->
+                    bike.stationName == item.station
+                    bike.parkingBikeTotCnt != item.parkingBike
+                    bike.rackTotCnt != item.rackBike
+                }.map { item ->
+                    item.rackBike = bike.rackTotCnt
+                    item.parkingBike = bike.parkingBikeTotCnt
+                    viewModel.insertItem(item)
                 }
             }
+
+
+
+
+
         } catch(e: NullPointerException) {
             val alertDialog: AlertDialog? = activity?.let {
                 val builder = AlertDialog.Builder(it)

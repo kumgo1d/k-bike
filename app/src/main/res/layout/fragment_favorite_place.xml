@@ -8,6 +8,7 @@
         android:orientation="vertical">
 
         <include
+            android:id="@+id/app_bar"
             layout="@layout/item_app_bar"
             app:title="@{@string/search_list}"/>
 

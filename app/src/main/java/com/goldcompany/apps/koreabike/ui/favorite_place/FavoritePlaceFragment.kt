@@ -27,7 +27,6 @@ class FavoritePlaceFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_favorite_place, container, false)
-
         viewModel = ViewModelProvider(this).get(FavoritePlaceViewModel::class.java)
 
         viewModel.getAddress().observe(viewLifecycleOwner, {
@@ -61,7 +60,7 @@ class FavoritePlaceFragment : Fragment() {
     }
 
     private fun addListener() {
-        binding.navigationBackButton.setOnClickListener {
+        binding.appBar.navigationBackButton.setOnClickListener {
             findNavController().popBackStack()
         }
     }
