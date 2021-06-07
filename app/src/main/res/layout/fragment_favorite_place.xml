@@ -10,6 +10,7 @@
         <include
             android:id="@+id/app_bar"
             layout="@layout/item_app_bar"
+            android:id="@+id/app_bar"
             app:title="@{@string/search_list}"/>
 
         <androidx.recyclerview.widget.RecyclerView
