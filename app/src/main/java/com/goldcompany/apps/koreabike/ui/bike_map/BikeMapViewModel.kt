@@ -34,29 +34,4 @@ class BikeMapViewModel : ViewModel() {
     fun getItem(code: String, longitude: String, latitude: String): LiveData<CategoryGroup> {
         return SeoulBikeRepository.getCategoryItem(code, longitude, latitude)
     }
-
-//    private fun setCategoryMarker(code: String, resource: Int) {
-//        val latitude = naverMap.cameraPosition.target.latitude.toString()
-//        val longitude = naverMap.cameraPosition.target.longitude.toString()
-//
-//        for(i in it.documents.indices) {
-//            if(isMarked) {
-//                markerList[0].map = null
-//                markerList.removeAt(0)
-//            }
-//            else {
-//                val marker = Marker()
-//
-//                marker.apply {
-//                    icon = OverlayImage.fromResource(resource)
-//                    width = 100
-//                    height = 100
-//                    position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
-//                    map = naverMap
-//                }
-//                markerList.add(marker)
-//            }
-//        }
-//        isMarked = !isMarked
-//    }
 }
