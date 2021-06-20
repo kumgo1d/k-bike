@@ -19,7 +19,6 @@ import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.goldcompany.apps.koreabike.location.LocationProvider
 import com.goldcompany.apps.koreabike.data.seoul.SeoulBike
 import com.goldcompany.apps.koreabike.data.seoul.StationInfo
-import com.goldcompany.apps.koreabike.ui.HomeFragmentDirections
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -35,7 +34,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var viewModel: BikeMapViewModel
     private lateinit var binding: FragmentBikeMapBinding
-
     private lateinit var naverMap: NaverMap
 
     private lateinit var bike1: SeoulBike
@@ -64,7 +62,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         checkPermissions()
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
-
         viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
 
         startMap()
@@ -106,6 +103,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if(!checkPermission(LOCATION_PERMISSION)){
+            shouldShowRequestPermissionRationale(LOCATION_PERMISSION)
             Toast.makeText(context, R.string.go_set_location, Toast.LENGTH_SHORT).show()
         }
     }
@@ -126,11 +124,11 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
         binding.searchAddress.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchAddressFragment())
+            findNavController().navigate(BikeMapFragmentDirections.actionMapViewToSearchAddressFragment())
         }
 
         binding.searchAddressButton.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchAddressFragment())
+            findNavController().navigate(BikeMapFragmentDirections.actionMapViewToSearchAddressFragment())
         }
 
         binding.myLocation.setOnClickListener {
