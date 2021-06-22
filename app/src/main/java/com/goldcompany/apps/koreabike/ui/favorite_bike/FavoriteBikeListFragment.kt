@@ -1,5 +1,6 @@
 package com.goldcompany.apps.koreabike.ui.favorite_bike
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,9 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
+import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoriteListBinding
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 import com.goldcompany.apps.koreabike.data.seoul.SeoulBike
+import kotlinx.android.synthetic.main.sub_favorite_list_item.view.*
 import kotlinx.coroutines.launch
 import java.lang.NullPointerException
 
@@ -18,7 +22,7 @@ class FavoriteBikeListFragment : Fragment() {
     private lateinit var viewModel: FavoriteBikeListViewModel
     private lateinit var binding: FragmentFavoriteListBinding
 
-    var list = mutableListOf<FavoriteListItem>()
+    private var list = mutableListOf<FavoriteListItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -88,6 +92,45 @@ class FavoriteBikeListFragment : Fragment() {
                 builder.create()
             }
             alertDialog!!.show()
+        }
+    }
+}
+
+class FavoriteBikeListAdapter(private val list: MutableList<FavoriteListItem>,
+                              private val deleteItem: (FavoriteListItem) -> Unit) : RecyclerView.Adapter<FavoriteBikeListAdapter.Holder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.sub_favorite_list_item, parent, false)
+        return Holder(view)
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    override fun onBindViewHolder(holder: Holder, position: Int) {
+        val data = list[position]
+        holder.setList(data)
+    }
+
+    inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private var currentItem: FavoriteListItem? = null
+
+        init {
+            itemView.delete_button.setOnClickListener {
+                deleteItem(currentItem!!)
+                list.remove(currentItem)
+                notifyDataSetChanged()
+            }
+        }
+
+        @SuppressLint("SetTextI18n")
+        fun setList(item: FavoriteListItem) {
+            itemView.item_station.text = item.station
+            itemView.item_parking.text = "자전거 : ${item.parkingBike}"
+            itemView.item_rack.text = "주차가능 : ${item.rackBike}"
+
+            this.currentItem = item
         }
     }
 }

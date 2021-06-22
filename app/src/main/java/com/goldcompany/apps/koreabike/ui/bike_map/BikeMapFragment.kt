@@ -278,7 +278,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     @Override
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
-        viewModel.naverMap = naverMap
         isFirst = false
 
         setCameraPosition()

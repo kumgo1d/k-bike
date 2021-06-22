@@ -1,7 +1,7 @@
 package com.goldcompany.apps.koreabike.api.seoul_api
 
 import androidx.lifecycle.MutableLiveData
-import com.goldcompany.apps.koreabike.data.CategoryGroup.CategoryGroup
+import com.goldcompany.apps.koreabike.data.category_group.CategoryGroup
 import com.goldcompany.apps.koreabike.api.FindPlaces
 import com.goldcompany.apps.koreabike.data.seoul.SeoulBike
 import retrofit2.Call

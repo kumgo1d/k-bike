@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.data.CategoryGroup
+package com.goldcompany.apps.koreabike.data.category_group
 
 data class Meta(
     val is_end: Boolean,

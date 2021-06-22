@@ -1,7 +1,7 @@
 package com.goldcompany.apps.koreabike.api
 
 import androidx.lifecycle.MutableLiveData
-import com.goldcompany.apps.koreabike.data.CategoryGroup.CategoryGroup
+import com.goldcompany.apps.koreabike.data.category_group.CategoryGroup
 import com.goldcompany.apps.koreabike.api.kakao_api.KakaoApi
 import com.goldcompany.apps.koreabike.api.kakao_api.KakaoApiRetrofitClient
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
