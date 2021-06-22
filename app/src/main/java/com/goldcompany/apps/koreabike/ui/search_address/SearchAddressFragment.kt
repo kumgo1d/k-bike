@@ -59,6 +59,7 @@ class SearchAddressFragment : Fragment() {
         }
     }
 
+
     private fun searchAddress() {
         val address = binding.searchAddressInput.text.toString()
         FindPlaces().callKakaoKeyword(address = address) { data, _ ->
