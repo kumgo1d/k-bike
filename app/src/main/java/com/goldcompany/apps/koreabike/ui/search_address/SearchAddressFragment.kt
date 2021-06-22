@@ -2,24 +2,24 @@ package com.goldcompany.apps.koreabike.ui.search_address
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.goldcompany.apps.koreabike.KBikeApplication
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.db.item.UserAddress
 import com.goldcompany.apps.koreabike.api.FindPlaces
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import kotlinx.android.synthetic.main.sub_search_address_item.view.*
-import timber.log.Timber
 
 class SearchAddressFragment : Fragment() {
     private lateinit var binding: FragmentSearchAddressBinding
@@ -30,6 +30,7 @@ class SearchAddressFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_address, container, false)
+
         viewModel = ViewModelProvider(this).get(SearchAddressViewModel::class.java)
 
         addListener()
@@ -40,12 +41,12 @@ class SearchAddressFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun addListener() {
         binding.parentLayout.setOnTouchListener { _, _ ->
-            KBikeApplication.hideKeyboard(binding.searchAddressInput, requireActivity(), requireView())
+            hideKeyboard()
             return@setOnTouchListener true
         }
 
         binding.navigationBackButton.setOnClickListener {
-            KBikeApplication.hideKeyboard(binding.searchAddressInput, requireActivity(), requireView())
+            hideKeyboard()
             findNavController().popBackStack()
         }
 
@@ -63,18 +64,24 @@ class SearchAddressFragment : Fragment() {
         FindPlaces().callKakaoKeyword(address = address) { data, _ ->
             if(data == null) {
                 //TODO 에러 처리
-                Timber.e("search address error")
                 return@callKakaoKeyword
             }
 
             binding.searchAddressList.adapter = SearchAddressAdapter(data, viewModel, ::navigateHome)
         }
 
-        KBikeApplication.hideKeyboard(binding.searchAddressInput, requireActivity(), requireView())
+        hideKeyboard()
     }
 
     private fun navigateHome() {
         findNavController().popBackStack()
+    }
+
+    private fun hideKeyboard() {
+        binding.searchAddressInput.clearFocus()
+
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 }
 
