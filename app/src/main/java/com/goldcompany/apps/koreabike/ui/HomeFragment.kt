@@ -25,7 +25,6 @@ class HomeFragment : Fragment() {
         childFragmentManager.beginTransaction().replace(R.id.fragment_container_view, BikeMapFragment(), "map").commit()
 
         setBanner()
-
         navigationFragments()
 
         return binding.root
