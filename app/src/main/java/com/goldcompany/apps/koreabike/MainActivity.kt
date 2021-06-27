@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +24,13 @@ class MainActivity : AppCompatActivity() {
 
         MobileAds.initialize(this)
 
+        setBanner()
         setBottomNav()
+    }
+
+    private fun setBanner() {
+        val adRequest = AdManagerAdRequest.Builder().build()
+        findViewById<AdView>(R.id.publisherAdView).loadAd(adRequest)
     }
 
     private fun setBottomNav() {
