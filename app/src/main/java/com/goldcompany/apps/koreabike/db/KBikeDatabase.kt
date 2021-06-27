@@ -11,7 +11,7 @@ import com.goldcompany.apps.koreabike.db.dao.UserAddressDAO
 import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
 import com.goldcompany.apps.koreabike.db.item.UserAddress
 
-@Database(entities = [FavoriteListItem::class, UserAddress::class], version = 5, exportSchema = false)
+@Database(entities = [FavoriteListItem::class, UserAddress::class], version = 6, exportSchema = false)
 abstract class KBikeDatabase : RoomDatabase() {
     abstract fun FavoriteListItemDAO(): FavoriteListItemDAO
 
@@ -45,9 +45,15 @@ abstract class KBikeDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE list_item")
+            }
+        }
+
         private fun buildDatabase(context: Context): KBikeDatabase {
             return Room.databaseBuilder(context, KBikeDatabase::class.java, "kbike_database")
-                .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
+                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                 .build()
         }
     }

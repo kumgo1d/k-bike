@@ -19,7 +19,6 @@ import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.goldcompany.apps.koreabike.location.LocationProvider
 import com.goldcompany.apps.koreabike.data.seoul.SeoulBike
 import com.goldcompany.apps.koreabike.data.seoul.StationInfo
-import com.goldcompany.apps.koreabike.ui.HomeFragmentDirections
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -120,11 +119,11 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
         binding.searchAddress.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchAddressFragment())
+            findNavController().navigate(BikeMapFragmentDirections.actionMapViewToSearchAddressFragment())
         }
 
         binding.searchAddressButton.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchAddressFragment())
+            findNavController().navigate(BikeMapFragmentDirections.actionMapViewToSearchAddressFragment())
         }
 
         binding.myLocation.setOnClickListener {

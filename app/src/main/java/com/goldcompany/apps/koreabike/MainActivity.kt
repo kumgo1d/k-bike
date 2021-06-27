@@ -2,7 +2,10 @@ package com.goldcompany.apps.koreabike
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.MobileAds
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,5 +21,15 @@ class MainActivity : AppCompatActivity() {
         instance = this
 
         MobileAds.initialize(this)
+
+        setBottomNav()
+    }
+
+    private fun setBottomNav() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
+        val navController = navHostFragment.navController
+        findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
+            .setupWithNavController(navController)
     }
 }

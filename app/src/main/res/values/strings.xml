@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">K-Bike</string>
 
+    <string name="map">Map</string>
+    <string name="web">Web</string>
+
     <string name="add_favorite_item">즐겨찾기에 추가되었습니다.</string>
     <string name="search_address_hint">장소, 지하철을 검색하세요.</string>
     <string name="search_address_button">검색</string>
