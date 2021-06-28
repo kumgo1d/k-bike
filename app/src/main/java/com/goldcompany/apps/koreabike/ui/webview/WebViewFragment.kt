@@ -10,6 +10,7 @@ import android.webkit.GeolocationPermissions
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.navArgs
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentWebViewBinding
 
@@ -30,8 +31,9 @@ class WebViewFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun webViewSetting() {
         val web = binding.webView
+
         web.apply {
-            loadUrl("https://www.bikeseoul.com/")
+            loadUrl(WebViewFragmentArgs.fromBundle(requireArguments()).url)
             webViewClient = WebViewClient()
 
             webChromeClient = object : WebChromeClient() {

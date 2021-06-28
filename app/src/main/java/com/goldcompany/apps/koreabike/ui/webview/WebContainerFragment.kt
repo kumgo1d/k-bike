@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import com.goldcompany.apps.koreabike.Constants
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentWebContainerBinding
 
@@ -18,11 +19,23 @@ class WebContainerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_web_container, container, false)
-
-        binding.seoulButton.setOnClickListener {
-            findNavController().navigate(WebContainerFragmentDirections.actionWebViewContainerToWebView())
-        }
+        binding.fragment = this
 
         return binding.root
+    }
+
+    fun onButtonClick(view: View) {
+        when(view) {
+            binding.seoulButton.button -> {
+                browseWebPage(Constants.SEOUL)
+            }
+            binding.daejeonButton.button -> {
+                browseWebPage(Constants.DAEJEON)
+            }
+        }
+    }
+
+    private fun browseWebPage(url: String) {
+        findNavController().navigate(WebContainerFragmentDirections.actionWebViewContainerToWebView(url))
     }
 }

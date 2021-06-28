@@ -46,7 +46,11 @@
     <fragment
         android:id="@+id/web_view"
         android:name="com.goldcompany.apps.koreabike.ui.webview.WebViewFragment"
-        android:label="WebViewFragment" />
+        android:label="WebViewFragment" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/web_view_container"
         android:name="com.goldcompany.apps.koreabike.ui.webview.WebContainerFragment"
