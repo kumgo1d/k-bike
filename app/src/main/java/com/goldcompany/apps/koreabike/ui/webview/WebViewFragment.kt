@@ -32,6 +32,10 @@ class WebViewFragment : Fragment() {
     private fun webViewSetting() {
         val web = binding.webView
 
+        web.settings.apply {
+            javaScriptEnabled = true
+        }
+
         web.apply {
             loadUrl(WebViewFragmentArgs.fromBundle(requireArguments()).url)
             webViewClient = WebViewClient()
@@ -45,13 +49,11 @@ class WebViewFragment : Fragment() {
                     callback?.invoke(origin, true, false)
                 }
             }
+
             canGoBack()
+            canGoForward()
             zoomIn()
             zoomOut()
-        }
-
-        web.settings.apply {
-            javaScriptEnabled = true
         }
     }
 }

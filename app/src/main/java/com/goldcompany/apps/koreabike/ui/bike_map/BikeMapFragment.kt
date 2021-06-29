@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -14,36 +15,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.ui.bike_bottom_sheet.BikeDataBottomSheet
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.goldcompany.apps.koreabike.location.LocationProvider
-import com.goldcompany.apps.koreabike.data.seoul.SeoulBike
-import com.goldcompany.apps.koreabike.data.seoul.StationInfo
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.Overlay
-import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class BikeMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var viewModel: BikeMapViewModel
     private lateinit var binding: FragmentBikeMapBinding
-
     private lateinit var naverMap: NaverMap
-
-    private lateinit var bike1: SeoulBike
-    private lateinit var bike2: SeoulBike
-    private lateinit var bike3: SeoulBike
-
-    //화면 안에 마커가 한번만 표시되기 위한, 화면 밖에 마커를 제거하기 위한 set
-    private var bikeList = mutableSetOf<String>()
-    private var isFirst = true
 
     //카테고리 검색 중복 제거
     private var isMarked = false
@@ -58,7 +44,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        checkPermissions()
+        onCheckPermissions()
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
 
@@ -70,17 +56,19 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         return binding.root
     }
 
-    private fun startMap() {
-        viewModel.getBikes1().observe(viewLifecycleOwner, { bike ->
-            bike1 = bike
-        })
-        viewModel.getBikes2().observe(viewLifecycleOwner, { bike ->
-            bike2 = bike
-        })
-        viewModel.getBikes3().observe(viewLifecycleOwner, { bike ->
-            bike3 = bike
-        })
+    private fun onCheckPermissions() {
+        if(ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Toast.makeText(context, R.string.go_set_location, Toast.LENGTH_SHORT).show()
 
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+            } else {
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+            }
+        }
+    }
+
+    private fun startMap() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map)
                 as MapFragment? ?: MapFragment.newInstance().also {
             childFragmentManager.beginTransaction().replace(R.id.map, it).commit()
@@ -93,13 +81,21 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        if(ActivityCompat.checkSelfPermission(
+//                requireContext(),
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) == PackageManager.PERMISSION_DENIED){
+//            Toast.makeText(context, R.string.go_set_location, Toast.LENGTH_SHORT).show()
+//        }
 
-        if(ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_DENIED){
-            Toast.makeText(context, R.string.go_set_location, Toast.LENGTH_SHORT).show()
+        when(requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(context, "권한이 설정되었습니다.", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "권한이 설정되지 않았습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -127,35 +123,36 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.myLocation.setOnClickListener {
-            if(ContextCompat.checkSelfPermission(
-                    requireContext(),
+            if(ActivityCompat.checkSelfPermission(
+                    requireActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED) {
                 setCameraPositionToMyLocation()
             }
             else {
-                checkPermissions()
+//                checkPermissions()
+                onCheckPermissions()
             }
         }
 
         binding.pharmacy.setOnClickListener {
-            setCategoryMarker("PM9", R.drawable.ic_location_pharmacy)
+            setCategoryMarker("PM9")
         }
 
         binding.convenienceStore.setOnClickListener {
-            setCategoryMarker("CS2", R.drawable.ic_location_convenience_store)
+            setCategoryMarker("CS2")
         }
 
         binding.cafe.setOnClickListener {
-            setCategoryMarker("CE7", R.drawable.ic_location_cafe)
+            setCategoryMarker("CE7")
         }
 
         binding.accommodation.setOnClickListener {
-            setCategoryMarker("AD5", R.drawable.ic_location_accommodation)
+            setCategoryMarker("AD5")
         }
     }
 
-    private fun setCategoryMarker(code: String, resource: Int) {
+    private fun setCategoryMarker(code: String) {
         val latitude = naverMap.cameraPosition.target.latitude.toString()
         val longitude = naverMap.cameraPosition.target.longitude.toString()
 
@@ -169,8 +166,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                     val marker = Marker()
 
                     marker.apply {
-                        icon = OverlayImage.fromResource(resource)
-                        width = 100
+                        width = 80
                         height = 100
                         position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
                         map = naverMap
@@ -230,71 +226,10 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun markerListener(b: StationInfo, pos: LatLng): Overlay.OnClickListener {
-        return Overlay.OnClickListener { overlay ->
-            val marker = overlay as Marker
-            if (marker.infoWindow == null) {
-                val cameraUpdate = CameraUpdate.scrollTo(pos)
-                    .animate(CameraAnimation.Fly, 1000)
-                naverMap.moveCamera(cameraUpdate)
-
-                val bottomSheet = BikeDataBottomSheet(
-                    station = b.stationName,
-                    parkingToCnt = b.parkingBikeTotCnt,
-                    rackToCnt = b.rackTotCnt)
-                bottomSheet.show(childFragmentManager, bottomSheet.tag)
-            }
-            true
-        }
-    }
-
-    private fun showBikeList(bike: SeoulBike) {
-        //현재 위치와 자전거 대여소의 위치를 비교하여 내 위치 주변 대여소만 보여준다.
-        for(b in bike.stationList.stationInfo) {
-            if(!bikeList.contains(b.stationId)) {
-                if(naverMap.contentBounds.southLatitude <= b.stationLatitude.toDouble() &&
-                    b.stationLatitude.toDouble() <= naverMap.contentBounds.northLatitude &&
-                    naverMap.contentBounds.westLongitude <= b.stationLongitude.toDouble() &&
-                    b.stationLongitude.toDouble() <= naverMap.contentBounds.eastLongitude) {
-
-                    bikeList.add(b.stationId)
-                    val pos = LatLng(b.stationLatitude.toDouble(), b.stationLongitude.toDouble())
-
-                    val listener = markerListener(b, pos)
-
-                    val marker = Marker()
-                    marker.apply {
-                        width = 80
-                        height = 100
-                        position = pos
-                        map = naverMap
-                        onClickListener = listener
-                    }
-                }
-                else {
-                    bikeList.remove(b.stationId)
-                }
-            }
-        }
-    }
-
     @Override
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
-        isFirst = false
 
         setCameraPosition()
-
-        naverMap.addOnCameraChangeListener { _, _ ->
-            lifecycleScope.launch {
-                try {
-                    showBikeList(bike1)
-                    showBikeList(bike2)
-                    showBikeList(bike3)
-                } catch (e: UninitializedPropertyAccessException) {
-                    Timber.i("서울 api -> null")
-                }
-            }
-        }
     }
 }
