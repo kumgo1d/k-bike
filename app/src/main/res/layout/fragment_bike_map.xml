@@ -12,7 +12,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/seoul_map_fragment_frame">
+        android:id="@+id/map_layout">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map"

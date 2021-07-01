@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -17,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.goldcompany.apps.koreabike.location.LocationProvider
+import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -35,6 +37,17 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     private var isMarked = false
     private var markerList = mutableListOf<Marker>()
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if(isGranted) {
+                Toast.makeText(requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
@@ -44,28 +57,15 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        onCheckPermissions()
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
 
         viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
 
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         startMap()
         addListener()
 
         return binding.root
-    }
-
-    private fun onCheckPermissions() {
-        if(ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Toast.makeText(context, R.string.go_set_location, Toast.LENGTH_SHORT).show()
-
-                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-            } else {
-                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-            }
-        }
     }
 
     private fun startMap() {
@@ -74,36 +74,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             childFragmentManager.beginTransaction().replace(R.id.map, it).commit()
         }
         mapFragment.getMapAsync(this)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-//        if(ActivityCompat.checkSelfPermission(
-//                requireContext(),
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            ) == PackageManager.PERMISSION_DENIED){
-//            Toast.makeText(context, R.string.go_set_location, Toast.LENGTH_SHORT).show()
-//        }
-
-        when(requestCode) {
-            LOCATION_PERMISSION_REQUEST_CODE -> {
-                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(context, "권한이 설정되었습니다.", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "권한이 설정되지 않았습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun checkPermissions() {
-        requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            LOCATION_PERMISSION_REQUEST_CODE
-        )
     }
 
     private fun setCameraPositionToMyLocation() {
@@ -130,8 +100,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                 setCameraPositionToMyLocation()
             }
             else {
-//                checkPermissions()
-                onCheckPermissions()
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
 
@@ -194,29 +163,23 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     private fun setCameraPosition() {
         lifecycleScope.launch {
             val address = LocationProvider.getUserAddress()
-
+            val permission = ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
             val latitude = address?.latitude ?: 37.5643
             val longitude = address?.longitude ?: 126.9801
 
             initMapSettings()
 
-            if(ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED && address != null) {
-
+            if(permission && address != null) {
                 val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
 
                 naverMap.cameraPosition = cameraPosition
                 setUserLocationMarker(latitude, longitude)
 
-            } else if(ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED && address == null) {
-
+            } else if(permission && address == null) {
                 setCameraPositionToMyLocation()
-
             } else {
                 val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
                 setUserLocationMarker(latitude, longitude)
