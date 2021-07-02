@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -18,7 +17,6 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.goldcompany.apps.koreabike.location.LocationProvider
-import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -35,16 +33,18 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
 
     //카테고리 검색 중복 제거
     private var isMarked = false
-    private var markerList = mutableListOf<Marker>()
+    private var categoryMarkers = mutableListOf<Marker>()
+
+    private var locationMarker = Marker()
 
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if(isGranted) {
-                Toast.makeText(requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.enable_location_service, Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.go_set_location, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -52,20 +52,79 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
+    private fun checkLocationPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
-        viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
+    private fun setCameraPositionToMyLocation() {
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+    }
 
-        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        startMap()
-        addListener()
+    private fun setCameraPosition() {
+        lifecycleScope.launch {
+            val address = LocationProvider.getUserAddress()
+            val latitude = address?.latitude ?: 37.5643
+            val longitude = address?.longitude ?: 126.9801
 
-        return binding.root
+            initMapSettings()
+
+            if(checkLocationPermission() && address != null) {
+                val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+
+                naverMap.cameraPosition = cameraPosition
+                setUserLocationMarker(latitude, longitude)
+
+            } else if(checkLocationPermission() && address == null) {
+                setCameraPositionToMyLocation()
+            } else {
+                val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+                setUserLocationMarker(latitude, longitude)
+                naverMap.cameraPosition = cameraPosition
+                naverMap.locationTrackingMode = LocationTrackingMode.None
+            }
+        }
+    }
+
+    private fun setCategoryMarker(code: String) {
+        val latitude = naverMap.cameraPosition.target.latitude.toString()
+        val longitude = naverMap.cameraPosition.target.longitude.toString()
+
+        viewModel.getItem(code, longitude, latitude).observe(viewLifecycleOwner) {
+            for(i in it.documents.indices) {
+                if(isMarked) {
+                    categoryMarkers[0].map = null
+                    categoryMarkers.removeAt(0)
+                }
+                else {
+                    val marker = Marker()
+
+                    marker.apply {
+                        width = 80
+                        height = 100
+                        position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
+                        map = naverMap
+                    }
+                    categoryMarkers.add(marker)
+                }
+            }
+            isMarked = !isMarked
+        }
+    }
+
+    private fun setUserLocationMarker(latitude: Double, longitude: Double) {
+        locationMarker.position = LatLng(latitude, longitude)
+        locationMarker.icon = MarkerIcons.BLUE
+        locationMarker.map = naverMap
+    }
+
+    private fun initMapSettings() {
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
+        naverMap.uiSettings.isZoomControlEnabled = false
+        naverMap.minZoom = 13.0
     }
 
     private fun startMap() {
@@ -76,9 +135,11 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    private fun setCameraPositionToMyLocation() {
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+    @Override
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+
+        setCameraPosition()
     }
 
     private fun addListener() {
@@ -93,10 +154,8 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.myLocation.setOnClickListener {
-            if(ActivityCompat.checkSelfPermission(
-                    requireActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED) {
+            if(checkLocationPermission()) {
+                locationMarker.map = null
                 setCameraPositionToMyLocation()
             }
             else {
@@ -121,78 +180,19 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun setCategoryMarker(code: String) {
-        val latitude = naverMap.cameraPosition.target.latitude.toString()
-        val longitude = naverMap.cameraPosition.target.longitude.toString()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
 
-        viewModel.getItem(code, longitude, latitude).observe(viewLifecycleOwner) {
-            for(i in it.documents.indices) {
-                if(isMarked) {
-                    markerList[0].map = null
-                    markerList.removeAt(0)
-                }
-                else {
-                    val marker = Marker()
+        viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
 
-                    marker.apply {
-                        width = 80
-                        height = 100
-                        position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
-                        map = naverMap
-                    }
-                    markerList.add(marker)
-                }
-            }
-            isMarked = !isMarked
-        }
-    }
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        startMap()
+        addListener()
 
-    private fun initMapSettings() {
-        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
-        naverMap.uiSettings.isZoomControlEnabled = false
-        naverMap.minZoom = 13.0
-    }
-
-    private fun setUserLocationMarker(latitude: Double, longitude: Double) {
-        val marker = Marker()
-        marker.position = LatLng(latitude, longitude)
-        marker.icon = MarkerIcons.BLUE
-        marker.map = naverMap
-    }
-
-    private fun setCameraPosition() {
-        lifecycleScope.launch {
-            val address = LocationProvider.getUserAddress()
-            val permission = ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-            val latitude = address?.latitude ?: 37.5643
-            val longitude = address?.longitude ?: 126.9801
-
-            initMapSettings()
-
-            if(permission && address != null) {
-                val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
-
-                naverMap.cameraPosition = cameraPosition
-                setUserLocationMarker(latitude, longitude)
-
-            } else if(permission && address == null) {
-                setCameraPositionToMyLocation()
-            } else {
-                val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
-                setUserLocationMarker(latitude, longitude)
-                naverMap.cameraPosition = cameraPosition
-                naverMap.locationTrackingMode = LocationTrackingMode.None
-            }
-        }
-    }
-
-    @Override
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-
-        setCameraPosition()
+        return binding.root
     }
 }

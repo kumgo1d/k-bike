@@ -1,6 +1,5 @@
 package com.goldcompany.apps.koreabike.db.dao
 
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.goldcompany.apps.koreabike.db.item.UserAddress
 

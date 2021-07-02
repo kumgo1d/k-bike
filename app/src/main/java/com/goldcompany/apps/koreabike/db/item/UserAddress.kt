@@ -6,7 +6,7 @@ import java.util.*
 
 @Entity(tableName = "user_address", primaryKeys = ["latitude", "longitude"])
 class UserAddress(
-    @ColumnInfo var date: Long = Date().time,
+    @ColumnInfo var date: Long = System.currentTimeMillis(),
     @ColumnInfo var latitude: Double,
     @ColumnInfo var longitude: Double,
     @ColumnInfo var address: String,

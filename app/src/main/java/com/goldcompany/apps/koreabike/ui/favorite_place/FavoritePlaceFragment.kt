@@ -46,7 +46,7 @@ class FavoritePlaceFragment : Fragment() {
 
     private fun updateItem(address: UserAddress) {
         val selected = UserAddress(
-            date = address.date,
+            date = System.currentTimeMillis(),
             longitude = address.longitude,
             latitude = address.latitude,
             address = address.address,
@@ -55,6 +55,8 @@ class FavoritePlaceFragment : Fragment() {
         )
 
         viewModel.setCurrentAddress(selected)
+
+        findNavController().navigate(FavoritePlaceFragmentDirections.actionFavoritePlaceFragmentToMapView())
     }
 
     private fun addListener() {
