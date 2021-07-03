@@ -10,7 +10,6 @@ import android.webkit.GeolocationPermissions
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.navArgs
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentWebViewBinding
 

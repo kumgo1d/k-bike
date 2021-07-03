@@ -32,6 +32,9 @@ class WebContainerFragment : Fragment() {
             binding.daejeonButton.button -> {
                 browseWebPage(Constants.DAEJEON)
             }
+            binding.changwonButton.button -> {
+                browseWebPage(Constants.CHANGWON)
+            }
         }
     }
 

@@ -4,8 +4,10 @@
     <string name="map">Map</string>
     <string name="web">Web</string>
 
-    <string name="seoul_bike">서울자전거 (따릉이)</string>
-    <string name="daejeon_bike">대전자전거 (타슈)</string>
+    <string name="seoul_bike">서울시 자전거 (따릉이)</string>
+    <string name="daejeon_bike">대전시 자전거 (타슈)</string>
+    <string name="gongju_bike">공주시 자전거</string>
+    <string name="changwon_bike">창원시 자전거 (누비자)</string>
 
     <string name="add_favorite_item">즐겨찾기에 추가되었습니다.</string>
     <string name="search_address_hint">장소, 지하철을 검색하세요.</string>

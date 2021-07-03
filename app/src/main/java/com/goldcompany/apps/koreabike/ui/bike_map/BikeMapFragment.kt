@@ -2,12 +2,15 @@ package com.goldcompany.apps.koreabike.ui.bike_map
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -117,7 +120,8 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
 
     private fun setUserLocationMarker(latitude: Double, longitude: Double) {
         locationMarker.position = LatLng(latitude, longitude)
-        locationMarker.icon = MarkerIcons.BLUE
+        locationMarker.icon = MarkerIcons.BLACK
+        locationMarker.iconTintColor = resources.getColor(R.color.colorPrimary, resources.newTheme())
         locationMarker.map = naverMap
     }
 
