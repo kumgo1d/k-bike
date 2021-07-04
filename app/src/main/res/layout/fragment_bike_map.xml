@@ -4,13 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable
-            name="viewModel"
+        <variable name="viewModel"
             type="com.goldcompany.apps.koreabike.ui.bike_map.BikeMapViewModel" />
 
         <variable
-            name="fragment"
-            type="com.goldcompany.apps.koreabike.ui.bike_map.BikeMapFragment" />
+            name="handler"
+            type="com.goldcompany.apps.koreabike.ui.bike_map.BikeMapHandler" />
     </data>
 
     <FrameLayout
@@ -49,12 +48,12 @@
                     app:layout_flexGrow="1">
 
                     <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/search_address"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:paddingVertical="8dp"
                         android:paddingHorizontal="10dp"
                         android:background="@android:color/white"
+                        android:onClick="@{() -> handler.goSearchFragment()}"
                         android:hint="@string/search_address_hint2"
                         android:maxLines="1"
                         android:focusable="false"/>
@@ -62,7 +61,6 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/search_address_button"
                     android:theme="@style/AppTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -70,6 +68,7 @@
                     android:textColor="@android:color/white"
                     android:textStyle="bold"
                     android:backgroundTint="?attr/colorPrimary"
+                    android:onClick="@{() -> handler.goSearchFragment()}"
                     app:icon="@drawable/ic_search_button"
                     app:layout_alignSelf="center"/>
 
@@ -86,57 +85,57 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/my_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="내 위치"
+                        android:text="@string/my_location"
                         android:textColor="@color/black"
                         android:backgroundTint="@android:color/white"
+                        android:onClick="@{() -> handler.getMyLocation()}"
                         app:icon="@drawable/ic_gps_fixed"
                         app:iconTint="@color/black"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/pharmacy"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="약국"
+                        android:text="@string/pharmacy"
                         android:textColor="@color/black"
                         android:backgroundTint="@android:color/white"
+                        android:onClick="@{() -> handler.setCategoryMarker(viewModel.pharmacyCode)}"
                         app:icon="@drawable/ic_local_hospital"
                         app:iconTint="@color/black"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/convenience_store"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="편의점"
+                        android:text="@string/convenience_store"
                         android:textColor="@color/black"
                         android:backgroundTint="@android:color/white"
+                        android:onClick="@{() -> handler.setCategoryMarker(viewModel.convenienceStoreCode)}"
                         app:icon="@drawable/ic_local_convenience_store"
                         app:iconTint="@color/black"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/cafe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="카페"
+                        android:text="@string/cafe"
                         android:textColor="@color/black"
                         android:backgroundTint="@android:color/white"
+                        android:onClick="@{() -> handler.setCategoryMarker(viewModel.cafeCode)}"
                         app:icon="@drawable/ic_local_cafe"
                         app:iconTint="@color/black"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/accommodation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="8dp"
-                        android:text="숙박"
+                        android:text="@string/accommodation"
                         android:textColor="@color/black"
                         android:backgroundTint="@android:color/white"
+                        android:onClick="@{() -> handler.setCategoryMarker(viewModel.accommodationCode)}"
                         app:icon="@drawable/ic_king_bed"
                         app:iconTint="@color/black"/>
 
