@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.api.kakao_api
+package com.goldcompany.apps.koreabike.api
 
 import com.goldcompany.apps.koreabike.data.category_group.CategoryGroup
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
@@ -7,13 +7,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
-
-class KakaoApi {
-    companion object {
-        const val BASE_URL = "https://dapi.kakao.com/"
-        const val API_KEY = "KakaoAK 09ab5a332869126358f643b6ff26abc8"
-    }
-}
 
 interface KakaoApiService {
     @GET("v2/local/search/keyword.json")
@@ -30,4 +23,14 @@ interface KakaoApiService {
         @Query("y") latitude: String,
         @Query("radius") radius: Int
     ): Call<CategoryGroup>
+}
+
+interface NaverApiService {
+    @GET
+    fun getPath(
+        @Header("X-NCP-APIGW-API-KEY-ID") apiKeyId: String,
+        @Header("X-NCP-APIGW-API-KEY") apiKey: String,
+        @Query("start") start: String,
+        @Query("goal") goal: String
+    )
 }
