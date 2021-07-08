@@ -9,11 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.db.item.UserAddress
@@ -41,12 +43,12 @@ class SearchAddressFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun addListener() {
         binding.parentLayout.setOnTouchListener { _, _ ->
-            hideKeyboard()
+            MainActivity.hideKeyboard(binding.searchAddressInput)
             return@setOnTouchListener true
         }
 
         binding.navigationBackButton.setOnClickListener {
-            hideKeyboard()
+            MainActivity.hideKeyboard(binding.searchAddressInput)
             findNavController().popBackStack()
         }
 
@@ -71,18 +73,11 @@ class SearchAddressFragment : Fragment() {
             binding.searchAddressList.adapter = SearchAddressAdapter(data, viewModel, ::navigateHome)
         }
 
-        hideKeyboard()
+        MainActivity.hideKeyboard(binding.searchAddressInput)
     }
 
     private fun navigateHome() {
         findNavController().popBackStack()
-    }
-
-    private fun hideKeyboard() {
-        binding.searchAddressInput.clearFocus()
-
-        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 }
 

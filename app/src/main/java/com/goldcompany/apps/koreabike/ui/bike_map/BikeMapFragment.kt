@@ -28,6 +28,7 @@ interface BikeMapHandler {
     fun setCategoryMarker(code: String)
     fun getMyLocation()
     fun goSearchFragment()
+    fun goNavigationFragment()
 }
 
 class BikeMapFragment : Fragment(), OnMapReadyCallback {
@@ -91,6 +92,10 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
 
         override fun goSearchFragment() {
             findNavController().navigate(BikeMapFragmentDirections.actionMapViewToSearchAddressFragment())
+        }
+
+        override fun goNavigationFragment() {
+            findNavController().navigate(BikeMapFragmentDirections.actionMapViewToNavigationFragment())
         }
     }
 
