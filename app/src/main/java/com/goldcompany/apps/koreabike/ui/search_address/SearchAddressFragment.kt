@@ -43,20 +43,23 @@ class SearchAddressFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun addListener() {
         binding.parentLayout.setOnTouchListener { _, _ ->
-            MainActivity.hideKeyboard(binding.searchAddressInput)
+            binding.searchAddressInput.clearFocus()
+            MainActivity.hideKeyboard(binding.root)
             return@setOnTouchListener true
         }
 
         binding.navigationBackButton.setOnClickListener {
-            MainActivity.hideKeyboard(binding.searchAddressInput)
+            binding.searchAddressInput.clearFocus()
             findNavController().popBackStack()
         }
 
         binding.searchAddressButton.setOnClickListener {
+            binding.searchAddressInput.clearFocus()
             searchAddress()
         }
 
         binding.favoriteAddressButton.setOnClickListener {
+            binding.searchAddressInput.clearFocus()
             findNavController().navigate(SearchAddressFragmentDirections.actionSearchAddressFragmentToFavoritePlaceFragment())
         }
     }

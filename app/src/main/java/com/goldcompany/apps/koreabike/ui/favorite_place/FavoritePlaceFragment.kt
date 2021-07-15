@@ -1,5 +1,6 @@
 package com.goldcompany.apps.koreabike.ui.favorite_place
 
+import android.graphics.Rect
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater

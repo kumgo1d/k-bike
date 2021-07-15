@@ -1,6 +1,7 @@
 package com.goldcompany.apps.koreabike.api
 
 import com.goldcompany.apps.koreabike.data.category_group.CategoryGroup
+import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.Call
@@ -26,11 +27,11 @@ interface KakaoApiService {
 }
 
 interface NaverApiService {
-    @GET
+    @GET("v1/driving")
     fun getPath(
         @Header("X-NCP-APIGW-API-KEY-ID") apiKeyId: String,
         @Header("X-NCP-APIGW-API-KEY") apiKey: String,
         @Query("start") start: String,
         @Query("goal") goal: String
-    )
+    ): Call<ResultPath>
 }

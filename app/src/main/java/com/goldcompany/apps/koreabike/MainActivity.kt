@@ -3,6 +3,7 @@ package com.goldcompany.apps.koreabike
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.navigation.fragment.NavHostFragment
@@ -12,19 +13,13 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-interface navigationHandler {
-    fun popBack()
-}
-
 class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var instance: MainActivity
             private set
 
-        fun hideKeyboard(view: EditText) {
-            view.clearFocus()
-
+        fun hideKeyboard(view: View) {
             val imm = instance.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
