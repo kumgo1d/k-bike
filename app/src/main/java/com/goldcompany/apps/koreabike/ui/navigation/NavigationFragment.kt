@@ -2,7 +2,7 @@ package com.goldcompany.apps.koreabike.ui.navigation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
+import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import java.util.ArrayList
 
 class NavigationFragment : Fragment() {
     private lateinit var binding: FragmentNavigationBinding
@@ -56,19 +57,27 @@ class NavigationFragment : Fragment() {
         }
     }
 
+    //TODO : 내비게이션 시작 좌표, 도착 좌표 지오코딩
     private fun navigateApi() {
         val navigation = NaverApiRetrofitClient.naverApi.getPath(
             NAVER_API_KEY_ID,
             NAVER_API_KEY,
-            "129.089441,35.231100",
-            "129.084454,35.228982"
+            "126.9864,37.5610",
+            "126.9725,37.5532",
+            "tracomfort"
         )
 
+        //TODO : 새로운 지도 Fragment에 마커표시
         navigation.enqueue(object : Callback<ResultPath> {
             override fun onResponse(call: Call<ResultPath>, response: Response<ResultPath>) {
-                Timber.d("error body : ${response.errorBody().toString()}")
                 if(response.isSuccessful) {
                     Timber.d("body : ${response.body()}")
+
+                    val path = response.body()!!.route.traComfort[0].path
+                    val bundle = Bundle()
+
+                    bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
+                    findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
                 }
             }
 

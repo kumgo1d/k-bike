@@ -32,6 +32,7 @@ interface NaverApiService {
         @Header("X-NCP-APIGW-API-KEY-ID") apiKeyId: String,
         @Header("X-NCP-APIGW-API-KEY") apiKey: String,
         @Query("start") start: String,
-        @Query("goal") goal: String
+        @Query("goal") goal: String,
+        @Query("option") option: String
     ): Call<ResultPath>
 }

@@ -2,6 +2,7 @@ package com.goldcompany.apps.koreabike
 
 import android.app.Application
 import com.goldcompany.apps.koreabike.db.KBikeDatabase
+import timber.log.Timber
 
 class KBikeApplication: Application() {
     companion object {
@@ -13,5 +14,10 @@ class KBikeApplication: Application() {
 
     init {
         instance = this
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        Timber.plant(Timber.DebugTree())
     }
 }

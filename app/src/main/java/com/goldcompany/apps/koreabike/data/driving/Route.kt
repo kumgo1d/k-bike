@@ -1,5 +1,7 @@
 package com.goldcompany.apps.koreabike.data.driving
 
+import com.google.gson.annotations.SerializedName
+
 data class Route(
-    val trafast: List<Trafast>
+    @SerializedName("tracomfort") val traComfort: List<TraComfort>
 )

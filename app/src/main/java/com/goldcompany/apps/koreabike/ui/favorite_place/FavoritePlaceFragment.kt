@@ -57,7 +57,7 @@ class FavoritePlaceFragment : Fragment() {
 
         viewModel.setCurrentAddress(selected)
 
-        findNavController().navigate(FavoritePlaceFragmentDirections.actionFavoritePlaceFragmentToMapView())
+        findNavController().navigate(FavoritePlaceFragmentDirections.actionGlobalMapView())
     }
 
     private fun addListener() {
