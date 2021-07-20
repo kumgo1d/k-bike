@@ -27,7 +27,7 @@ interface KakaoApiService {
 }
 
 interface NaverApiService {
-    @GET("v1/driving")
+    @GET("map-direction/v1/driving")
     fun getPath(
         @Header("X-NCP-APIGW-API-KEY-ID") apiKeyId: String,
         @Header("X-NCP-APIGW-API-KEY") apiKey: String,
@@ -35,4 +35,9 @@ interface NaverApiService {
         @Query("goal") goal: String,
         @Query("option") option: String
     ): Call<ResultPath>
+
+    @GET("map-geocode/v2/geocode")
+    fun getAddressToCoordinate(
+
+    )
 }

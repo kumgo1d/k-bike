@@ -2,17 +2,15 @@ package com.goldcompany.apps.koreabike.ui.search_address
 
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.MainActivity
@@ -20,7 +18,9 @@ import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.db.item.UserAddress
 import com.goldcompany.apps.koreabike.api.FindPlaces
+import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
+import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
 import kotlinx.android.synthetic.main.sub_search_address_item.view.*
 
 class SearchAddressFragment : Fragment() {
@@ -40,6 +40,12 @@ class SearchAddressFragment : Fragment() {
         return binding.root
     }
 
+    override fun onStop() {
+        super.onStop()
+        binding.searchAddressInput.clearFocus()
+        MainActivity.hideKeyboard(binding.root)
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private fun addListener() {
         binding.parentLayout.setOnTouchListener { _, _ ->
@@ -49,17 +55,16 @@ class SearchAddressFragment : Fragment() {
         }
 
         binding.navigationBackButton.setOnClickListener {
-            binding.searchAddressInput.clearFocus()
             findNavController().popBackStack()
         }
 
         binding.searchAddressButton.setOnClickListener {
             binding.searchAddressInput.clearFocus()
+            MainActivity.hideKeyboard(binding.searchAddressInput)
             searchAddress()
         }
 
         binding.favoriteAddressButton.setOnClickListener {
-            binding.searchAddressInput.clearFocus()
             findNavController().navigate(SearchAddressFragmentDirections.actionSearchAddressFragmentToFavoritePlaceFragment())
         }
     }
@@ -73,50 +78,45 @@ class SearchAddressFragment : Fragment() {
                 return@callKakaoKeyword
             }
 
-            binding.searchAddressList.adapter = SearchAddressAdapter(data, viewModel, ::navigateHome)
+            binding.searchAddressList.adapter = SearchAddressAdapter(data, viewModel)
         }
-
-        MainActivity.hideKeyboard(binding.searchAddressInput)
-    }
-
-    private fun navigateHome() {
-        findNavController().popBackStack()
     }
 }
 
 class SearchAddressAdapter(private val dataSet: KakaoData,
-                           private val viewModel: SearchAddressViewModel,
-                           private val navigate: () -> Unit): RecyclerView.Adapter<SearchAddressAdapter.ViewHolder>() {
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val keyword: TextView = view.findViewById(R.id.item_keyword)
-        val address: TextView = view.findViewById(R.id.item_address)
+                           private val viewModel: SearchAddressViewModel): RecyclerView.Adapter<SearchAddressAdapter.ViewHolder>() {
+    inner class ViewHolder(private val binding: SubSearchAddressItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        val keyword = binding.itemKeyword
+        val address = binding.itemAddress
+
+        fun bind(item: KakaoAddressItem) {
+            keyword.text = item.placeName
+            address.text = item.addressName
+
+            itemView.setOnClickListener {
+                val userAddress = UserAddress(
+                    latitude = item.y.toDouble(),
+                    longitude = item.x.toDouble(),
+                    address = item.addressName,
+                    keyword = item.placeName,
+                    selected = true
+                )
+
+                viewModel.setCurrentAddress(userAddress)
+                Navigation.findNavController(itemView).popBackStack()
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.sub_search_address_item, parent, false)
+        val view = SubSearchAddressItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.keyword.text = dataSet.documents[position].place_name
-        holder.address.text = dataSet.documents[position].address_name
-
-        holder.itemView.setOnClickListener {
-            val userAddress = UserAddress(
-                latitude = dataSet.documents[position].y.toDouble(),
-                longitude = dataSet.documents[position].x.toDouble(),
-                address = dataSet.documents[position].address_name,
-                keyword = dataSet.documents[position].place_name,
-                selected = true
-            )
-
-            viewModel.setCurrentAddress(userAddress)
-
-            navigate()
-        }
+        holder.bind(dataSet.addressList[position])
     }
 
-    override fun getItemCount() = dataSet.documents.size
+    override fun getItemCount() = dataSet.addressList.size
 }

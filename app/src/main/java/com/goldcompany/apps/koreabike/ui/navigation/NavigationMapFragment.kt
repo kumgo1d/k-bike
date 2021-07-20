@@ -39,6 +39,7 @@ class NavigationMapFragment : Fragment(), OnMapReadyCallback {
         }
         Timber.d("$path")
 
+        //TODO 카메라 포커스
         overlay.apply {
             coords = path
             color = Color.GREEN

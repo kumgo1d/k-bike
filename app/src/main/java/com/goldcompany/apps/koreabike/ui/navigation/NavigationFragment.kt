@@ -3,17 +3,27 @@ package com.goldcompany.apps.koreabike.ui.navigation
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
+import com.goldcompany.apps.koreabike.api.FindPlaces
 import com.goldcompany.apps.koreabike.api.NaverApiRetrofitClient
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
+import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
+import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
+import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,6 +47,13 @@ class NavigationFragment : Fragment() {
         return binding.root
     }
 
+    override fun onStop() {
+        super.onStop()
+        binding.start.clearFocus()
+        binding.end.clearFocus()
+        MainActivity.hideKeyboard(binding.root)
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private fun setListener() {
         binding.parentLayout.setOnTouchListener { _, _ ->
@@ -47,13 +64,39 @@ class NavigationFragment : Fragment() {
         }
 
         binding.navigationAppBar.navigationBackButton.setOnClickListener {
-            binding.start.clearFocus()
-            binding.end.clearFocus()
             findNavController().popBackStack()
         }
 
+        binding.start.addTextChangedListener(textChangeListener())
+
+        binding.end.addTextChangedListener(textChangeListener())
+
         binding.navigateButton.setOnClickListener {
             navigateApi()
+        }
+    }
+
+    private fun textChangeListener() = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            lifecycleScope.launch {
+                delay(1000)
+                searchAddress(s.toString())
+            }
+        }
+
+        override fun afterTextChanged(s: Editable?) {}
+    }
+
+    private fun searchAddress(address: String) {
+        FindPlaces().callKakaoKeyword(address = address) { data, _ ->
+            if(data == null) {
+                //TODO 에러 처리
+                return@callKakaoKeyword
+            }
+
+            binding.addressRecyclerView.adapter = NavigationAdapter(data)
         }
     }
 
@@ -67,7 +110,6 @@ class NavigationFragment : Fragment() {
             "tracomfort"
         )
 
-        //TODO : 새로운 지도 Fragment에 마커표시
         navigation.enqueue(object : Callback<ResultPath> {
             override fun onResponse(call: Call<ResultPath>, response: Response<ResultPath>) {
                 if(response.isSuccessful) {
@@ -86,4 +128,33 @@ class NavigationFragment : Fragment() {
             }
         })
     }
+}
+
+class NavigationAdapter(private val dataSet: KakaoData): RecyclerView.Adapter<NavigationAdapter.ViewHolder>() {
+    class ViewHolder(private val binding: SubSearchAddressItemBinding): RecyclerView.ViewHolder(binding.root) {
+        val keyword = binding.itemKeyword
+        val address = binding.itemAddress
+
+        fun bind(item: KakaoAddressItem) {
+            keyword.text = item.placeName
+            address.text = item.addressName
+
+            binding.root.setOnClickListener {
+                //TODO 키워드 혹은 주소를 EditText에 전달. geocoding.
+
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = SubSearchAddressItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(dataSet.addressList[position])
+    }
+
+    override fun getItemCount(): Int = dataSet.addressList.size
 }

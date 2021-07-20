@@ -182,7 +182,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
         viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
-        MainActivity.hideKeyboard(binding.root)
         binding.viewModel = viewModel
         binding.handler = handler
 
