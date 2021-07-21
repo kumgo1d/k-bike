@@ -8,9 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationMapBinding
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -37,14 +40,22 @@ class NavigationMapFragment : Fragment(), OnMapReadyCallback {
         arg.forEachIndexed { index, _ ->
             path.add(LatLng(arg[index][1], arg[index][0]))
         }
-        Timber.d("$path")
 
-        //TODO 카메라 포커스
         overlay.apply {
             coords = path
             color = Color.GREEN
             width = 10
             map = naverMap
+        }
+
+        val bounds = LatLngBounds(path[0], path[path.size-1])
+        val camera = CameraUpdate.fitBounds(bounds, 100)
+        naverMap.moveCamera(camera)
+    }
+
+    private fun setListener() {
+        binding.navigationMapAppBar.navigationBackButton.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
@@ -60,6 +71,7 @@ class NavigationMapFragment : Fragment(), OnMapReadyCallback {
     ): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_navigation_map, container, false)
         startMap()
+        setListener()
 
         return binding.root
     }
