@@ -2,17 +2,22 @@ package com.goldcompany.apps.koreabike.ui.navigation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.RecyclerView
 
 class NavigationViewModel : ViewModel() {
     val startAddress : MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    var startX = "0.0"
-    var startY = "0.0"
+    var startX = ""
+    var startY = ""
 
     val endAddress : MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    var endX = "0.0"
-    var endY = "0.0"
+    var endX = ""
+    var endY = ""
+
+    fun clearAdapter(view: RecyclerView) {
+        view.adapter = null
+    }
 }

@@ -47,6 +47,7 @@ class NavigationFragment : Fragment() {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_navigation, container, false)
         viewModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
 
+        MainActivity.hideBottom()
         setListener()
 
         return binding.root
@@ -121,7 +122,7 @@ class NavigationFragment : Fragment() {
     }
 
     private fun navigateApi() {
-        if(binding.start.text.isNullOrEmpty() || binding.end.text.isNullOrEmpty()) {
+        if(viewModel.startX.isEmpty() || viewModel.endX.isEmpty()) {
             Toast.makeText(requireContext(), "주소를 입력해주세요.", Toast.LENGTH_SHORT).show()
             return
         }
@@ -139,8 +140,12 @@ class NavigationFragment : Fragment() {
                 if(response.isSuccessful) {
 //                    Timber.d("body : ${response.body()}")
                     val path = response.body()!!.route.traComfort[0].path
+                    val duration = response.body()!!.route.traComfort[0].summary.duration
+                    val distance = response.body()!!.route.traComfort[0].summary.distance
                     val bundle = Bundle()
 
+                    bundle.putInt("duration", duration)
+                    bundle.putInt("distance", distance)
                     bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
                     findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
                 }

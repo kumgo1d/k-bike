@@ -185,6 +185,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         binding.viewModel = viewModel
         binding.handler = handler
 
+        MainActivity.showBottom()
         requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         startMap()
 

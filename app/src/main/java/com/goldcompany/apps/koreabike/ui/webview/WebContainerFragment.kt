@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.Constants
+import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentWebContainerBinding
 
@@ -20,6 +21,8 @@ class WebContainerFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_web_container, container, false)
         binding.fragment = this
+
+        MainActivity.showBottom()
 
         return binding.root
     }

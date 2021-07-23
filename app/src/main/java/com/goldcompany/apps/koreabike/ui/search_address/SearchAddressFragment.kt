@@ -35,6 +35,7 @@ class SearchAddressFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(SearchAddressViewModel::class.java)
 
+        MainActivity.hideBottom()
         addListener()
 
         return binding.root

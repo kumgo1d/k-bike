@@ -68,12 +68,17 @@
         tools:layout="@layout/fragment_navigation" >
         <action
             android:id="@+id/action_navigationFragment_to_navigationMapFragment"
-            app:destination="@id/navigationMapFragment" />
+            app:destination="@id/navigationMapFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
-    <action android:id="@+id/action_global_map_view"
+    <action
+        android:id="@+id/action_global_map_view"
         app:destination="@id/map_view"
-        app:popUpToInclusive="true"
-        app:popUpTo="@id/map_view"/>
+        app:popUpTo="@id/map_view"
+        app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/navigationMapFragment"
         android:name="com.goldcompany.apps.koreabike.ui.navigation.NavigationMapFragment"

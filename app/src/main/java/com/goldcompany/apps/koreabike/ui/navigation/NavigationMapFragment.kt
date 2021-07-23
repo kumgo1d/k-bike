@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationMapBinding
 import com.naver.maps.geometry.LatLng
@@ -49,7 +50,7 @@ class NavigationMapFragment : Fragment(), OnMapReadyCallback {
         }
 
         val bounds = LatLngBounds(path[0], path[path.size-1])
-        val camera = CameraUpdate.fitBounds(bounds, 100)
+        val camera = CameraUpdate.fitBounds(bounds, 300)
         naverMap.moveCamera(camera)
     }
 
@@ -57,6 +58,11 @@ class NavigationMapFragment : Fragment(), OnMapReadyCallback {
         binding.navigationMapAppBar.navigationBackButton.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        val distance = "거리 : ${arguments?.getInt("distance")?.toLong()?.div(1000)}km"
+        val duration = "소요시간 : 약 ${arguments?.getInt("duration")?.toLong()?.div(1000 * 60)?.plus(20)}분"
+        binding.navDistance.text = distance
+        binding.navDuration.text = duration
     }
 
     override fun onMapReady(naverMap: NaverMap) {

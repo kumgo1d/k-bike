@@ -10,6 +10,7 @@ import android.webkit.GeolocationPermissions
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
+import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentWebViewBinding
 
@@ -22,6 +23,7 @@ class WebViewFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_web_view, container, false)
 
+        MainActivity.hideBottom()
         webViewSetting()
 
         return binding.root
