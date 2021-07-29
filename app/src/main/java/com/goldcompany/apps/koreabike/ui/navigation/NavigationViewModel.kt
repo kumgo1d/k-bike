@@ -16,8 +16,4 @@ class NavigationViewModel : ViewModel() {
     }
     var endX = ""
     var endY = ""
-
-    fun clearAdapter(view: RecyclerView) {
-        view.adapter = null
-    }
 }

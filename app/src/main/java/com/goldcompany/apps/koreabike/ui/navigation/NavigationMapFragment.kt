@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.ui.navigation
+ package com.goldcompany.apps.koreabike.ui.navigation
 
 import android.graphics.Color
 import android.os.Bundle
@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
-import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationMapBinding
 import com.naver.maps.geometry.LatLng

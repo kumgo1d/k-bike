@@ -1,4 +1,4 @@
-package com.android.apps.seoulpublicbike
+package com.goldcompany.apps.koreabike
 
 import org.junit.Test
 
