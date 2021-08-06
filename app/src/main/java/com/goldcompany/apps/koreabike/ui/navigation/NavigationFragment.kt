@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -92,11 +93,21 @@ class NavigationFragment : Fragment() {
 
     private fun searchNavAddress() {
         binding.start.addTextChangedListener(textChangeListener(true))
+        binding.start.setOnKeyListener(enterKeyListener())
         binding.end.addTextChangedListener(textChangeListener(false))
+        binding.end.setOnKeyListener(enterKeyListener())
 
         binding.navigateButton.setOnClickListener {
             navigateApi()
         }
+    }
+
+    private fun enterKeyListener() = View.OnKeyListener { _, keyCode, event ->
+        if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+            navigateApi()
+            true
+        }
+        false
     }
 
     private fun textChangeListener(isStart: Boolean) = object : TextWatcher {
