@@ -24,6 +24,23 @@ class NavigationMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentNavigationMapBinding
     private lateinit var naverMap: NaverMap
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_navigation_map, container, false)
+        startMap()
+        setListener()
+
+        return binding.root
+    }
+
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+
+        navigationPath()
+    }
+
     private fun startMap() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.navigation_map_container)
                 as MapFragment? ?: MapFragment.newInstance().also {
@@ -59,25 +76,8 @@ class NavigationMapFragment : Fragment(), OnMapReadyCallback {
         }
 
         val distance = "거리 : ${arguments?.getInt("distance")?.toLong()?.div(1000)}km"
-        val duration = "소요시간 : 약 ${arguments?.getInt("duration")?.toLong()?.div(1000 * 60)?.plus(20)}분"
+        val duration = "소요시간 : 약 ${arguments?.getInt("duration")?.toLong()?.div(1000 * 60)?.times(3)}분"
         binding.navDistance.text = distance
         binding.navDuration.text = duration
-    }
-
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-
-        navigationPath()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_navigation_map, container, false)
-        startMap()
-        setListener()
-
-        return binding.root
     }
 }

@@ -92,8 +92,15 @@ class NavigationFragment : Fragment() {
     }
 
     private fun searchNavAddress() {
+        binding.start.setOnClickListener {
+            binding.addressRecyclerView.adapter = null
+        }
         binding.start.addTextChangedListener(textChangeListener(true))
         binding.start.setOnKeyListener(enterKeyListener())
+
+        binding.end.setOnClickListener {
+            binding.addressRecyclerView.adapter = null
+        }
         binding.end.addTextChangedListener(textChangeListener(false))
         binding.end.setOnKeyListener(enterKeyListener())
 

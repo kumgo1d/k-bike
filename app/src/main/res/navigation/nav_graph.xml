@@ -78,7 +78,7 @@
         android:id="@+id/action_global_map_view"
         app:destination="@id/map_view"
         app:popUpTo="@id/map_view"
-        app:popUpToInclusive="true" />
+        app:popUpToInclusive="true"/>
     <fragment
         android:id="@+id/navigationMapFragment"
         android:name="com.goldcompany.apps.koreabike.ui.navigation.NavigationMapFragment"
