@@ -46,7 +46,7 @@
                         android:paddingHorizontal="10dp"
                         android:background="@android:color/background_light"
                         android:hint="출발지를 입력해주세요."
-                        android:maxLines="1"/>
+                        android:singleLine="true"/>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -68,7 +68,7 @@
                         android:paddingHorizontal="10dp"
                         android:background="@android:color/background_light"
                         android:hint="도착지를 입력해주세요."
-                        android:maxLines="1"/>
+                        android:singleLine="true"/>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -78,9 +78,9 @@
                 android:id="@+id/navigate_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
                 android:text="@string/navigation_button"
                 android:textStyle="bold"
+                app:layout_minWidth="90dp"
                 app:layout_alignSelf="stretch"/>
 
         </com.google.android.flexbox.FlexboxLayout>
