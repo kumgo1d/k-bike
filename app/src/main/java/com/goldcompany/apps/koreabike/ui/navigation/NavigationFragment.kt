@@ -143,6 +143,9 @@ class NavigationFragment : Fragment() {
         if(viewModel.startX.isEmpty() || viewModel.endX.isEmpty()) {
             Toast.makeText(requireContext(), "주소를 입력해주세요.", Toast.LENGTH_SHORT).show()
             return
+        } else if(viewModel.startAddress.value == viewModel.endAddress.value) {
+            Toast.makeText(requireContext(), "다른 주소를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            return
         }
 
         val navigation = NaverApiRetrofitClient.naverApi.getPath(
