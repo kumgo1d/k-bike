@@ -1,15 +1,15 @@
 package com.goldcompany.apps.koreabike.ui.search_address
 
-
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +22,7 @@ import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
 import kotlinx.android.synthetic.main.sub_search_address_item.view.*
+import kotlinx.coroutines.launch
 
 class SearchAddressFragment : Fragment() {
     private lateinit var binding: FragmentSearchAddressBinding
@@ -62,7 +63,9 @@ class SearchAddressFragment : Fragment() {
         binding.searchAddressButton.setOnClickListener {
             binding.searchAddressInput.clearFocus()
             MainActivity.hideKeyboard(binding.searchAddressInput)
-            searchAddress()
+            lifecycleScope.launch {
+                searchAddress()
+            }
         }
 
         binding.favoriteAddressButton.setOnClickListener {
@@ -75,7 +78,7 @@ class SearchAddressFragment : Fragment() {
         val address = binding.searchAddressInput.text.toString()
         FindPlaces().callKakaoKeyword(address = address) { data, _ ->
             if(data == null) {
-                //TODO 에러 처리
+                Toast.makeText(requireContext(), "해당 주소를 찾지 못하였습니다.", Toast.LENGTH_SHORT).show()
                 return@callKakaoKeyword
             }
 

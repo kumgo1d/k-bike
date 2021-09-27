@@ -108,6 +108,43 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
+        viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
+        binding.viewModel = viewModel
+        binding.handler = handler
+
+        MainActivity.showBottom()
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        lifecycleScope.launch {
+            startMap()
+        }
+
+        return binding.root
+    }
+
+    @Override
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+
+        setCameraPosition()
+    }
+
+    private fun startMap() {
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map)
+                as MapFragment? ?: MapFragment.newInstance().also {
+            childFragmentManager.beginTransaction().replace(R.id.map, it).commit()
+        }
+        mapFragment.getMapAsync(this)
+
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+    }
+
     private fun checkLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireActivity(),
@@ -156,39 +193,5 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
         naverMap.uiSettings.isZoomControlEnabled = false
         naverMap.minZoom = 13.0
-    }
-
-    private fun startMap() {
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map)
-                as MapFragment? ?: MapFragment.newInstance().also {
-            childFragmentManager.beginTransaction().replace(R.id.map, it).commit()
-        }
-        mapFragment.getMapAsync(this)
-
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-    }
-
-    @Override
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-
-        setCameraPosition()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
-        viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
-        binding.viewModel = viewModel
-        binding.handler = handler
-
-        MainActivity.showBottom()
-        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        startMap()
-
-        return binding.root
     }
 }

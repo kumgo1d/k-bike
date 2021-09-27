@@ -26,6 +26,7 @@ import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -105,14 +106,17 @@ class NavigationFragment : Fragment() {
         binding.end.setOnKeyListener(enterKeyListener())
 
         binding.navigateButton.setOnClickListener {
-            navigateApi()
+            lifecycleScope.launch {
+                navigateApi()
+            }
         }
     }
 
     private fun enterKeyListener() = View.OnKeyListener { _, keyCode, event ->
         if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-            navigateApi()
-            true
+            lifecycleScope.launch {
+                navigateApi()
+            }
         }
         false
     }
