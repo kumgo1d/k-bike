@@ -12,7 +12,9 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     companion object {

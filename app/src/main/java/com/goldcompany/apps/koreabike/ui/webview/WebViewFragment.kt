@@ -1,6 +1,7 @@
 package com.goldcompany.apps.koreabike.ui.webview
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.GeolocationPermissions
 import android.webkit.WebChromeClient
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
 import com.goldcompany.apps.koreabike.MainActivity
@@ -39,7 +41,19 @@ class WebViewFragment : Fragment() {
 
         web.apply {
             loadUrl(WebViewFragmentArgs.fromBundle(requireArguments()).url)
-            webViewClient = WebViewClient()
+            webViewClient = object : WebViewClient() {
+                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                    super.onPageStarted(view, url, favicon)
+
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+
+                    binding.progressBar.visibility = View.GONE
+                }
+            }
 
             webChromeClient = object : WebChromeClient() {
                 override fun onGeolocationPermissionsShowPrompt(
