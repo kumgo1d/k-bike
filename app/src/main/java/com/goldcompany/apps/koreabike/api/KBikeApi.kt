@@ -35,9 +35,4 @@ interface NaverApiService {
         @Query("goal") goal: String,
         @Query("option") option: String
     ): Call<ResultPath>
-
-    @GET("map-geocode/v2/geocode")
-    fun getAddressToCoordinate(
-
-    )
 }

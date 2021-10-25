@@ -26,6 +26,7 @@ import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -35,6 +36,7 @@ import retrofit2.Response
 import timber.log.Timber
 import java.util.ArrayList
 
+@AndroidEntryPoint
 class NavigationFragment : Fragment() {
     private lateinit var binding: FragmentNavigationBinding
     private lateinit var viewModel: NavigationViewModel

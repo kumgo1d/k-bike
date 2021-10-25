@@ -21,9 +21,11 @@ import com.goldcompany.apps.koreabike.api.FindPlaces
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.sub_search_address_item.view.*
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SearchAddressFragment : Fragment() {
     private lateinit var binding: FragmentSearchAddressBinding
     private lateinit var viewModel: SearchAddressViewModel

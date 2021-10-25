@@ -9,16 +9,19 @@ import retrofit2.Call
 import retrofit2.Response
 import java.lang.Exception
 import java.lang.NullPointerException
+import javax.inject.Inject
 
 class FindPlaces {
     private val KAKAO_API_KEY = "KakaoAK 09ab5a332869126358f643b6ff26abc8"
     private val kakaoApi = KakaoApiRetrofitClient.apiService
+    @Inject lateinit var kakaoApiService: KakaoApiService
 
     fun callKakaoKeyword(
         address: String,
         onComplete: (KakaoData?, Exception?) -> Unit
     ) {
-        kakaoApi.getKakaoAddress(KAKAO_API_KEY, address = address)
+        kakaoApiService = KakaoApiRetrofitClient_ProvideKakaoApiServiceFactory.provideKakaoApiService()
+        kakaoApiService.getKakaoAddress(KAKAO_API_KEY, address = address)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
