@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 class FindPlaces {
     private val KAKAO_API_KEY = "KakaoAK 09ab5a332869126358f643b6ff26abc8"
-    private val kakaoApi = KakaoApiRetrofitClient.apiService
     @Inject lateinit var kakaoApiService: KakaoApiService
 
     fun callKakaoKeyword(
@@ -34,7 +33,8 @@ class FindPlaces {
     fun callKakaoCategoryGroupItem(code: String, longitude: String, latitude: String): MutableLiveData<CategoryGroup> {
         val kakao = MutableLiveData<CategoryGroup>()
 
-        kakaoApi.getCategoryGroup(KAKAO_API_KEY, code = code, longitude = longitude, latitude = latitude, radius = 10000)
+        kakaoApiService = KakaoApiRetrofitClient_ProvideKakaoApiServiceFactory.provideKakaoApiService()
+        kakaoApiService.getCategoryGroup(KAKAO_API_KEY, code = code, longitude = longitude, latitude = latitude, radius = 10000)
             .enqueue(object : retrofit2.Callback<CategoryGroup> {
                 override fun onResponse(
                     call: Call<CategoryGroup>,
