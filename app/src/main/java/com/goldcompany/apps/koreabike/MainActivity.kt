@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.goldcompany.apps.koreabike.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
@@ -40,10 +40,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         instance = this
 
         MobileAds.initialize(this)
@@ -53,17 +56,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setBanner() {
-        banner = findViewById(R.id.publisherAdView)
+        banner = binding.publisherAdView
         val adRequest = AdManagerAdRequest.Builder().build()
-        findViewById<AdView>(R.id.publisherAdView).loadAd(adRequest)
+        banner.loadAd(adRequest)
     }
 
     private fun setBottomNav() {
-        bottomNav = findViewById(R.id.bottom_navigation_view)
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
+        bottomNav = binding.bottomNavigationView
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
         val navController = navHostFragment.navController
-        findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
-            .setupWithNavController(navController)
+        bottomNav.setupWithNavController(navController)
     }
 }

@@ -23,7 +23,7 @@ interface KakaoApiService {
         @Query("x") longitude: String,
         @Query("y") latitude: String,
         @Query("radius") radius: Int
-    ): Call<CategoryGroup>
+    ): Observable<CategoryGroup>
 }
 
 interface NaverApiService {

@@ -7,6 +7,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Response
+import timber.log.Timber
 import java.lang.Exception
 import java.lang.NullPointerException
 import javax.inject.Inject
@@ -35,17 +36,12 @@ class FindPlaces {
 
         kakaoApiService = KakaoApiRetrofitClient_ProvideKakaoApiServiceFactory.provideKakaoApiService()
         kakaoApiService.getCategoryGroup(KAKAO_API_KEY, code = code, longitude = longitude, latitude = latitude, radius = 10000)
-            .enqueue(object : retrofit2.Callback<CategoryGroup> {
-                override fun onResponse(
-                    call: Call<CategoryGroup>,
-                    response: Response<CategoryGroup>
-                ) {
-                    kakao.value = response.body()
-                }
-
-                override fun onFailure(call: Call<CategoryGroup>, t: Throwable) {
-
-                }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                kakao.value = it
+            }, {
+                Timber.e(it)
             })
 
         return kakao
