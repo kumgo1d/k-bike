@@ -29,16 +29,12 @@ class NavigationMapFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_navigation_map, container, false)
+
         startMap()
         setListener()
+        setDistanceAndDuration()
 
         return binding.root
-    }
-
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-
-        navigationPath()
     }
 
     private fun startMap() {
@@ -47,6 +43,25 @@ class NavigationMapFragment : Fragment(), OnMapReadyCallback {
             childFragmentManager.beginTransaction().replace(R.id.navigation_map_container, it).commit()
         }
         mapFragment.getMapAsync(this)
+    }
+
+    private fun setListener() {
+        binding.navigationMapAppBar.navigationBackButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun setDistanceAndDuration() {
+        val distance = "거리 : ${arguments?.getInt("distance")?.toLong()?.div(1000)}km"
+        val duration = "소요시간 : 약 ${arguments?.getInt("duration")?.toLong()?.div(1000 * 60)?.times(3)}분"
+        binding.navDistance.text = distance
+        binding.navDuration.text = duration
+    }
+
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+
+        navigationPath()
     }
 
     private fun navigationPath() {
@@ -68,16 +83,5 @@ class NavigationMapFragment : Fragment(), OnMapReadyCallback {
         val bounds = LatLngBounds(path[0], path[path.size-1])
         val camera = CameraUpdate.fitBounds(bounds, 300)
         naverMap.moveCamera(camera)
-    }
-
-    private fun setListener() {
-        binding.navigationMapAppBar.navigationBackButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        val distance = "거리 : ${arguments?.getInt("distance")?.toLong()?.div(1000)}km"
-        val duration = "소요시간 : 약 ${arguments?.getInt("duration")?.toLong()?.div(1000 * 60)?.times(3)}분"
-        binding.navDistance.text = distance
-        binding.navDuration.text = duration
     }
 }

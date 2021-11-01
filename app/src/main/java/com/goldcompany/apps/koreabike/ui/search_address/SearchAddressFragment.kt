@@ -39,7 +39,7 @@ class SearchAddressFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(SearchAddressViewModel::class.java)
 
         MainActivity.hideBottom()
-        addListener()
+        setButtonListener()
 
         return binding.root
     }
@@ -51,7 +51,7 @@ class SearchAddressFragment : Fragment() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun addListener() {
+    private fun setButtonListener() {
         binding.parentLayout.setOnTouchListener { _, _ ->
             binding.searchAddressInput.clearFocus()
             MainActivity.hideKeyboard(binding.root)
@@ -74,7 +74,6 @@ class SearchAddressFragment : Fragment() {
             findNavController().navigate(SearchAddressFragmentDirections.actionSearchAddressFragmentToFavoritePlaceFragment())
         }
     }
-
 
     private fun searchAddress() {
         val address = binding.searchAddressInput.text.toString()

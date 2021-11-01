@@ -12,7 +12,7 @@ class KBikeApplication: Application() {
             private set
     }
 
-    val database by lazy { KBikeDatabase.getInstance(this)}
+    val database by lazy { KBikeDatabase.getInstance(this) }
 
     init {
         instance = this

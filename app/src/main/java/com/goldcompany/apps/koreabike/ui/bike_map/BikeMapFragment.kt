@@ -2,12 +2,10 @@ package com.goldcompany.apps.koreabike.ui.bike_map
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -26,12 +24,10 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import kotlinx.coroutines.launch
-import java.net.HttpURLConnection
-import java.net.URL
 
 interface BikeMapHandler {
-    fun setCategoryMarker(code: String)
-    fun getMyLocation()
+    fun setCategoryMarkOverlay(code: String)
+    fun checkPermissionAndGetMyLocation()
     fun goSearchFragment()
     fun goNavigationFragment()
 }
@@ -42,8 +38,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentBikeMapBinding
     private lateinit var naverMap: NaverMap
 
-    //카테고리 검색 중복 제거
-    private var isMarked = false
+    private var isNearbyPlaceOverlayMarked = false
     private var categoryMarkers = mutableListOf<Marker>()
     private var locationMarker = Marker()
 
@@ -59,13 +54,13 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
 
     private val handler = object : BikeMapHandler {
-        override fun setCategoryMarker(code: String) {
+        override fun setCategoryMarkOverlay(code: String) {
             val latitude = naverMap.cameraPosition.target.latitude.toString()
             val longitude = naverMap.cameraPosition.target.longitude.toString()
 
             viewModel.getItem(code, longitude, latitude).observe(viewLifecycleOwner) {
                 for(i in it.documents.indices) {
-                    if(isMarked) {
+                    if(isNearbyPlaceOverlayMarked) {
                         categoryMarkers[0].map = null
                         categoryMarkers.removeAt(0)
                     }
@@ -81,16 +76,15 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                         categoryMarkers.add(marker)
                     }
                 }
-                isMarked = !isMarked
+                isNearbyPlaceOverlayMarked = !isNearbyPlaceOverlayMarked
             }
         }
 
-        override fun getMyLocation() {
+        override fun checkPermissionAndGetMyLocation() {
             if(checkLocationPermission()) {
                 locationMarker.map = null
                 setCameraPositionToMyLocation()
-            }
-            else {
+            } else {
                 requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
@@ -132,6 +126,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
 
+        initMapSettings()
         setCameraPosition()
     }
 
@@ -163,8 +158,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             val latitude = address?.latitude ?: 37.5643
             val longitude = address?.longitude ?: 126.9801
 
-            initMapSettings()
-
             if(checkLocationPermission() && address != null) {
                 val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
 
@@ -182,16 +175,16 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun initMapSettings() {
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
+        naverMap.uiSettings.isZoomControlEnabled = false
+        naverMap.minZoom = 13.0
+    }
+
     private fun setUserLocationMarker(latitude: Double, longitude: Double) {
         locationMarker.position = LatLng(latitude, longitude)
         locationMarker.icon = MarkerIcons.BLACK
         locationMarker.iconTintColor = resources.getColor(R.color.colorPrimary, resources.newTheme())
         locationMarker.map = naverMap
-    }
-
-    private fun initMapSettings() {
-        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
-        naverMap.uiSettings.isZoomControlEnabled = false
-        naverMap.minZoom = 13.0
     }
 }

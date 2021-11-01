@@ -51,11 +51,11 @@ class MainActivity : AppCompatActivity() {
 
         MobileAds.initialize(this)
 
-        setBanner()
+        setAdBanner()
         setBottomNav()
     }
 
-    private fun setBanner() {
+    private fun setAdBanner() {
         banner = binding.publisherAdView
         val adRequest = AdManagerAdRequest.Builder().build()
         banner.loadAd(adRequest)

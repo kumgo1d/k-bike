@@ -11,7 +11,9 @@ import timber.log.Timber
 import java.lang.Exception
 import java.lang.NullPointerException
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FindPlaces {
     private val KAKAO_API_KEY = "KakaoAK 09ab5a332869126358f643b6ff26abc8"
     @Inject lateinit var kakaoApiService: KakaoApiService

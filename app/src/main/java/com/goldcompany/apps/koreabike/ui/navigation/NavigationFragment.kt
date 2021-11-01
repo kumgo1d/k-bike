@@ -52,7 +52,9 @@ class NavigationFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
 
         MainActivity.hideBottom()
-        setListener()
+        setTouchListener()
+        bindNavAddress()
+        searchNavAddress()
 
         return binding.root
     }
@@ -65,7 +67,7 @@ class NavigationFragment : Fragment() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setListener() {
+    private fun setTouchListener() {
         binding.parentLayout.setOnTouchListener { _, _ ->
             binding.start.clearFocus()
             binding.end.clearFocus()
@@ -77,8 +79,11 @@ class NavigationFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        bindNavAddress()
-        searchNavAddress()
+        binding.navigateButton.setOnClickListener {
+            lifecycleScope.launch {
+                checkAddressAndnavigateApi()
+            }
+        }
     }
 
     private fun bindNavAddress() {
@@ -106,18 +111,12 @@ class NavigationFragment : Fragment() {
         }
         binding.end.addTextChangedListener(textChangeListener(false))
         binding.end.setOnKeyListener(enterKeyListener())
-
-        binding.navigateButton.setOnClickListener {
-            lifecycleScope.launch {
-                navigateApi()
-            }
-        }
     }
 
     private fun enterKeyListener() = View.OnKeyListener { _, keyCode, event ->
         if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
             lifecycleScope.launch {
-                navigateApi()
+                checkAddressAndnavigateApi()
             }
         }
         false
@@ -134,25 +133,8 @@ class NavigationFragment : Fragment() {
         }
     }
 
-    private fun searchAddress(address: String, isStart: Boolean) {
-        FindPlaces().callKakaoKeyword(address = address) { data, _ ->
-            if(data == null) {
-                Toast.makeText(requireContext(), "에러가 발생하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
-                return@callKakaoKeyword
-            }
-
-            binding.addressRecyclerView.adapter = NavigationAdapter(data, viewModel, isStart)
-        }
-    }
-
-    private fun navigateApi() {
-        if(viewModel.startX.isEmpty() || viewModel.endX.isEmpty()) {
-            Toast.makeText(requireContext(), "주소를 입력해주세요.", Toast.LENGTH_SHORT).show()
-            return
-        } else if(viewModel.startAddress.value == viewModel.endAddress.value) {
-            Toast.makeText(requireContext(), "다른 주소를 입력해주세요.", Toast.LENGTH_SHORT).show()
-            return
-        }
+    private fun checkAddressAndnavigateApi() {
+        if(!checkRequiredAllAddress()) return
 
         val navigation = NaverApiRetrofitClient.naverApi.getPath(
             NAVER_API_KEY_ID,
@@ -165,7 +147,6 @@ class NavigationFragment : Fragment() {
         navigation.enqueue(object : Callback<ResultPath> {
             override fun onResponse(call: Call<ResultPath>, response: Response<ResultPath>) {
                 if(response.isSuccessful) {
-//                    Timber.d("body : ${response.body()}")
                     val path = response.body()!!.route.traComfort[0].path
                     val duration = response.body()!!.route.traComfort[0].summary.duration
                     val distance = response.body()!!.route.traComfort[0].summary.distance
@@ -182,6 +163,28 @@ class NavigationFragment : Fragment() {
                 Timber.e("error : ${t.printStackTrace()}")
             }
         })
+    }
+
+    private fun checkRequiredAllAddress(): Boolean {
+        if(viewModel.startX.isEmpty() || viewModel.endX.isEmpty()) {
+            Toast.makeText(requireContext(), "주소를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            return false
+        } else if(viewModel.startAddress.value == viewModel.endAddress.value) {
+            Toast.makeText(requireContext(), "다른 주소를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
+
+    private fun searchAddress(address: String, isStart: Boolean) {
+        FindPlaces().callKakaoKeyword(address = address) { data, _ ->
+            if(data == null) {
+                Toast.makeText(requireContext(), "에러가 발생하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                return@callKakaoKeyword
+            }
+
+            binding.addressRecyclerView.adapter = NavigationAdapter(data, viewModel, isStart)
+        }
     }
 }
 

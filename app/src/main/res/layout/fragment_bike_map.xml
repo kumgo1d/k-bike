@@ -91,7 +91,7 @@
                         android:text="@string/my_location"
                         android:textColor="@color/black"
                         android:backgroundTint="@android:color/white"
-                        android:onClick="@{() -> handler.getMyLocation()}"
+                        android:onClick="@{() -> handler.checkPermissionAndGetMyLocation()}"
                         app:icon="@drawable/ic_gps_fixed"
                         app:iconTint="@color/black"/>
 
@@ -102,7 +102,7 @@
                         android:text="@string/pharmacy"
                         android:textColor="@color/black"
                         android:backgroundTint="@android:color/white"
-                        android:onClick="@{() -> handler.setCategoryMarker(&quot;PM9&quot;)}"
+                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;PM9&quot;)}"
                         app:icon="@drawable/ic_local_hospital"
                         app:iconTint="@color/black"/>
 
@@ -113,7 +113,7 @@
                         android:text="@string/convenience_store"
                         android:textColor="@color/black"
                         android:backgroundTint="@android:color/white"
-                        android:onClick="@{() -> handler.setCategoryMarker(&quot;CS2&quot;)}"
+                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;CS2&quot;)}"
                         app:icon="@drawable/ic_local_convenience_store"
                         app:iconTint="@color/black"/>
 
@@ -124,7 +124,7 @@
                         android:text="@string/cafe"
                         android:textColor="@color/black"
                         android:backgroundTint="@android:color/white"
-                        android:onClick="@{() -> handler.setCategoryMarker(&quot;CE7&quot;)}"
+                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;CE7&quot;)}"
                         app:icon="@drawable/ic_local_cafe"
                         app:iconTint="@color/black"/>
 
@@ -135,7 +135,7 @@
                         android:text="@string/accommodation"
                         android:textColor="@color/black"
                         android:backgroundTint="@android:color/white"
-                        android:onClick="@{() -> handler.setCategoryMarker(&quot;AD5&quot;)}"
+                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;AD5&quot;)}"
                         app:icon="@drawable/ic_king_bed"
                         app:iconTint="@color/black"/>
 
