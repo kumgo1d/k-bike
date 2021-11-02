@@ -8,12 +8,6 @@ import com.goldcompany.apps.koreabike.location.LocationProvider
 import kotlinx.coroutines.launch
 
 class SearchAddressViewModel: ViewModel() {
-    private fun insertAddress(userAddress: UserAddress) {
-        viewModelScope.launch {
-            KBikeApplication.instance.database.UserAddressDAO().insert(userAddress)
-        }
-    }
-
     fun setCurrentAddress(userAddress: UserAddress) {
         viewModelScope.launch {
             val current = LocationProvider.getUserAddress()
@@ -26,11 +20,15 @@ class SearchAddressViewModel: ViewModel() {
                     address = current.address,
                     selected = false
                 )
-
                 insertAddress(unSelected)
             }
-
             insertAddress(userAddress)
+        }
+    }
+
+    private fun insertAddress(userAddress: UserAddress) {
+        viewModelScope.launch {
+            KBikeApplication.instance.database.UserAddressDAO().insert(userAddress)
         }
     }
 }
