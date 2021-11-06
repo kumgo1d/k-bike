@@ -20,6 +20,6 @@ class KBikeApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(Timber.DebugTree())
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
 }

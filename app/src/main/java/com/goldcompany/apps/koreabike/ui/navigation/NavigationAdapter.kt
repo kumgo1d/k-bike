@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.adapter
+package com.goldcompany.apps.koreabike.ui.navigation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,6 @@ import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
-import com.goldcompany.apps.koreabike.ui.navigation.NavigationViewModel
 
 class NavigationAdapter(private val dataSet: KakaoData,
                         private val viewModel: NavigationViewModel,
@@ -31,7 +30,7 @@ class NavigationAdapter(private val dataSet: KakaoData,
                     viewModel.endY = item.y
                 }
 
-                MainActivity.hideKeyboard(it)
+                MainActivity.instance.hideKeyboard(it)
             }
         }
     }

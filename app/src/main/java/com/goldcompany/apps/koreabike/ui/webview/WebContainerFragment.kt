@@ -22,7 +22,7 @@ class WebContainerFragment : Fragment() {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_web_container, container, false)
         binding.fragment = this
 
-        MainActivity.showBottom()
+        MainActivity.instance.showBottom()
 
         return binding.root
     }

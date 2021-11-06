@@ -81,7 +81,7 @@
         app:popUpToInclusive="true"/>
     <fragment
         android:id="@+id/navigationMapFragment"
-        android:name="com.goldcompany.apps.koreabike.ui.navigation.NavigationMapFragment"
+        android:name="com.goldcompany.apps.koreabike.ui.navigation.NavigationResultFragment"
         android:label="NavigationMapFragment" />
 
 </navigation>

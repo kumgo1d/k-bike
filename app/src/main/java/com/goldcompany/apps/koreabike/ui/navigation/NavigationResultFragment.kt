@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.databinding.FragmentNavigationMapBinding
+import com.goldcompany.apps.koreabike.databinding.FragmentNavigationResultBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
@@ -18,17 +18,16 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.PathOverlay
-import timber.log.Timber
 
-class NavigationMapFragment : Fragment(), OnMapReadyCallback {
-    private lateinit var binding: FragmentNavigationMapBinding
+ class NavigationResultFragment : Fragment(), OnMapReadyCallback {
+    private lateinit var binding: FragmentNavigationResultBinding
     private lateinit var naverMap: NaverMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_navigation_map, container, false)
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_navigation_result, container, false)
 
         startMap()
         setListener()

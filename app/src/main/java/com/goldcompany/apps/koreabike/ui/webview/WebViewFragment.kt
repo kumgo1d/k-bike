@@ -25,7 +25,7 @@ class WebViewFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_web_view, container, false)
 
-        MainActivity.hideBottom()
+        MainActivity.instance.hideBottom()
         webViewSetting()
 
         return binding.root

@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.adapter
+package com.goldcompany.apps.koreabike.ui.favorite_place
 
 import android.view.LayoutInflater
 import android.view.View

@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.adapter.SearchAddressAdapter
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.api.FindPlaces
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +32,7 @@ class SearchAddressFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(SearchAddressViewModel::class.java)
 
-        MainActivity.hideBottom()
+        MainActivity.instance.hideBottom()
         setButtonListener()
 
         return binding.root
@@ -42,14 +41,14 @@ class SearchAddressFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         binding.searchAddressInput.clearFocus()
-        MainActivity.hideKeyboard(binding.root)
+        MainActivity.instance.hideKeyboard(binding.root)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setButtonListener() {
         binding.parentLayout.setOnTouchListener { _, _ ->
             binding.searchAddressInput.clearFocus()
-            MainActivity.hideKeyboard(binding.root)
+            MainActivity.instance.hideKeyboard(binding.root)
             return@setOnTouchListener true
         }
 
@@ -59,7 +58,7 @@ class SearchAddressFragment : Fragment() {
 
         binding.searchAddressButton.setOnClickListener {
             binding.searchAddressInput.clearFocus()
-            MainActivity.hideKeyboard(binding.searchAddressInput)
+            MainActivity.instance.hideKeyboard(binding.searchAddressInput)
             lifecycleScope.launch {
                 searchAddress()
             }

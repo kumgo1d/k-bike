@@ -18,7 +18,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.adapter.NavigationAdapter
 import com.goldcompany.apps.koreabike.api.FindPlaces
 import com.goldcompany.apps.koreabike.api.NaverApiRetrofitClient
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
@@ -47,7 +46,7 @@ class NavigationFragment : Fragment() {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_navigation, container, false)
         viewModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
 
-        MainActivity.hideBottom()
+        MainActivity.instance.hideBottom()
         setTouchListener()
         bindNavAddress()
         searchNavAddress()
@@ -59,7 +58,7 @@ class NavigationFragment : Fragment() {
         super.onStop()
         binding.start.clearFocus()
         binding.end.clearFocus()
-        MainActivity.hideKeyboard(binding.root)
+        MainActivity.instance.hideKeyboard(binding.root)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -67,7 +66,7 @@ class NavigationFragment : Fragment() {
         binding.parentLayout.setOnTouchListener { _, _ ->
             binding.start.clearFocus()
             binding.end.clearFocus()
-            MainActivity.hideKeyboard(binding.root)
+            MainActivity.instance.hideKeyboard(binding.root)
             return@setOnTouchListener true
         }
 
@@ -109,15 +108,6 @@ class NavigationFragment : Fragment() {
         binding.end.setOnKeyListener(enterKeyListener())
     }
 
-    private fun enterKeyListener() = View.OnKeyListener { _, keyCode, event ->
-        if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-            lifecycleScope.launch {
-                checkAddressAndnavigateApi()
-            }
-        }
-        false
-    }
-
     private fun textChangeListener(isStart: Boolean) = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun afterTextChanged(s: Editable?) {}
@@ -127,6 +117,26 @@ class NavigationFragment : Fragment() {
                 searchAddress(s.toString(), isStart)
             }
         }
+    }
+
+    private fun searchAddress(address: String, isStart: Boolean) {
+        FindPlaces().callKakaoKeyword(address = address) { data, _ ->
+            if(data == null) {
+                Toast.makeText(requireContext(), "에러가 발생하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                return@callKakaoKeyword
+            }
+
+            binding.addressRecyclerView.adapter = NavigationAdapter(data, viewModel, isStart)
+        }
+    }
+
+    private fun enterKeyListener() = View.OnKeyListener { _, keyCode, event ->
+        if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+            lifecycleScope.launch {
+                checkAddressAndnavigateApi()
+            }
+        }
+        false
     }
 
     private fun checkAddressAndnavigateApi() {
@@ -170,16 +180,5 @@ class NavigationFragment : Fragment() {
             return false
         }
         return true
-    }
-
-    private fun searchAddress(address: String, isStart: Boolean) {
-        FindPlaces().callKakaoKeyword(address = address) { data, _ ->
-            if(data == null) {
-                Toast.makeText(requireContext(), "에러가 발생하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
-                return@callKakaoKeyword
-            }
-
-            binding.addressRecyclerView.adapter = NavigationAdapter(data, viewModel, isStart)
-        }
     }
 }

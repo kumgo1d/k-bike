@@ -16,31 +16,14 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var bottomNav: BottomNavigationView
+    private lateinit var banner: AdView
 
     companion object {
         lateinit var instance: MainActivity
             private set
-
-        fun hideKeyboard(view: View) {
-            val imm = instance.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-
-        lateinit var banner: AdView
-        lateinit var bottomNav: BottomNavigationView
-
-        fun hideBottom() {
-            banner.visibility = View.GONE
-            bottomNav.visibility = View.GONE
-        }
-
-        fun showBottom() {
-            banner.visibility = View.VISIBLE
-            bottomNav.visibility = View.VISIBLE
-        }
     }
-
-    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -66,5 +49,20 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
         val navController = navHostFragment.navController
         bottomNav.setupWithNavController(navController)
+    }
+
+    fun hideKeyboard(view: View) {
+        val imm = instance.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun hideBottom() {
+        banner.visibility = View.GONE
+        bottomNav.visibility = View.GONE
+    }
+
+    fun showBottom() {
+        banner.visibility = View.VISIBLE
+        bottomNav.visibility = View.VISIBLE
     }
 }

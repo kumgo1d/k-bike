@@ -18,7 +18,6 @@ abstract class KBikeDatabase : RoomDatabase() {
     abstract fun UserAddressDAO(): UserAddressDAO
 
     companion object {
-
         fun getInstance(context: Context): KBikeDatabase {
             return buildDatabase(context)
         }

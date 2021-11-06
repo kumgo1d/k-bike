@@ -9,9 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
@@ -33,8 +32,9 @@ interface BikeMapHandler {
 }
 
 class BikeMapFragment : Fragment(), OnMapReadyCallback {
+    private val viewModel by viewModels<BikeMapViewModel>()
+
     private lateinit var locationSource: FusedLocationSource
-    private lateinit var viewModel: BikeMapViewModel
     private lateinit var binding: FragmentBikeMapBinding
     private lateinit var naverMap: NaverMap
 
@@ -107,12 +107,12 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
-        viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
-        binding.viewModel = viewModel
-        binding.handler = handler
+        binding = FragmentBikeMapBinding.inflate(inflater, container, false).apply {
+            viewModel = viewModel
+            handler = handler
+        }
 
-        MainActivity.showBottom()
+        MainActivity.instance.showBottom()
         requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
 
         lifecycleScope.launch {

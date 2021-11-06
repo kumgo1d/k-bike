@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.adapter
+package com.goldcompany.apps.koreabike.ui.search_address
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,6 @@ import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
 import com.goldcompany.apps.koreabike.db.item.UserAddress
-import com.goldcompany.apps.koreabike.ui.search_address.SearchAddressViewModel
 
 class SearchAddressAdapter(private val dataSet: KakaoData,
                            private val viewModel: SearchAddressViewModel
