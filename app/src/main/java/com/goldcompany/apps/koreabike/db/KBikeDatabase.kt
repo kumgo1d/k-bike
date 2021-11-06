@@ -14,7 +14,6 @@ import com.goldcompany.apps.koreabike.db.item.UserAddress
 @Database(entities = [FavoriteListItem::class, UserAddress::class], version = 6, exportSchema = false)
 abstract class KBikeDatabase : RoomDatabase() {
     abstract fun FavoriteListItemDAO(): FavoriteListItemDAO
-
     abstract fun UserAddressDAO(): UserAddressDAO
 
     companion object {

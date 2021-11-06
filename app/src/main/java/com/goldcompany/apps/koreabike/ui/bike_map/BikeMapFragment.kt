@@ -9,8 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
@@ -27,15 +28,12 @@ import kotlinx.coroutines.launch
 interface BikeMapHandler {
     fun setCategoryMarkOverlay(code: String)
     fun checkPermissionAndGetMyLocation()
-    fun goSearchFragment()
-    fun goNavigationFragment()
 }
 
 class BikeMapFragment : Fragment(), OnMapReadyCallback {
-    private val viewModel by viewModels<BikeMapViewModel>()
-
     private lateinit var locationSource: FusedLocationSource
     private lateinit var binding: FragmentBikeMapBinding
+    private lateinit var viewModel: BikeMapViewModel
     private lateinit var naverMap: NaverMap
 
     private var isNearbyPlaceOverlayMarked = false
@@ -66,7 +64,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                     }
                     else {
                         val marker = Marker()
-
                         marker.apply {
                             width = 70
                             height = 100
@@ -88,14 +85,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                 requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
-
-        override fun goSearchFragment() {
-            findNavController().navigate(BikeMapFragmentDirections.actionMapViewToSearchAddressFragment())
-        }
-
-        override fun goNavigationFragment() {
-            findNavController().navigate(BikeMapFragmentDirections.actionMapViewToNavigationFragment())
-        }
     }
 
     companion object {
@@ -107,10 +96,10 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentBikeMapBinding.inflate(inflater, container, false).apply {
-            viewModel = viewModel
-            handler = handler
-        }
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
+        viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
+        binding.viewModel = viewModel
+        binding.handler = handler
 
         MainActivity.instance.showBottom()
         requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -119,15 +108,10 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             startMap()
         }
 
+        setUpSearchNavigation()
+        setUpSearchAddress()
+
         return binding.root
-    }
-
-    @Override
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-
-        initMapSettings()
-        setCameraPosition()
     }
 
     private fun startMap() {
@@ -140,16 +124,37 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
-    private fun checkLocationPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            requireActivity(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+    private fun setUpSearchNavigation() {
+        binding.searchNavigationPathButton.let {
+            it.setOnClickListener {
+                val direction = BikeMapFragmentDirections.actionMapViewToNavigationFragment()
+                findNavController().navigate(direction)
+            }
+        }
     }
 
-    private fun setCameraPositionToMyLocation() {
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+    private fun setUpSearchAddress() {
+        binding.searchAddressButton.let {
+            it.setOnClickListener {
+                val direction = BikeMapFragmentDirections.actionMapViewToSearchAddressFragment()
+                findNavController().navigate(direction)
+            }
+        }
+    }
+
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+
+        initMapSettings()
+        setCameraPosition()
+    }
+
+    private fun initMapSettings() {
+        naverMap.apply {
+            setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
+            uiSettings.isZoomControlEnabled = false
+            minZoom = 13.0
+        }
     }
 
     private fun setCameraPosition() {
@@ -175,16 +180,26 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun initMapSettings() {
-        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BICYCLE, true)
-        naverMap.uiSettings.isZoomControlEnabled = false
-        naverMap.minZoom = 13.0
+    private fun checkLocationPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun setUserLocationMarker(latitude: Double, longitude: Double) {
-        locationMarker.position = LatLng(latitude, longitude)
-        locationMarker.icon = MarkerIcons.BLACK
-        locationMarker.iconTintColor = resources.getColor(R.color.colorPrimary, resources.newTheme())
-        locationMarker.map = naverMap
+        locationMarker.apply {
+            position = LatLng(latitude, longitude)
+            icon = MarkerIcons.BLACK
+            iconTintColor = resources.getColor(R.color.colorPrimary, resources.newTheme())
+            map = naverMap
+        }
+    }
+
+    private fun setCameraPositionToMyLocation() {
+        naverMap.apply {
+            locationSource = locationSource
+            locationTrackingMode = LocationTrackingMode.Follow
+        }
     }
 }

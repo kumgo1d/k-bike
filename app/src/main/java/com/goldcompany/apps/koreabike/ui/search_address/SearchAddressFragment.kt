@@ -29,19 +29,12 @@ class SearchAddressFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_address, container, false)
-
         viewModel = ViewModelProvider(this).get(SearchAddressViewModel::class.java)
 
         MainActivity.instance.hideBottom()
         setButtonListener()
 
         return binding.root
-    }
-
-    override fun onStop() {
-        super.onStop()
-        binding.searchAddressInput.clearFocus()
-        MainActivity.instance.hideKeyboard(binding.root)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -71,13 +64,19 @@ class SearchAddressFragment : Fragment() {
 
     private fun searchAddress() {
         val address = binding.searchAddressInput.text.toString()
-        FindPlaces().callKakaoKeyword(address = address) { data, _ ->
+        viewModel.getAddress(address = address) { data, _ ->
             if(data == null) {
                 Toast.makeText(requireContext(), "해당 주소를 찾지 못하였습니다.", Toast.LENGTH_SHORT).show()
-                return@callKakaoKeyword
+                return@getAddress
             }
 
             binding.searchAddressList.adapter = SearchAddressAdapter(data, viewModel)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.searchAddressInput.clearFocus()
+        MainActivity.instance.hideKeyboard(binding.root)
     }
 }

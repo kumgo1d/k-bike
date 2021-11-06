@@ -48,12 +48,12 @@
                     app:layout_flexGrow="1">
 
                     <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/search_address_button"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:paddingVertical="8dp"
                         android:paddingHorizontal="10dp"
                         android:background="@android:color/white"
-                        android:onClick="@{() -> handler.goSearchFragment()}"
                         android:hint="@string/search_address_hint2"
                         android:maxLines="1"
                         android:focusable="false"/>
@@ -61,6 +61,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/search_navigation_path_button"
                     android:theme="@style/AppTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="60dp"
@@ -68,8 +69,6 @@
                     android:textColor="@android:color/white"
                     android:textStyle="bold"
                     android:backgroundTint="?attr/colorPrimary"
-                    android:onClick="@{() -> handler.goNavigationFragment()}"
-
                     app:layout_alignSelf="center"/>
 
             </com.google.android.flexbox.FlexboxLayout>

@@ -35,7 +35,6 @@ class FindPlaces {
 
     fun callKakaoCategoryGroupItem(code: String, longitude: String, latitude: String): MutableLiveData<CategoryGroup> {
         val kakao = MutableLiveData<CategoryGroup>()
-
         kakaoApiService = KakaoApiRetrofitClient_ProvideKakaoApiServiceFactory.provideKakaoApiService()
         kakaoApiService.getCategoryGroup(KAKAO_API_KEY, code = code, longitude = longitude, latitude = latitude, radius = 10000)
             .subscribeOn(Schedulers.io())

@@ -27,9 +27,10 @@ class FavoritePlaceFragment : Fragment() {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_favorite_place, container, false)
         viewModel = ViewModelProvider(this).get(FavoritePlaceViewModel::class.java)
 
-        viewModel.getAddress().observe(viewLifecycleOwner, {
-            binding.favoriteAddressList.adapter = FavoritePlaceAdapter(it, ::deleteItem, ::updateItem)
-        })
+        viewModel.getAddress().observe(viewLifecycleOwner) {
+            binding.favoriteAddressList.adapter =
+                FavoritePlaceAdapter(it, ::deleteItem, ::updateItem)
+        }
 
         addListener()
 
