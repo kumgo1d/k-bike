@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
-import com.goldcompany.apps.koreabike.db.item.UserAddress
+import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 
-class SearchAddressAdapter(private val dataSet: KakaoData,
+class SearchAddressAdapter(private val dataSet: List<KakaoAddressItem>,
                            private val viewModel: SearchAddressViewModel
 ): RecyclerView.Adapter<SearchAddressAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: SubSearchAddressItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -21,7 +21,7 @@ class SearchAddressAdapter(private val dataSet: KakaoData,
             address.text = item.addressName
 
             itemView.setOnClickListener {
-                val userAddress = UserAddress(
+                val userAddress = UserHistoryAddress(
                     latitude = item.y.toDouble(),
                     longitude = item.x.toDouble(),
                     address = item.addressName,
@@ -42,8 +42,8 @@ class SearchAddressAdapter(private val dataSet: KakaoData,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(dataSet.addressList[position])
+        holder.bind(dataSet[position])
     }
 
-    override fun getItemCount() = dataSet.addressList.size
+    override fun getItemCount() = dataSet.size
 }

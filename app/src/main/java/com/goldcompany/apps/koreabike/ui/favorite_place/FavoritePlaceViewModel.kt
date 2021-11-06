@@ -5,13 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.goldcompany.apps.koreabike.KBikeApplication
-import com.goldcompany.apps.koreabike.db.item.UserAddress
+import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import kotlinx.coroutines.launch
 
 class FavoritePlaceViewModel: ViewModel() {
-    private val addressList = MutableLiveData<MutableList<UserAddress>?>()
+    private val addressList = MutableLiveData<MutableList<UserHistoryAddress>?>()
 
-    fun getAddress(): LiveData<MutableList<UserAddress>?> {
+    fun getAddress(): LiveData<MutableList<UserHistoryAddress>?> {
         loadAddress()
         return addressList
     }
@@ -22,7 +22,7 @@ class FavoritePlaceViewModel: ViewModel() {
         }
     }
 
-    fun setCurrentAddress(address: UserAddress) {
+    fun setCurrentAddress(address: UserHistoryAddress) {
         viewModelScope.launch {
             val dao = KBikeApplication.instance.database.UserAddressDAO()
             val current = dao.getAddress()
@@ -31,7 +31,7 @@ class FavoritePlaceViewModel: ViewModel() {
                 return@launch
             }
 
-            val unSelected = UserAddress(
+            val unSelected = UserHistoryAddress(
                 date = current.date,
                 longitude = current.longitude,
                 latitude = current.latitude,

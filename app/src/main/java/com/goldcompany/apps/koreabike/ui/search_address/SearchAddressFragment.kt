@@ -7,29 +7,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
-import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
-import com.goldcompany.apps.koreabike.api.FindPlaces
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.sub_search_address_item.view.*
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchAddressFragment : Fragment() {
+
+    private val viewModel by viewModels<SearchAddressViewModel>()
+
     private lateinit var binding: FragmentSearchAddressBinding
-    private lateinit var viewModel: SearchAddressViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_address, container, false)
-        viewModel = ViewModelProvider(this).get(SearchAddressViewModel::class.java)
+        binding = FragmentSearchAddressBinding.inflate(inflater, container, false)
 
         MainActivity.instance.hideBottom()
         setButtonListener()
@@ -64,13 +61,9 @@ class SearchAddressFragment : Fragment() {
 
     private fun searchAddress() {
         val address = binding.searchAddressInput.text.toString()
-        viewModel.getAddress(address = address) { data, _ ->
-            if(data == null) {
-                Toast.makeText(requireContext(), "해당 주소를 찾지 못하였습니다.", Toast.LENGTH_SHORT).show()
-                return@getAddress
-            }
-
-            binding.searchAddressList.adapter = SearchAddressAdapter(data, viewModel)
+        lifecycleScope.launch {
+            val resultAddress = viewModel.getAddress(address)
+            binding.searchAddressList.adapter = SearchAddressAdapter(resultAddress, viewModel)
         }
     }
 

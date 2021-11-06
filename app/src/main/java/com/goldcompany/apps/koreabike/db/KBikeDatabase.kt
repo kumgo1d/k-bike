@@ -6,15 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.goldcompany.apps.koreabike.db.dao.FavoriteListItemDAO
-import com.goldcompany.apps.koreabike.db.dao.UserAddressDAO
-import com.goldcompany.apps.koreabike.db.item.FavoriteListItem
-import com.goldcompany.apps.koreabike.db.item.UserAddress
+import com.goldcompany.apps.koreabike.db.favorite_address.FavoriteAddressItemDAO
+import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddressDAO
+import com.goldcompany.apps.koreabike.db.favorite_address.FavoriteAddressItem
+import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 
-@Database(entities = [FavoriteListItem::class, UserAddress::class], version = 6, exportSchema = false)
+@Database(entities = [FavoriteAddressItem::class, UserHistoryAddress::class], version = 6, exportSchema = false)
 abstract class KBikeDatabase : RoomDatabase() {
-    abstract fun FavoriteListItemDAO(): FavoriteListItemDAO
-    abstract fun UserAddressDAO(): UserAddressDAO
+    abstract fun FavoriteListItemDAO(): FavoriteAddressItemDAO
+    abstract fun UserAddressDAO(): UserHistoryAddressDAO
 
     companion object {
         fun getInstance(context: Context): KBikeDatabase {

@@ -1,10 +1,10 @@
-package com.goldcompany.apps.koreabike.db.item
+package com.goldcompany.apps.koreabike.db.history_address
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
 @Entity(tableName = "user_address", primaryKeys = ["latitude", "longitude"])
-class UserAddress(
+class UserHistoryAddress(
     @ColumnInfo var date: Long = System.currentTimeMillis(),
     @ColumnInfo var latitude: Double,
     @ColumnInfo var longitude: Double,

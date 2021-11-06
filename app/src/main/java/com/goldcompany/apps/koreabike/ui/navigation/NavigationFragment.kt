@@ -11,14 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.api.FindPlaces
 import com.goldcompany.apps.koreabike.api.NaverApiRetrofitClient
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
@@ -33,18 +31,18 @@ import java.util.ArrayList
 
 @AndroidEntryPoint
 class NavigationFragment : Fragment() {
-    private lateinit var binding: FragmentNavigationBinding
-    private lateinit var viewModel: NavigationViewModel
 
+    private val viewModel by viewModels<NavigationViewModel>()
     private val NAVER_API_KEY_ID = "fe7iwsbkl5"
     private val NAVER_API_KEY = "1KYsy93nxRaNmfxdHExFfyAIX89B8sfwePQw7bNP"
+
+    private lateinit var binding: FragmentNavigationBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_navigation, container, false)
-        viewModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+        binding = FragmentNavigationBinding.inflate(layoutInflater, container, false)
 
         MainActivity.instance.hideBottom()
         setTouchListener()
@@ -52,13 +50,6 @@ class NavigationFragment : Fragment() {
         searchNavAddress()
 
         return binding.root
-    }
-
-    override fun onStop() {
-        super.onStop()
-        binding.start.clearFocus()
-        binding.end.clearFocus()
-        MainActivity.instance.hideKeyboard(binding.root)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -76,7 +67,7 @@ class NavigationFragment : Fragment() {
 
         binding.navigateButton.setOnClickListener {
             lifecycleScope.launch {
-                checkAddressAndnavigateApi()
+                checkAddressAndNavigateApi()
             }
         }
     }
@@ -120,26 +111,22 @@ class NavigationFragment : Fragment() {
     }
 
     private fun searchAddress(address: String, isStart: Boolean) {
-        FindPlaces().callKakaoKeyword(address = address) { data, _ ->
-            if(data == null) {
-                Toast.makeText(requireContext(), "에러가 발생하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
-                return@callKakaoKeyword
-            }
-
-            binding.addressRecyclerView.adapter = NavigationAdapter(data, viewModel, isStart)
+        lifecycleScope.launch {
+            val resultAddress = viewModel.searchAddress(address)
+            binding.addressRecyclerView.adapter = NavigationAdapter(resultAddress, viewModel, isStart)
         }
     }
 
     private fun enterKeyListener() = View.OnKeyListener { _, keyCode, event ->
         if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
             lifecycleScope.launch {
-                checkAddressAndnavigateApi()
+                checkAddressAndNavigateApi()
             }
         }
         false
     }
 
-    private fun checkAddressAndnavigateApi() {
+    private fun checkAddressAndNavigateApi() {
         if(!checkRequiredAllAddress()) return
 
         val navigation = NaverApiRetrofitClient.naverApi.getPath(
@@ -180,5 +167,12 @@ class NavigationFragment : Fragment() {
             return false
         }
         return true
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.start.clearFocus()
+        binding.end.clearFocus()
+        MainActivity.instance.hideKeyboard(binding.root)
     }
 }

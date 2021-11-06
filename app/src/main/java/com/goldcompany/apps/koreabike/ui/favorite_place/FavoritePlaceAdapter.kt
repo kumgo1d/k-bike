@@ -5,14 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.db.item.UserAddress
+import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import kotlinx.android.synthetic.main.sub_favorite_place_list_item.view.*
 
-class FavoritePlaceAdapter(private val list: MutableList<UserAddress>?,
-                           private val deleteItem: (UserAddress) -> Unit,
-                           private val updateItem: (UserAddress) -> Unit): RecyclerView.Adapter<FavoritePlaceAdapter.ViewHolder>() {
+class FavoritePlaceAdapter(private val list: MutableList<UserHistoryAddress>?,
+                           private val deleteItem: (UserHistoryAddress) -> Unit,
+                           private val updateItem: (UserHistoryAddress) -> Unit): RecyclerView.Adapter<FavoritePlaceAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var item: UserAddress? = null
+        var item: UserHistoryAddress? = null
 
         init {
             itemView.place_item_delete.setOnClickListener {
@@ -26,7 +26,7 @@ class FavoritePlaceAdapter(private val list: MutableList<UserAddress>?,
             }
         }
 
-        fun setList(item: UserAddress) {
+        fun setList(item: UserHistoryAddress) {
             itemView.place_item_keyword.text = item.keyword
             itemView.place_item_address.text = item.address
 

@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -31,9 +32,11 @@ interface BikeMapHandler {
 }
 
 class BikeMapFragment : Fragment(), OnMapReadyCallback {
+
+    private val viewModel by viewModels<BikeMapViewModel>()
+
     private lateinit var locationSource: FusedLocationSource
     private lateinit var binding: FragmentBikeMapBinding
-    private lateinit var viewModel: BikeMapViewModel
     private lateinit var naverMap: NaverMap
 
     private var isNearbyPlaceOverlayMarked = false
@@ -56,24 +59,26 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             val latitude = naverMap.cameraPosition.target.latitude.toString()
             val longitude = naverMap.cameraPosition.target.longitude.toString()
 
-            viewModel.getItem(code, longitude, latitude).observe(viewLifecycleOwner) {
-                for(i in it.documents.indices) {
-                    if(isNearbyPlaceOverlayMarked) {
-                        categoryMarkers[0].map = null
-                        categoryMarkers.removeAt(0)
-                    }
-                    else {
-                        val marker = Marker()
-                        marker.apply {
-                            width = 70
-                            height = 100
-                            position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
-                            map = naverMap
+            lifecycleScope.launch {
+                viewModel.getItem(code, longitude, latitude).observe(viewLifecycleOwner) {
+                    for(i in it.documents.indices) {
+                        if(isNearbyPlaceOverlayMarked) {
+                            categoryMarkers[0].map = null
+                            categoryMarkers.removeAt(0)
                         }
-                        categoryMarkers.add(marker)
+                        else {
+                            val marker = Marker()
+                            marker.apply {
+                                width = 70
+                                height = 100
+                                position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
+                                map = naverMap
+                            }
+                            categoryMarkers.add(marker)
+                        }
                     }
+                    isNearbyPlaceOverlayMarked = !isNearbyPlaceOverlayMarked
                 }
-                isNearbyPlaceOverlayMarked = !isNearbyPlaceOverlayMarked
             }
         }
 
@@ -96,18 +101,15 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bike_map, container, false)
-        viewModel = ViewModelProvider(this).get(BikeMapViewModel::class.java)
-        binding.viewModel = viewModel
-        binding.handler = handler
-
-        MainActivity.instance.showBottom()
         requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-
-        lifecycleScope.launch {
-            startMap()
+        binding = FragmentBikeMapBinding.inflate(inflater, container, false).apply {
+            viewModel = viewModel
+            handler = handler
         }
 
+        MainActivity.instance.showBottom()
+
+        startMap()
         setUpSearchNavigation()
         setUpSearchAddress()
 

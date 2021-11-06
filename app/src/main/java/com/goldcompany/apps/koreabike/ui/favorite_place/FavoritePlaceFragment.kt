@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.KBikeApplication
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentFavoritePlaceBinding
-import com.goldcompany.apps.koreabike.db.item.UserAddress
+import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import kotlinx.coroutines.launch
 
 
@@ -37,14 +37,14 @@ class FavoritePlaceFragment : Fragment() {
         return binding.root
     }
 
-    private fun deleteItem(address: UserAddress) {
+    private fun deleteItem(address: UserHistoryAddress) {
         lifecycleScope.launch {
             KBikeApplication.instance.database.UserAddressDAO().delete(address)
         }
     }
 
-    private fun updateItem(address: UserAddress) {
-        val selected = UserAddress(
+    private fun updateItem(address: UserHistoryAddress) {
+        val selected = UserHistoryAddress(
             date = System.currentTimeMillis(),
             longitude = address.longitude,
             latitude = address.latitude,

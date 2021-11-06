@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.db.item
+package com.goldcompany.apps.koreabike.db.favorite_address
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity(tableName = "list_item")
-class FavoriteListItem(
+class FavoriteAddressItem(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo var no: Long?,
     @ColumnInfo var station: String,
