@@ -22,6 +22,8 @@ import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,6 +39,7 @@ class NavigationFragment : Fragment() {
     private val NAVER_API_KEY = "1KYsy93nxRaNmfxdHExFfyAIX89B8sfwePQw7bNP"
 
     private lateinit var binding: FragmentNavigationBinding
+    private lateinit var adapter: NavigationAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -103,25 +106,31 @@ class NavigationFragment : Fragment() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun afterTextChanged(s: Editable?) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            lifecycleScope.launch {
-                delay(1000)
-                searchAddress(s.toString(), isStart)
+            if(s != null && s.isNotEmpty()) {
+                lifecycleScope.launch {
+                    delay(1000)
+                    searchAddress(s.toString(), isStart)
+                }
             }
         }
     }
 
     private fun searchAddress(address: String, isStart: Boolean) {
+        adapter = NavigationAdapter(viewModel, isStart)
+        binding.addressRecyclerView.adapter = adapter
+
         lifecycleScope.launch {
-            val resultAddress = viewModel.searchAddress(address)
-            binding.addressRecyclerView.adapter = NavigationAdapter(resultAddress, viewModel, isStart)
+            viewModel.searchAddress(address)
+                .distinctUntilChanged()
+                .collect {
+                    adapter.submitList(it.addressList)
+                }
         }
     }
 
     private fun enterKeyListener() = View.OnKeyListener { _, keyCode, event ->
         if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-            lifecycleScope.launch {
-                checkAddressAndNavigateApi()
-            }
+            checkAddressAndNavigateApi()
         }
         false
     }

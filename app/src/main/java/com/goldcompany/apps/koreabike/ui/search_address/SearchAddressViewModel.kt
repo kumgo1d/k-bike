@@ -4,14 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.goldcompany.apps.koreabike.KBikeApplication
-import com.goldcompany.apps.koreabike.api.FindPlaces
 import com.goldcompany.apps.koreabike.data.KBikeRepository
-import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.goldcompany.apps.koreabike.location.LocationProvider
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class SearchAddressViewModel(application: Application): AndroidViewModel(application) {
 
@@ -35,8 +34,8 @@ class SearchAddressViewModel(application: Application): AndroidViewModel(applica
         }
     }
 
-    suspend fun getAddress(address: String): List<KakaoAddressItem> {
-        return kBikeRepository.getKeywordAddressItem(address)
+    suspend fun getAddress(address: String): Flow<KakaoData> = flow {
+        emit(kBikeRepository.getKeywordAddressItem(address))
     }
 
     private fun insertAddress(userAddress: UserHistoryAddress) {

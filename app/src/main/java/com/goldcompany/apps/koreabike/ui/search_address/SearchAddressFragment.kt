@@ -11,8 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
+import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -21,12 +25,14 @@ class SearchAddressFragment : Fragment() {
     private val viewModel by viewModels<SearchAddressViewModel>()
 
     private lateinit var binding: FragmentSearchAddressBinding
+    private lateinit var adapter: SearchAddressAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchAddressBinding.inflate(inflater, container, false)
+        adapter = SearchAddressAdapter(viewModel)
 
         MainActivity.instance.hideBottom()
         setButtonListener()
@@ -49,21 +55,24 @@ class SearchAddressFragment : Fragment() {
         binding.searchAddressButton.setOnClickListener {
             binding.searchAddressInput.clearFocus()
             MainActivity.instance.hideKeyboard(binding.searchAddressInput)
-            lifecycleScope.launch {
-                searchAddress()
-            }
+            searchAddress()
         }
 
         binding.favoriteAddressButton.setOnClickListener {
-            findNavController().navigate(SearchAddressFragmentDirections.actionSearchAddressFragmentToFavoritePlaceFragment())
+            val direction = SearchAddressFragmentDirections.actionSearchAddressFragmentToFavoritePlaceFragment()
+            findNavController().navigate(direction)
         }
     }
 
     private fun searchAddress() {
         val address = binding.searchAddressInput.text.toString()
         lifecycleScope.launch {
-            val resultAddress = viewModel.getAddress(address)
-            binding.searchAddressList.adapter = SearchAddressAdapter(resultAddress, viewModel)
+            binding.searchAddressList.adapter = adapter
+            viewModel.getAddress(address)
+                .distinctUntilChanged()
+                .collect {
+                    adapter.submitList(it.addressList)
+                }
         }
     }
 

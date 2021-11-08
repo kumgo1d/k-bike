@@ -7,6 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
+import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class NavigationViewModel(application: Application) : AndroidViewModel(application) {
@@ -24,7 +27,7 @@ class NavigationViewModel(application: Application) : AndroidViewModel(applicati
     var endX = ""
     var endY = ""
 
-    suspend fun searchAddress(address: String): List<KakaoAddressItem> {
-        return kBikeRepository.getKeywordAddressItem(address)
+    suspend fun searchAddress(address: String): Flow<KakaoData> = flow {
+        emit(kBikeRepository.getKeywordAddressItem(address))
     }
 }

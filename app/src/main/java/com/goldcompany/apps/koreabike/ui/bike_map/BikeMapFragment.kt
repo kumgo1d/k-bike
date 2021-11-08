@@ -24,6 +24,8 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 interface BikeMapHandler {
@@ -60,25 +62,27 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             val longitude = naverMap.cameraPosition.target.longitude.toString()
 
             lifecycleScope.launch {
-                viewModel.getItem(code, longitude, latitude).observe(viewLifecycleOwner) {
-                    for(i in it.documents.indices) {
-                        if(isNearbyPlaceOverlayMarked) {
-                            categoryMarkers[0].map = null
-                            categoryMarkers.removeAt(0)
-                        }
-                        else {
-                            val marker = Marker()
-                            marker.apply {
-                                width = 70
-                                height = 100
-                                position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
-                                map = naverMap
+                viewModel.getItem(code, longitude, latitude)
+                    .distinctUntilChanged()
+                    .collect {
+                        for(i in it.documents.indices) {
+                            if(isNearbyPlaceOverlayMarked) {
+                                categoryMarkers[0].map = null
+                                categoryMarkers.removeAt(0)
                             }
-                            categoryMarkers.add(marker)
+                            else {
+                                val marker = Marker()
+                                marker.apply {
+                                    width = 70
+                                    height = 100
+                                    position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
+                                    map = naverMap
+                                }
+                                categoryMarkers.add(marker)
+                            }
                         }
+                        isNearbyPlaceOverlayMarked = !isNearbyPlaceOverlayMarked
                     }
-                    isNearbyPlaceOverlayMarked = !isNearbyPlaceOverlayMarked
-                }
             }
         }
 
