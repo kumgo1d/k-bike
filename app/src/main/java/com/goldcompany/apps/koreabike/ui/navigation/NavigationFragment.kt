@@ -106,9 +106,9 @@ class NavigationFragment : Fragment() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun afterTextChanged(s: Editable?) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if(s != null && s.isNotEmpty()) {
-                lifecycleScope.launch {
-                    delay(1000)
+            lifecycleScope.launch {
+                delay(1000)
+                if(s != null && s.isNotEmpty()) {
                     searchAddress(s.toString(), isStart)
                 }
             }
