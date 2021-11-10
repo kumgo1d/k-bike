@@ -9,10 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
@@ -62,10 +60,10 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             val longitude = naverMap.cameraPosition.target.longitude.toString()
 
             lifecycleScope.launch {
-                viewModel.getItem(code, longitude, latitude)
+                viewModel.searchNearbyPlacesMarker(code, longitude, latitude)
                     .distinctUntilChanged()
                     .collect {
-                        for(i in it.documents.indices) {
+                        for(i in it.places.indices) {
                             if(isNearbyPlaceOverlayMarked) {
                                 categoryMarkers[0].map = null
                                 categoryMarkers.removeAt(0)
@@ -75,7 +73,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                                 marker.apply {
                                     width = 70
                                     height = 100
-                                    position = LatLng(it.documents[i].y.toDouble(), it.documents[i].x.toDouble())
+                                    position = LatLng(it.places[i].y.toDouble(), it.places[i].x.toDouble())
                                     map = naverMap
                                 }
                                 categoryMarkers.add(marker)
@@ -106,11 +104,10 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View {
         requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        binding = FragmentBikeMapBinding.inflate(inflater, container, false).apply {
-            viewModel = viewModel
-            handler = handler
-        }
-
+        binding = FragmentBikeMapBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.handler = handler
         MainActivity.instance.showBottom()
 
         startMap()

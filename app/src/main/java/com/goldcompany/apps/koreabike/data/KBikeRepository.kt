@@ -1,10 +1,10 @@
 package com.goldcompany.apps.koreabike.data
 
 import android.app.Application
-import com.goldcompany.apps.koreabike.data.category_group.CategoryGroup
+import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarker
 import com.goldcompany.apps.koreabike.api.KakaoApiRetrofitClient
 import com.goldcompany.apps.koreabike.api.KakaoApiService
-import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
+import com.goldcompany.apps.koreabike.data.search_address.Addresses
 import com.goldcompany.apps.koreabike.db.history_address.HistoryAddressLocalDataSource
 import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
@@ -37,16 +37,16 @@ class KBikeRepository private constructor(application: Application) {
         addressLocalDataSource = HistoryAddressLocalDataSource(database.UserAddressDAO())
     }
 
-    suspend fun getKeywordAddressItem(address: String): KakaoData = withContext(Dispatchers.IO) {
-        return@withContext kakaoApiService.getKakaoAddress(KAKAO_API_KEY, address = address)
+    suspend fun searchAddress(address: String): Addresses = withContext(Dispatchers.IO) {
+        return@withContext kakaoApiService.searchAddress(KAKAO_API_KEY, address = address)
     }
 
-    suspend fun getCategoryItem(
+    suspend fun searchNearbyPlacesMarker(
         code: String,
         longitude: String,
         latitude: String
-    ): CategoryGroup = withContext(Dispatchers.IO) {
-        return@withContext kakaoApiService.getCategoryGroup(KAKAO_API_KEY, code, longitude, latitude, radius = 10000)
+    ): PlaceMarker = withContext(Dispatchers.IO) {
+        return@withContext kakaoApiService.searchNearbyPlacesMarker(KAKAO_API_KEY, code, longitude, latitude, radius = 10000)
     }
 
     suspend fun getAllAddress(): MutableList<UserHistoryAddress> {

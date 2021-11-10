@@ -6,14 +6,13 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
-import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
+import com.goldcompany.apps.koreabike.data.search_address.AddressItem
 import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 
 class SearchAddressAdapter(
     private val viewModel: SearchAddressViewModel
-): ListAdapter<KakaoAddressItem, SearchAddressAdapter.ViewHolder>(SearchAddressDiffCallback()) {
+): ListAdapter<AddressItem, SearchAddressAdapter.ViewHolder>(SearchAddressDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -33,7 +32,7 @@ class SearchAddressAdapter(
         val keyword = binding.itemKeyword
         val address = binding.itemAddress
 
-        fun bind(item: KakaoAddressItem) {
+        fun bind(item: AddressItem) {
             keyword.text = item.placeName
             address.text = item.addressName
 
@@ -53,17 +52,17 @@ class SearchAddressAdapter(
     }
 }
 
-private class SearchAddressDiffCallback : DiffUtil.ItemCallback<KakaoAddressItem>() {
+private class SearchAddressDiffCallback : DiffUtil.ItemCallback<AddressItem>() {
     override fun areItemsTheSame(
-        oldItem: KakaoAddressItem,
-        newItem: KakaoAddressItem
+        oldItem: AddressItem,
+        newItem: AddressItem
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: KakaoAddressItem,
-        newItem: KakaoAddressItem
+        oldItem: AddressItem,
+        newItem: AddressItem
     ): Boolean {
         return oldItem == newItem
     }

@@ -1,8 +1,8 @@
 package com.goldcompany.apps.koreabike.api
 
-import com.goldcompany.apps.koreabike.data.category_group.CategoryGroup
+import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarker
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
-import com.goldcompany.apps.koreabike.data.kakaodata.KakaoData
+import com.goldcompany.apps.koreabike.data.search_address.Addresses
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -10,19 +10,19 @@ import retrofit2.http.Query
 
 interface KakaoApiService {
     @GET("v2/local/search/keyword.json")
-    suspend fun getKakaoAddress(
+    suspend fun searchAddress(
         @Header("Authorization") key: String,
         @Query("query") address: String
-    ): KakaoData
+    ): Addresses
 
     @GET("v2/local/search/category.json")
-    fun getCategoryGroup(
+    suspend fun searchNearbyPlacesMarker(
         @Header("Authorization") key: String,
         @Query("category_group_code") code: String,
         @Query("x") longitude: String,
         @Query("y") latitude: String,
         @Query("radius") radius: Int
-    ): CategoryGroup
+    ): PlaceMarker
 }
 
 interface NaverApiService {

@@ -6,15 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
-import com.goldcompany.apps.koreabike.data.kakaodata.KakaoAddressItem
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -68,7 +65,7 @@ class SearchAddressFragment : Fragment() {
         val address = binding.searchAddressInput.text.toString()
         lifecycleScope.launch {
             binding.searchAddressList.adapter = adapter
-            viewModel.getAddress(address)
+            viewModel.searchAddress(address)
                 .distinctUntilChanged()
                 .collect {
                     adapter.submitList(it.addressList)
