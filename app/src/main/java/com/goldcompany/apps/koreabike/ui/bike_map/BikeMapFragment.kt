@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
-import com.goldcompany.apps.koreabike.location.LocationProvider
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -162,7 +161,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
 
     private fun setCameraPosition() {
         lifecycleScope.launch {
-            val address = LocationProvider.getUserAddress()
+            val address = viewModel.getAddress()
             val latitude = address?.latitude ?: 37.5643
             val longitude = address?.longitude ?: 126.9801
 

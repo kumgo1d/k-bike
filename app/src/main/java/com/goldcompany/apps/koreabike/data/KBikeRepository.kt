@@ -34,7 +34,7 @@ class KBikeRepository private constructor(application: Application) {
         val database by lazy { KBikeDatabase.getInstance(application.applicationContext) }
 
         kakaoApiService = KakaoApiRetrofitClient.provideKakaoApiService()
-        addressLocalDataSource = HistoryAddressLocalDataSource(database.UserAddressDAO())
+        addressLocalDataSource = HistoryAddressLocalDataSource(database.userAddressDAO())
     }
 
     suspend fun searchAddress(address: String): Addresses = withContext(Dispatchers.IO) {
@@ -51,5 +51,17 @@ class KBikeRepository private constructor(application: Application) {
 
     suspend fun getAllAddress(): MutableList<UserHistoryAddress> {
         return addressLocalDataSource.getAllAddress()
+    }
+
+    suspend fun getAddress(): UserHistoryAddress {
+        return addressLocalDataSource.getAddress()
+    }
+
+    suspend fun insertAddress(address: UserHistoryAddress) {
+        addressLocalDataSource.insertAddress(address)
+    }
+
+    suspend fun deleteAddress(address: UserHistoryAddress) {
+        addressLocalDataSource.deleteAddress(address)
     }
 }

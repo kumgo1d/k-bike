@@ -38,9 +38,7 @@ class FavoritePlaceFragment : Fragment() {
     }
 
     private fun deleteItem(address: UserHistoryAddress) {
-        lifecycleScope.launch {
-            KBikeApplication.instance.database.UserAddressDAO().delete(address)
-        }
+        viewModel.deleteAddress(address)
     }
 
     private fun updateItem(address: UserHistoryAddress) {

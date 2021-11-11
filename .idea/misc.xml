@@ -6,6 +6,8 @@
         <entry key="..\:/Users/jungh/Documents/Git/K-Bike/app/src/main/res/layout/activity_main.xml" value="0.12335359675785208" />
         <entry key="..\:/Users/jungh/Documents/Git/K-Bike/app/src/main/res/layout/fragment_bike_map.xml" value="0.12335359675785208" />
         <entry key="app/src/main/res/layout/fragment_bike_map.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_favorite_place.xml" value="0.16058763931104356" />
+        <entry key="app/src/main/res/layout/fragment_search_address.xml" value="0.16058763931104356" />
       </map>
     </option>
   </component>

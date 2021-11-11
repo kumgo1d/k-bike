@@ -1,31 +1,19 @@
 package com.goldcompany.apps.koreabike.ui.favorite_place
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.lifecycle.*
 import com.goldcompany.apps.koreabike.KBikeApplication
+import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import kotlinx.coroutines.launch
 
-class FavoritePlaceViewModel: ViewModel() {
+class FavoritePlaceViewModel(application: Application): AndroidViewModel(application) {
     private val addressList = MutableLiveData<MutableList<UserHistoryAddress>?>()
-
-    fun getAddress(): LiveData<MutableList<UserHistoryAddress>?> {
-        loadAddress()
-        return addressList
-    }
-
-    private fun loadAddress() {
-        viewModelScope.launch {
-            addressList.value = KBikeApplication.instance.database.UserAddressDAO().getAll()
-        }
-    }
+    private val kBikeRepository =  KBikeRepository.getRepository(application)
 
     fun setCurrentAddress(address: UserHistoryAddress) {
         viewModelScope.launch {
-            val dao = KBikeApplication.instance.database.UserAddressDAO()
-            val current = dao.getAddress()
+            val current = kBikeRepository.getAddress()
 
             if(current.date == address.date) {
                 return@launch
@@ -40,8 +28,25 @@ class FavoritePlaceViewModel: ViewModel() {
                 selected = false
             )
 
-            dao.insert(unSelected)
-            dao.insert(address)
+            kBikeRepository.insertAddress(unSelected)
+            kBikeRepository.insertAddress(address)
+        }
+    }
+
+    fun deleteAddress(address: UserHistoryAddress) {
+        viewModelScope.launch {
+            kBikeRepository.deleteAddress(address)
+        }
+    }
+
+    fun getAddress(): LiveData<MutableList<UserHistoryAddress>?> {
+        loadAddress()
+        return addressList
+    }
+
+    private fun loadAddress() {
+        viewModelScope.launch {
+            addressList.value = kBikeRepository.getAllAddress()
         }
     }
 }

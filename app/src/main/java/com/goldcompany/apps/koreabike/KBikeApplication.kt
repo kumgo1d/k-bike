@@ -7,17 +7,6 @@ import timber.log.Timber
 
 @HiltAndroidApp
 class KBikeApplication: Application() {
-    companion object {
-        lateinit var instance: KBikeApplication
-            private set
-    }
-
-    val database by lazy { KBikeDatabase.getInstance(this) }
-
-    init {
-        instance = this
-    }
-
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())

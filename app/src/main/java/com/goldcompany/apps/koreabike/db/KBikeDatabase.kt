@@ -13,8 +13,8 @@ import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 
 @Database(entities = [FavoriteAddressItem::class, UserHistoryAddress::class], version = 6, exportSchema = false)
 abstract class KBikeDatabase : RoomDatabase() {
-    abstract fun FavoriteListItemDAO(): FavoriteAddressItemDAO
-    abstract fun UserAddressDAO(): UserHistoryAddressDAO
+    abstract fun favoriteListItemDAO(): FavoriteAddressItemDAO
+    abstract fun userAddressDAO(): UserHistoryAddressDAO
 
     companion object {
         fun getInstance(context: Context): KBikeDatabase {

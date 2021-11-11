@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarker
+import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -12,5 +13,9 @@ class BikeMapViewModel(application: Application) : AndroidViewModel(application)
 
     suspend fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String): Flow<PlaceMarker> = flow {
         emit(kBikeRepository.searchNearbyPlacesMarker(code, longitude, latitude))
+    }
+
+    suspend fun getAddress(): UserHistoryAddress? {
+        return kBikeRepository.getAddress()
     }
 }
