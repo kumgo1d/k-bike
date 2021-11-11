@@ -1,70 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:orientation="vertical"
-    android:focusable="true"
-    android:clickable="true"
-    android:background="?attr/selectableItemBackground">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="address"
+            type="com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/place_item_drawable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_search_button"/>
+        android:paddingTop="8dp"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/place_item_keyword"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/place_item_drawable"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="강남역 2호선"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:layout_weight="1"
-                tools:ignore="NestedWeights" />
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_search_button"/>
 
-            <TextView
-                android:id="@+id/place_item_address"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="서울 서초구 서초동 1308-26"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp"
-                android:layout_weight="1"/>
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/place_item_keyword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{address.keyword}"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    tools:ignore="NestedWeights" />
+
+                <TextView
+                    android:id="@+id/place_item_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@{address.address}"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="14sp"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/place_item_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete_button"
+                android:background="?attr/selectableItemBackground"
+                android:focusable="true"
+                android:clickable="true"
+                android:layout_marginHorizontal="8dp"/>
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/place_item_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete_button"
-            android:background="?attr/selectableItemBackground"
-            android:focusable="true"
-            android:clickable="true"
-            android:layout_marginHorizontal="8dp"/>
-
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@android:color/darker_gray"/>
-
-</LinearLayout>
+</layout>

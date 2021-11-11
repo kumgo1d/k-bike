@@ -24,5 +24,4 @@ class HistoryAddressLocalDataSource internal constructor(
     suspend fun deleteAddress(address: UserHistoryAddress) = withContext(ioDispatcher) {
         addressDao.delete(address)
     }
-
 }

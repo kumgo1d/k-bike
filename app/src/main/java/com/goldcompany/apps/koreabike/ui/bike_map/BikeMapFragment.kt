@@ -32,8 +32,6 @@ interface BikeMapHandler {
 
 class BikeMapFragment : Fragment(), OnMapReadyCallback {
 
-    private val viewModel by viewModels<BikeMapViewModel>()
-
     private lateinit var locationSource: FusedLocationSource
     private lateinit var binding: FragmentBikeMapBinding
     private lateinit var naverMap: NaverMap
@@ -42,6 +40,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     private var categoryMarkers = mutableListOf<Marker>()
     private var locationMarker = Marker()
 
+    private val viewModel by viewModels<BikeMapViewModel>()
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()

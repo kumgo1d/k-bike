@@ -46,6 +46,11 @@ class SearchAddressFragment : Fragment() {
             return@setOnTouchListener true
         }
 
+        binding.favoriteAddressButton.setOnClickListener {
+            val direction = SearchAddressFragmentDirections.actionSearchAddressFragmentToFavoritePlaceFragment()
+            findNavController().navigate(direction)
+        }
+
         binding.navigationBackButton.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -57,11 +62,6 @@ class SearchAddressFragment : Fragment() {
                 searchAddress()
                 MainActivity.instance.hideKeyboard(input)
             }
-        }
-
-        binding.favoriteAddressButton.setOnClickListener {
-            val direction = SearchAddressFragmentDirections.actionSearchAddressFragmentToFavoritePlaceFragment()
-            findNavController().navigate(direction)
         }
     }
 

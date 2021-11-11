@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/favorite_place_fragment"
-        android:name="com.goldcompany.apps.koreabike.ui.favorite_place.FavoritePlaceFragment" />
+        android:name="com.goldcompany.apps.koreabike.ui.history_place.HistoryPlaceFragment" />
 
     <fragment
         android:id="@+id/map_view"
