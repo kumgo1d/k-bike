@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
+import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -147,7 +148,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         this.naverMap = naverMap
 
         initMapSettings()
-        setCameraPosition()
+        getAddress()
     }
 
     private fun initMapSettings() {
@@ -158,26 +159,33 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun setCameraPosition() {
+    private fun getAddress() {
         lifecycleScope.launch {
-            val address = viewModel.getAddress()
-            val latitude = address?.latitude ?: 37.5643
-            val longitude = address?.longitude ?: 126.9801
+            viewModel.getAddress()
+                .distinctUntilChanged()
+                .collect {
+                    setCameraPosition(it)
+                }
+        }
+    }
 
-            if(checkLocationPermission() && address != null) {
-                val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+    private fun setCameraPosition(address: UserHistoryAddress?) {
+        val latitude = address?.latitude ?: 37.5643
+        val longitude = address?.longitude ?: 126.9801
 
-                naverMap.cameraPosition = cameraPosition
-                setUserLocationMarker(latitude, longitude)
+        if(checkLocationPermission() && address != null) {
+            val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
 
-            } else if(checkLocationPermission() && address == null) {
-                setCameraPositionToMyLocation()
-            } else {
-                val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
-                setUserLocationMarker(latitude, longitude)
-                naverMap.cameraPosition = cameraPosition
-                naverMap.locationTrackingMode = LocationTrackingMode.None
-            }
+            naverMap.cameraPosition = cameraPosition
+            setUserLocationMarker(latitude, longitude)
+
+        } else if(checkLocationPermission() && address == null) {
+            setCameraPositionToMyLocation()
+        } else {
+            val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+            setUserLocationMarker(latitude, longitude)
+            naverMap.cameraPosition = cameraPosition
+            naverMap.locationTrackingMode = LocationTrackingMode.None
         }
     }
 
@@ -198,9 +206,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setCameraPositionToMyLocation() {
-        naverMap.apply {
-            locationSource = locationSource
-            locationTrackingMode = LocationTrackingMode.Follow
-        }
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 }

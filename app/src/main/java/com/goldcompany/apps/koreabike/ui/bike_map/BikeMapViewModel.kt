@@ -15,7 +15,7 @@ class BikeMapViewModel(application: Application) : AndroidViewModel(application)
         emit(kBikeRepository.searchNearbyPlacesMarker(code, longitude, latitude))
     }
 
-    suspend fun getAddress(): UserHistoryAddress? {
-        return kBikeRepository.getAddress()
+    suspend fun getAddress(): Flow<UserHistoryAddress?> = flow {
+        emit(kBikeRepository.getAddress())
     }
 }
