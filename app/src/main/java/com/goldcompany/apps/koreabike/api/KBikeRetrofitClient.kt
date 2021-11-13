@@ -13,15 +13,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(FragmentComponent::class)
 object KakaoApiRetrofitClient {
-    @Singleton
-    @Provides
-    fun provideKakaoApiService() : KakaoApiService {
-        return Retrofit.Builder()
+    private val retrofit: Retrofit.Builder by lazy {
+        Retrofit.Builder()
             .baseUrl(Constants.KAKAO_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .build()
-            .create(KakaoApiService::class.java)
+    }
+
+    @Singleton
+    fun provideKakaoApiService(): KakaoApiService {
+        return retrofit.build().create(KakaoApiService::class.java)
     }
 }
 
@@ -33,7 +34,8 @@ object NaverApiRetrofitClient {
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     }
 
-    val naverApi: NaverApiService by lazy {
-        retrofit.build().create(NaverApiService::class.java)
+    @Singleton
+    fun provideNaverApiService(): NaverApiService {
+        return retrofit.build().create(NaverApiService::class.java)
     }
 }

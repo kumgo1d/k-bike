@@ -2,11 +2,13 @@ package com.goldcompany.apps.koreabike.ui.search_address
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -55,25 +57,35 @@ class SearchAddressFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        binding.searchAddressButton.setOnClickListener {
-            val input = binding.searchAddressInput
-            input.clearFocus()
-            if(input.text != null && input.text!!.isNotEmpty()) {
-                searchAddress()
-                MainActivity.instance.hideKeyboard(input)
+        binding.searchAddressInput.setOnKeyListener { _, keyCode, _ ->
+            when(keyCode) {
+                KeyEvent.KEYCODE_ENTER -> {
+                    searchAddress(binding.searchAddressInput)
+                    true
+                }
+                else -> { false }
             }
+        }
+
+        binding.searchAddressButton.setOnClickListener {
+            searchAddress(binding.searchAddressInput)
         }
     }
 
-    private fun searchAddress() {
-        val address = binding.searchAddressInput.text.toString()
-        lifecycleScope.launch {
-            binding.searchAddressList.adapter = adapter
-            viewModel.searchAddress(address)
-                .distinctUntilChanged()
-                .collect {
-                    adapter.submitList(it.addressList)
-                }
+    private fun searchAddress(input: AppCompatEditText) {
+        input.clearFocus()
+
+        if(input.text != null && input.text!!.isNotEmpty()) {
+            val address = binding.searchAddressInput.text.toString()
+            lifecycleScope.launch {
+                binding.searchAddressList.adapter = adapter
+                viewModel.searchAddress(address)
+                    .distinctUntilChanged()
+                    .collect {
+                        adapter.submitList(it.addressList)
+                    }
+            }
+            MainActivity.instance.hideKeyboard(input)
         }
     }
 

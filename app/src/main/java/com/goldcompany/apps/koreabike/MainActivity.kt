@@ -28,10 +28,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
+        instance = this
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        instance = this
-
         MobileAds.initialize(this)
 
         setAdBanner()

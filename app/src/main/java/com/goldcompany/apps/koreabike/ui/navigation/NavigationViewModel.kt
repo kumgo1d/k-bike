@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.goldcompany.apps.koreabike.data.KBikeRepository
+import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.search_address.Addresses
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -25,5 +26,9 @@ class NavigationViewModel(application: Application) : AndroidViewModel(applicati
 
     suspend fun searchAddress(address: String): Flow<Addresses> = flow {
         emit(kBikeRepository.searchAddress(address))
+    }
+
+    suspend fun getNavigationPath(): Flow<ResultPath> = flow {
+        emit(kBikeRepository.getNavigationPath("$startX,$startY", "$endX,$endY"))
     }
 }

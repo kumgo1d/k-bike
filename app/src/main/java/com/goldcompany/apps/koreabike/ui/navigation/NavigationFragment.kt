@@ -138,20 +138,13 @@ class NavigationFragment : Fragment() {
     private fun checkAddressAndNavigateApi() {
         if(!checkRequiredAllAddress()) return
 
-        val navigation = NaverApiRetrofitClient.naverApi.getPath(
-            NAVER_API_KEY_ID,
-            NAVER_API_KEY,
-            "${viewModel.startX},${viewModel.startY}",
-            "${viewModel.endX},${viewModel.endY}",
-            "tracomfort"
-        )
-
-        navigation.enqueue(object : Callback<ResultPath> {
-            override fun onResponse(call: Call<ResultPath>, response: Response<ResultPath>) {
-                if(response.isSuccessful) {
-                    val path = response.body()!!.route.traComfort[0].path
-                    val duration = response.body()!!.route.traComfort[0].summary.duration
-                    val distance = response.body()!!.route.traComfort[0].summary.distance
+        lifecycleScope.launch {
+            viewModel.getNavigationPath()
+                .distinctUntilChanged()
+                .collect {
+                    val path = it.route.traComfort[0].path
+                    val duration = it.route.traComfort[0].summary.duration
+                    val distance = it.route.traComfort[0].summary.distance
                     val bundle = Bundle()
 
                     bundle.putInt("duration", duration)
@@ -159,12 +152,7 @@ class NavigationFragment : Fragment() {
                     bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
                     findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
                 }
-            }
-
-            override fun onFailure(call: Call<ResultPath>, t: Throwable) {
-                Timber.e("error : ${t.printStackTrace()}")
-            }
-        })
+        }
     }
 
     private fun checkRequiredAllAddress(): Boolean {
