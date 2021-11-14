@@ -67,6 +67,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?attr/selectableItemBackground"
+                app:rippleColor="@color/colorPrimary"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="5dp">
 

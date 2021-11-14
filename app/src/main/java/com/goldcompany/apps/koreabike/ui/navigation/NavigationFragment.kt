@@ -115,17 +115,15 @@ class NavigationFragment : Fragment() {
         }
     }
 
-    private fun searchAddress(address: String, isStart: Boolean) {
+    private suspend fun searchAddress(address: String, isStart: Boolean) {
         adapter = NavigationAdapter(viewModel, isStart)
         binding.addressRecyclerView.adapter = adapter
 
-        lifecycleScope.launch {
-            viewModel.searchAddress(address)
-                .distinctUntilChanged()
-                .collect {
-                    adapter.submitList(it.addressList)
-                }
-        }
+        viewModel.searchAddress(address)
+            .distinctUntilChanged()
+            .collect {
+                adapter.submitList(it.addressList)
+            }
     }
 
     private fun enterKeyListener() = View.OnKeyListener { _, keyCode, event ->
@@ -142,9 +140,9 @@ class NavigationFragment : Fragment() {
             viewModel.getNavigationPath()
                 .distinctUntilChanged()
                 .collect {
-                    val path = it.route.traComfort[0].path
-                    val duration = it.route.traComfort[0].summary.duration
-                    val distance = it.route.traComfort[0].summary.distance
+                    val path = it.route.track[0].path
+                    val duration = it.route.track[0].summary.duration
+                    val distance = it.route.track[0].summary.distance
                     val bundle = Bundle()
 
                     bundle.putInt("duration", duration)
