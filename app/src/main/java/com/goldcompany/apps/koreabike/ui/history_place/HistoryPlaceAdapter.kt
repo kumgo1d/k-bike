@@ -1,22 +1,19 @@
 package com.goldcompany.apps.koreabike.ui.history_place
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.goldcompany.apps.koreabike.data.search_address.AddressItem
-import com.goldcompany.apps.koreabike.databinding.SubFavoritePlaceListItemBinding
+import com.goldcompany.apps.koreabike.databinding.ItemFavoritePlaceListBinding
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
-import kotlinx.android.synthetic.main.sub_favorite_place_list_item.view.*
 
 class FavoritePlaceAdapter(
     private val viewModel: HistoryPlaceViewModel
 ): ListAdapter<UserHistoryAddress, FavoritePlaceAdapter.ViewHolder>(HistoryAddressDiffCallback()) {
 
-    inner class ViewHolder(private val binding: SubFavoritePlaceListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ItemFavoritePlaceListBinding) : RecyclerView.ViewHolder(binding.root) {
         var item: UserHistoryAddress? = null
 
         init {
@@ -41,7 +38,7 @@ class FavoritePlaceAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            SubFavoritePlaceListItemBinding.inflate(
+            ItemFavoritePlaceListBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
-import com.goldcompany.apps.koreabike.databinding.SubSearchAddressItemBinding
+import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 
 class SearchAddressAdapter(
@@ -16,7 +16,7 @@ class SearchAddressAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            SubSearchAddressItemBinding.inflate(
+            ItemSearchAddressBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -28,7 +28,7 @@ class SearchAddressAdapter(
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(private val binding: SubSearchAddressItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ItemSearchAddressBinding) : RecyclerView.ViewHolder(binding.root) {
         val keyword = binding.itemKeyword
         val address = binding.itemAddress
 

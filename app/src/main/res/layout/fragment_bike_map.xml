@@ -84,60 +84,46 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
+                    <include layout="@layout/item_category_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        app:description="@{@string/my_location}"
+                        app:icon="@{@drawable/ic_gps_fixed}"
+                        android:onClick="@{() -> handler.checkPermissionAndGetMyLocation()}"/>
+
+                    <include layout="@layout/item_category_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/my_location"
-                        android:textColor="@color/black"
-                        android:backgroundTint="@android:color/white"
-                        android:onClick="@{() -> handler.checkPermissionAndGetMyLocation()}"
-                        app:icon="@drawable/ic_gps_fixed"
-                        app:iconTint="@color/black"/>
+                        app:description="@{@string/pharmacy}"
+                        app:icon="@{@drawable/ic_local_hospital}"
+                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;PM9&quot;)}"/>
 
-                    <com.google.android.material.button.MaterialButton
+                    <include layout="@layout/item_category_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/pharmacy"
-                        android:textColor="@color/black"
-                        android:backgroundTint="@android:color/white"
-                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;PM9&quot;)}"
-                        app:icon="@drawable/ic_local_hospital"
-                        app:iconTint="@color/black"/>
+                        app:description="@{@string/convenience_store}"
+                        app:icon="@{@drawable/ic_local_convenience_store}"
+                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;CS2&quot;)}"/>
 
-                    <com.google.android.material.button.MaterialButton
+                    <include layout="@layout/item_category_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/convenience_store"
-                        android:textColor="@color/black"
-                        android:backgroundTint="@android:color/white"
-                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;CS2&quot;)}"
-                        app:icon="@drawable/ic_local_convenience_store"
-                        app:iconTint="@color/black"/>
+                        app:description="@{@string/cafe}"
+                        app:icon="@{@drawable/ic_local_cafe}"
+                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;CE7&quot;)}"/>
 
-                    <com.google.android.material.button.MaterialButton
+                    <include layout="@layout/item_category_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/cafe"
-                        android:textColor="@color/black"
-                        android:backgroundTint="@android:color/white"
-                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;CE7&quot;)}"
-                        app:icon="@drawable/ic_local_cafe"
-                        app:iconTint="@color/black"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="8dp"
-                        android:text="@string/accommodation"
-                        android:textColor="@color/black"
-                        android:backgroundTint="@android:color/white"
-                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;AD5&quot;)}"
-                        app:icon="@drawable/ic_king_bed"
-                        app:iconTint="@color/black"/>
+                        android:layout_marginEnd="16dp"
+                        app:description="@{@string/accommodation}"
+                        app:icon="@{@drawable/ic_king_bed}"
+                        android:onClick="@{() -> handler.setCategoryMarkOverlay(&quot;AD5&quot;)}"/>
 
                 </LinearLayout>
 
