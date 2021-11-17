@@ -29,22 +29,14 @@ class NavigationAdapter(
     }
 
     class ViewHolder(private val binding: ItemSearchAddressBinding): RecyclerView.ViewHolder(binding.root) {
-        val keyword = binding.itemKeyword
-        val address = binding.itemAddress
 
         fun bind(item: AddressItem, viewModel: NavigationViewModel, isStart: Boolean) {
-            keyword.text = item.placeName
-            address.text = item.addressName
-
+            binding.address = item
             binding.root.setOnClickListener {
                 if(isStart) {
-                    viewModel.startAddress.value = item.placeName
-                    viewModel.startX = item.x
-                    viewModel.startY = item.y
+                    viewModel.startCoordinate.value = "${item.x},${item.y}"
                 } else {
-                    viewModel.endAddress.value = item.placeName
-                    viewModel.endX = item.x
-                    viewModel.endY = item.y
+                    viewModel.endCoordinate.value = "${item.x},${item.y}"
                 }
 
                 MainActivity.instance.hideKeyboard(it)

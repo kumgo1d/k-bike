@@ -12,23 +12,33 @@ import kotlinx.coroutines.flow.flow
 class NavigationViewModel(application: Application) : AndroidViewModel(application) {
     private val kBikeRepository =  KBikeRepository.getRepository(application)
 
-    val startAddress : MutableLiveData<String> by lazy {
+    val startCoordinate: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    var startX = ""
-    var startY = ""
 
-    val endAddress : MutableLiveData<String> by lazy {
+    val endCoordinate: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    var endX = ""
-    var endY = ""
 
     suspend fun searchAddress(address: String): Flow<Addresses> = flow {
         emit(kBikeRepository.searchAddress(address))
     }
 
     suspend fun getNavigationPath(): Flow<ResultPath> = flow {
-        emit(kBikeRepository.getNavigationPath("$startX,$startY", "$endX,$endY"))
+        val start = startCoordinate.value.toString()
+        val end = endCoordinate.value.toString()
+        emit(kBikeRepository.getNavigationPath(start, end))
+    }
+
+    fun isAddressNullOrSame(): Boolean {
+        val startCoordinate = startCoordinate.value
+        val endCoordinate = endCoordinate.value
+
+        if(startCoordinate.isNullOrEmpty() || endCoordinate.isNullOrEmpty()) {
+            return false
+        } else if(startCoordinate == endCoordinate) {
+            return false
+        }
+        return true
     }
 }
