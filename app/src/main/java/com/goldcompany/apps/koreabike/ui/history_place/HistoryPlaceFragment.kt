@@ -9,21 +9,22 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.databinding.FragmentFavoritePlaceBinding
+import com.goldcompany.apps.koreabike.databinding.FragmentHistoryPlaceBinding
+import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 
 
 class HistoryPlaceFragment : Fragment() {
 
     private val viewModel by viewModels<HistoryPlaceViewModel>()
 
-    private lateinit var binding: FragmentFavoritePlaceBinding
+    private lateinit var binding: FragmentHistoryPlaceBinding
     private lateinit var adapter: FavoritePlaceAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_favorite_place, container, false)
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_history_place, container, false)
 
         setAdapter()
         addListener()
@@ -34,6 +35,7 @@ class HistoryPlaceFragment : Fragment() {
     private fun setAdapter() {
         adapter = FavoritePlaceAdapter(viewModel)
         binding.favoriteAddressList.adapter = adapter
+        binding.favoriteAddressList.addItemDecoration(AddressAdapterDecoration())
 
         viewModel.getAddress().observe(viewLifecycleOwner) {
             adapter.submitList(it)

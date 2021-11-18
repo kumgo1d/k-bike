@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
+import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -93,6 +94,7 @@ class NavigationFragment : Fragment() {
         lifecycleScope.launch {
             adapter = NavigationAdapter(viewModel, isStart)
             binding.addressRecyclerView.adapter = adapter
+            binding.addressRecyclerView.addItemDecoration(AddressAdapterDecoration())
 
             viewModel.searchAddress(address)
                 .distinctUntilChanged()
