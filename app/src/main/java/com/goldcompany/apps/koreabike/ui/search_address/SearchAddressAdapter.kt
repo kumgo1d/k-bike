@@ -29,12 +29,8 @@ class SearchAddressAdapter(
     }
 
     inner class ViewHolder(private val binding: ItemSearchAddressBinding) : RecyclerView.ViewHolder(binding.root) {
-        val keyword = binding.itemKeyword
-        val address = binding.itemAddress
-
         fun bind(item: AddressItem) {
-            keyword.text = item.placeName
-            address.text = item.addressName
+            binding.address = item
 
             itemView.setOnClickListener {
                 val userAddress = UserHistoryAddress(

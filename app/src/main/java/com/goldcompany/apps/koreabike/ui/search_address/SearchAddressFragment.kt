@@ -75,7 +75,7 @@ class SearchAddressFragment : Fragment() {
     private fun searchAddress(input: AppCompatEditText) {
         input.clearFocus()
 
-        if(input.text != null && input.text!!.isNotEmpty()) {
+        if(!input.text.isNullOrEmpty()) {
             val address = binding.searchAddressInput.text.toString()
             lifecycleScope.launch {
                 binding.searchAddressList.adapter = adapter

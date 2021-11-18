@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -70,40 +72,28 @@ class NavigationFragment : Fragment() {
     }
 
     private fun searchNavAddress() {
-        startAddressListener()
-        endAddressListener()
+        addressEditTextListener(binding.start, true)
+        addressEditTextListener(binding.end, false)
     }
 
-    private fun startAddressListener() {
-        val start = binding.start
-        start.setOnClickListener {
+    private fun addressEditTextListener(view: EditText, isStart: Boolean) {
+        view.setOnClickListener {
             binding.addressRecyclerView.adapter = null
         }
-        start.setOnKeyListener(enterKeyListener(start.text.toString(), true))
-    }
-
-    private fun endAddressListener() {
-        val end = binding.end
-        end.setOnClickListener {
-            binding.addressRecyclerView.adapter = null
-        }
-        end.setOnKeyListener(enterKeyListener(end.text.toString(), false))
-    }
-
-    private fun enterKeyListener(str: String, isStart: Boolean) = View.OnKeyListener { v, keyCode, event ->
-        if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-            if(str.isNotEmpty()) {
-                searchAddress(str, isStart)
+        view.setOnKeyListener { _, keyCode, _ ->
+            if(keyCode == KeyEvent.KEYCODE_ENTER && !view.text.isNullOrEmpty())  {
+                searchAddress(view.text.toString(), isStart)
+                clearFocus()
             }
+            false
         }
-        false
     }
 
     private fun searchAddress(address: String, isStart: Boolean) {
-        adapter = NavigationAdapter(viewModel, isStart)
-        binding.addressRecyclerView.adapter = adapter
-
         lifecycleScope.launch {
+            adapter = NavigationAdapter(viewModel, isStart)
+            binding.addressRecyclerView.adapter = adapter
+
             viewModel.searchAddress(address)
                 .distinctUntilChanged()
                 .collect {
