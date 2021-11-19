@@ -16,8 +16,8 @@ class AddressAdapterDecoration : RecyclerView.ItemDecoration() {
     ) {
         super.getItemOffsets(outRect, view, parent, state)
 
-        val position = parent.getChildAdapterPosition(view) //get item index
-        val count = state.itemCount // item count
+        val position = parent.getChildAdapterPosition(view)
+        val count = state.itemCount
         val offset = 20
 
         if(position == 0) {

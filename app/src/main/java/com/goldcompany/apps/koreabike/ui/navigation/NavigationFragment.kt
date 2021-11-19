@@ -3,8 +3,6 @@ package com.goldcompany.apps.koreabike.ui.navigation
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,7 +18,6 @@ import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
