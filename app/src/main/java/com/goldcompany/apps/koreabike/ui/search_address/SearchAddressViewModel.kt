@@ -17,17 +17,7 @@ class SearchAddressViewModel(application: Application): AndroidViewModel(applica
     fun setCurrentAddress(userAddress: UserHistoryAddress) {
         viewModelScope.launch {
             val current = kBikeRepository.getAddress()
-            if(current != null) {
-                val unSelected = UserHistoryAddress(
-                    date = current.date,
-                    longitude = current.longitude,
-                    latitude = current.latitude,
-                    keyword = current.keyword,
-                    address = current.address,
-                    selected = false
-                )
-                insertAddress(unSelected)
-            }
+            updateAddressUnselect(current.date)
             insertAddress(userAddress)
         }
     }
@@ -39,6 +29,12 @@ class SearchAddressViewModel(application: Application): AndroidViewModel(applica
     private fun insertAddress(userAddress: UserHistoryAddress) {
         viewModelScope.launch {
             kBikeRepository.insertAddress(userAddress)
+        }
+    }
+
+    private fun updateAddressUnselect(date: Long) {
+        viewModelScope.launch {
+            kBikeRepository.updateAddressUnselect(date)
         }
     }
 }

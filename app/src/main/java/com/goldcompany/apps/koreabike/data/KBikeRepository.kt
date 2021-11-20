@@ -71,6 +71,10 @@ class KBikeRepository private constructor(application: Application) {
         return addressLocalDataSource.getAddress()
     }
 
+    suspend fun updateAddressUnselect(date: Long) {
+        addressLocalDataSource.updateAddressUnselect(date)
+    }
+
     suspend fun insertAddress(address: UserHistoryAddress) {
         addressLocalDataSource.insertAddress(address)
     }

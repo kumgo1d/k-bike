@@ -17,6 +17,10 @@ class HistoryAddressLocalDataSource internal constructor(
         return@withContext addressDao.getAddress()
     }
 
+    suspend fun updateAddressUnselect(date: Long) = withContext(ioDispatcher) {
+        addressDao.updateAddressUnselect(date)
+    }
+
     suspend fun insertAddress(address: UserHistoryAddress) = withContext(ioDispatcher) {
         addressDao.insert(address)
     }
