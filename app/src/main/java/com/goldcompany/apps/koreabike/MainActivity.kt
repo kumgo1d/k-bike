@@ -12,6 +12,7 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.naver.maps.map.NaverMapSdk
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         instance = this
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         MobileAds.initialize(this)
 
         setAdBanner()

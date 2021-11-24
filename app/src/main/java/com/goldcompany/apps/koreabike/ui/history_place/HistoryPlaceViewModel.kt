@@ -26,17 +26,8 @@ class HistoryPlaceViewModel(application: Application): AndroidViewModel(applicat
                 return@launch
             }
 
-            val unSelected = UserHistoryAddress(
-                date = current.date,
-                longitude = current.longitude,
-                latitude = current.latitude,
-                address = current.address,
-                keyword = current.keyword,
-                selected = false
-            )
-
-            kBikeRepository.insertAddress(unSelected)
-            kBikeRepository.insertAddress(selected)
+            kBikeRepository.updateAddressUnselect(current.date)
+            kBikeRepository.insertAddress(address)
         }
     }
 

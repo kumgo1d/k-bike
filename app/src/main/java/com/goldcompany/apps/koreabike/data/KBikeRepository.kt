@@ -21,7 +21,7 @@ class KBikeRepository private constructor(application: Application) {
     private val addressLocalDataSource: HistoryAddressLocalDataSource
 
     private val KAKAO_API_KEY = "KakaoAK 09ab5a332869126358f643b6ff26abc8"
-    private val NAVER_API_KEY_ID = "fe7iwsbkl5"
+    private val NAVER_API_CLIENT_ID = "fe7iwsbkl5"
     private val NAVER_API_KEY = "1KYsy93nxRaNmfxdHExFfyAIX89B8sfwePQw7bNP"
 
     companion object {
@@ -59,7 +59,7 @@ class KBikeRepository private constructor(application: Application) {
 
     suspend fun getNavigationPath(start: String, goal: String): ResultPath = withContext(Dispatchers.IO) {
         return@withContext naverApiService.getPath(
-            NAVER_API_KEY_ID, NAVER_API_KEY, start, goal, "tracomfort"
+            NAVER_API_CLIENT_ID, NAVER_API_KEY, start, goal, "tracomfort"
         )
     }
 
