@@ -8,17 +8,21 @@ import com.goldcompany.apps.koreabike.api.NaverApiRetrofitClient
 import com.goldcompany.apps.koreabike.api.NaverApiService
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.search_address.Addresses
-import com.goldcompany.apps.koreabike.db.history_address.HistoryAddressLocalDataSource
 import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
+import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddressDAO
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class KBikeRepository private constructor(application: Application) {
+class KBikeRepository private constructor(
+    application: Application,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) {
 
     private val kakaoApiService: KakaoApiService
     private val naverApiService: NaverApiService
-    private val addressLocalDataSource: HistoryAddressLocalDataSource
+    private val addressDao: UserHistoryAddressDAO
 
     private val KAKAO_API_KEY = "KakaoAK 09ab5a332869126358f643b6ff26abc8"
     private val NAVER_API_CLIENT_ID = "fe7iwsbkl5"
@@ -42,7 +46,7 @@ class KBikeRepository private constructor(application: Application) {
 
         kakaoApiService = KakaoApiRetrofitClient.provideKakaoApiService()
         naverApiService = NaverApiRetrofitClient.provideNaverApiService()
-        addressLocalDataSource = HistoryAddressLocalDataSource(database.userAddressDAO())
+        addressDao = database.userAddressDAO()
     }
 
     suspend fun searchAddress(address: String): Addresses = withContext(Dispatchers.IO) {
@@ -53,33 +57,33 @@ class KBikeRepository private constructor(application: Application) {
         code: String,
         longitude: String,
         latitude: String
-    ): PlaceMarker = withContext(Dispatchers.IO) {
+    ): PlaceMarker = withContext(ioDispatcher) {
         return@withContext kakaoApiService.searchNearbyPlacesMarker(KAKAO_API_KEY, code, longitude, latitude, radius = 10000)
     }
 
-    suspend fun getNavigationPath(start: String, goal: String): ResultPath = withContext(Dispatchers.IO) {
+    suspend fun getNavigationPath(start: String, goal: String): ResultPath = withContext(ioDispatcher) {
         return@withContext naverApiService.getPath(
             NAVER_API_CLIENT_ID, NAVER_API_KEY, start, goal, "tracomfort"
         )
     }
 
-    suspend fun getAllAddress(): MutableList<UserHistoryAddress> {
-        return addressLocalDataSource.getAllAddress()
+    suspend fun getAllAddress(): MutableList<UserHistoryAddress> = withContext(ioDispatcher) {
+        return@withContext addressDao.getAll()
     }
 
-    suspend fun getAddress(): UserHistoryAddress {
-        return addressLocalDataSource.getAddress()
+    suspend fun getAddress(): UserHistoryAddress? = withContext(ioDispatcher) {
+        return@withContext addressDao.getAddress()
     }
 
-    suspend fun updateAddressUnselect(date: Long) {
-        addressLocalDataSource.updateAddressUnselect(date)
+    suspend fun updateAddressUnselect(date: Long) = withContext(ioDispatcher) {
+        addressDao.updateAddressUnselect(date)
     }
 
-    suspend fun insertAddress(address: UserHistoryAddress) {
-        addressLocalDataSource.insertAddress(address)
+    suspend fun insertAddress(address: UserHistoryAddress) = withContext(ioDispatcher) {
+        addressDao.insert(address)
     }
 
-    suspend fun deleteAddress(address: UserHistoryAddress) {
-        addressLocalDataSource.deleteAddress(address)
+    suspend fun deleteAddress(address: UserHistoryAddress) = withContext(ioDispatcher) {
+        addressDao.delete(address)
     }
 }

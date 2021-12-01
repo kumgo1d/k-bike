@@ -22,11 +22,11 @@ class HistoryPlaceViewModel(application: Application): AndroidViewModel(applicat
                 selected = true
             )
 
-            if(current.date == selected.date) {
+            if(current?.date.toString() == selected.date.toString()) {
                 return@launch
             }
 
-            kBikeRepository.updateAddressUnselect(current.date)
+            if(current != null) kBikeRepository.updateAddressUnselect(current.date)
             kBikeRepository.insertAddress(address)
         }
     }

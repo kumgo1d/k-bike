@@ -16,8 +16,8 @@ class SearchAddressViewModel(application: Application): AndroidViewModel(applica
 
     fun setCurrentAddress(userAddress: UserHistoryAddress) {
         viewModelScope.launch {
-            val current = kBikeRepository.getAddress()
-            updateAddressUnselect(current.date)
+            val current: UserHistoryAddress? = kBikeRepository.getAddress()
+            if(current != null ) updateAddressUnselect(current.date)
             insertAddress(userAddress)
         }
     }
