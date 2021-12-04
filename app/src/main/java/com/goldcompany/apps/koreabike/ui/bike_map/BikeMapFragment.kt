@@ -157,6 +157,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             uiSettings.isZoomControlEnabled = false
             minZoom = 13.0
         }
+        naverMap.locationSource = locationSource
     }
 
     private fun getAddress() {
