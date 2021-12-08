@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
+import com.goldcompany.apps.koreabike.util.ViewHelper
 
 class NavigationAdapter(
     private val viewModel: NavigationViewModel,
@@ -39,7 +40,7 @@ class NavigationAdapter(
                     viewModel.endCoordinate.value = "${item.x},${item.y}"
                 }
 
-                MainActivity.instance.hideKeyboard(it)
+                ViewHelper.hideKeyboard(it)
             }
         }
     }

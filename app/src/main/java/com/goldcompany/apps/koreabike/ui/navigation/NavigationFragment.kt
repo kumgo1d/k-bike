@@ -17,6 +17,7 @@ import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
+import com.goldcompany.apps.koreabike.util.ViewHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -65,7 +66,7 @@ class NavigationFragment : Fragment() {
     private fun clearFocus() {
         binding.start.clearFocus()
         binding.end.clearFocus()
-        MainActivity.instance.hideKeyboard(binding.root)
+        ViewHelper.hideKeyboard(binding.root)
     }
 
     private fun searchNavAddress() {

@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
+import com.goldcompany.apps.koreabike.util.ViewHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -45,7 +45,7 @@ class SearchAddressFragment : Fragment() {
     private fun setButtonListener() {
         binding.parentLayout.setOnTouchListener { _, _ ->
             binding.searchAddressInput.clearFocus()
-            MainActivity.instance.hideKeyboard(binding.root)
+            ViewHelper.hideKeyboard(binding.root)
             return@setOnTouchListener true
         }
 
@@ -87,13 +87,13 @@ class SearchAddressFragment : Fragment() {
                         adapter.submitList(it.addressList)
                     }
             }
-            MainActivity.instance.hideKeyboard(input)
+            ViewHelper.hideKeyboard(input)
         }
     }
 
     override fun onStop() {
         super.onStop()
         binding.searchAddressInput.clearFocus()
-        MainActivity.instance.hideKeyboard(binding.root)
+        ViewHelper.hideKeyboard(binding.root)
     }
 }

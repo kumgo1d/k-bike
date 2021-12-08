@@ -1,10 +1,8 @@
 package com.goldcompany.apps.koreabike
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.goldcompany.apps.koreabike.databinding.ActivityMainBinding
@@ -12,7 +10,6 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.naver.maps.map.NaverMapSdk
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,11 +47,6 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
         val navController = navHostFragment.navController
         bottomNav.setupWithNavController(navController)
-    }
-
-    fun hideKeyboard(view: View) {
-        val imm = instance.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     fun hideBottom() {
