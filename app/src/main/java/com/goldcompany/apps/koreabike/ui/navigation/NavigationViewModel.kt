@@ -3,14 +3,20 @@ package com.goldcompany.apps.koreabike.ui.navigation
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.search_address.Addresses
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class NavigationViewModel(application: Application) : AndroidViewModel(application) {
-    private val kBikeRepository =  KBikeRepository.getRepository(application)
+@HiltViewModel
+class NavigationViewModel@Inject constructor(
+    private val kBikeRepository: KBikeRepository
+) : ViewModel() {
+//    private val kBikeRepository =  KBikeRepository.getRepository(application)
 
     val startCoordinate: MutableLiveData<String> by lazy {
         MutableLiveData<String>()

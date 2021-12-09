@@ -11,8 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentHistoryPlaceBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class HistoryPlaceFragment : Fragment() {
 
     private val viewModel by viewModels<HistoryPlaceViewModel>()

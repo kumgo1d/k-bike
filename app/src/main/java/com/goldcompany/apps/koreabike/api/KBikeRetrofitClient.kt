@@ -10,8 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-@Module
-@InstallIn(FragmentComponent::class)
 object KakaoApiRetrofitClient {
     private val retrofit: Retrofit.Builder by lazy {
         Retrofit.Builder()
@@ -20,7 +18,6 @@ object KakaoApiRetrofitClient {
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     }
 
-    @Singleton
     fun provideKakaoApiService(): KakaoApiService {
         return retrofit.build().create(KakaoApiService::class.java)
     }
@@ -34,7 +31,6 @@ object NaverApiRetrofitClient {
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     }
 
-    @Singleton
     fun provideNaverApiService(): NaverApiService {
         return retrofit.build().create(NaverApiService::class.java)
     }

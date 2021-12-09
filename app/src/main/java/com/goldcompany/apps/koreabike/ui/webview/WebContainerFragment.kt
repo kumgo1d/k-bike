@@ -11,7 +11,9 @@ import com.goldcompany.apps.koreabike.Constants
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentWebContainerBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WebContainerFragment : Fragment() {
     private lateinit var binding: FragmentWebContainerBinding
 
