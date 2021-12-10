@@ -1,14 +1,10 @@
 package com.goldcompany.apps.koreabike.data
 
-import android.app.Application
 import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarker
-import com.goldcompany.apps.koreabike.api.KakaoApiRetrofitClient
 import com.goldcompany.apps.koreabike.api.KakaoApiService
-import com.goldcompany.apps.koreabike.api.NaverApiRetrofitClient
 import com.goldcompany.apps.koreabike.api.NaverApiService
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.search_address.Addresses
-import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddressDAO
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,40 +13,16 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class KBikeRepository @Inject private constructor(
+@Singleton
+class KBikeRepository @Inject constructor(
     private val kakaoApiService: KakaoApiService,
     private val naverApiService: NaverApiService,
-    private val appDatabase: KBikeDatabase,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val addressDao: UserHistoryAddressDAO
 ) {
-
-//    private val kakaoApiService: KakaoApiService
-//    private val naverApiService: NaverApiService
-    private val addressDao: UserHistoryAddressDAO = appDatabase.userAddressDAO()
-
     private val KAKAO_API_KEY = "KakaoAK 09ab5a332869126358f643b6ff26abc8"
     private val NAVER_API_CLIENT_ID = "fe7iwsbkl5"
     private val NAVER_API_KEY = "1KYsy93nxRaNmfxdHExFfyAIX89B8sfwePQw7bNP"
-
-//    companion object {
-//        @Volatile
-//        private var INSTANCE: KBikeRepository? = null
-//
-//        fun getRepository(app: Application): KBikeRepository {
-//            return INSTANCE ?: synchronized(this) {
-//                KBikeRepository(app).also {
-//                    INSTANCE = it
-//                }
-//            }
-//        }
-//    }
-
-    init {
-//        val database by lazy { KBikeDatabase.getInstance(application.applicationContext) }
-//
-//        kakaoApiService = KakaoApiRetrofitClient.provideKakaoApiService()
-//        naverApiService = NaverApiRetrofitClient.provideNaverApiService()
-    }
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     suspend fun searchAddress(address: String): Addresses = withContext(Dispatchers.IO) {
         return@withContext kakaoApiService.searchAddress(KAKAO_API_KEY, address = address)
