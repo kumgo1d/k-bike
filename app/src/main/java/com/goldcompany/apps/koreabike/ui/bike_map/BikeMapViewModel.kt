@@ -13,7 +13,6 @@ import javax.inject.Inject
 class BikeMapViewModel @Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
-
     suspend fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String): Flow<PlaceMarker> = flow {
         emit(kBikeRepository.searchNearbyPlacesMarker(code, longitude, latitude))
     }

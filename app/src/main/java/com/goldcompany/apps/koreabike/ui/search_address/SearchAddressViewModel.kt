@@ -1,7 +1,5 @@
 package com.goldcompany.apps.koreabike.ui.search_address
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.goldcompany.apps.koreabike.data.KBikeRepository
@@ -17,9 +15,6 @@ import javax.inject.Inject
 class SearchAddressViewModel@Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
-
-//    private val kBikeRepository =  KBikeRepository.getRepository(application)
-
     fun setCurrentAddress(userAddress: UserHistoryAddress) {
         viewModelScope.launch {
             val current: UserHistoryAddress? = kBikeRepository.getAddress()

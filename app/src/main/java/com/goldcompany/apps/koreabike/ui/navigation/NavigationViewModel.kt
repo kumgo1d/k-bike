@@ -1,7 +1,5 @@
 package com.goldcompany.apps.koreabike.ui.navigation
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.goldcompany.apps.koreabike.data.KBikeRepository
@@ -16,8 +14,6 @@ import javax.inject.Inject
 class NavigationViewModel@Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
-//    private val kBikeRepository =  KBikeRepository.getRepository(application)
-
     val startCoordinate: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }

@@ -1,6 +1,5 @@
 package com.goldcompany.apps.koreabike.ui.history_place
 
-import android.app.Application
 import androidx.lifecycle.*
 import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
@@ -13,7 +12,6 @@ class HistoryPlaceViewModel@Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
     private val addressList = MutableLiveData<MutableList<UserHistoryAddress>?>()
-//    private val kBikeRepository =  KBikeRepository.getRepository(application)
 
     fun setCurrentAddress(address: UserHistoryAddress) {
         viewModelScope.launch {
