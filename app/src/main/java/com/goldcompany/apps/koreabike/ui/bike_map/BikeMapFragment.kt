@@ -2,6 +2,7 @@ package com.goldcompany.apps.koreabike.ui.bike_map
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -75,6 +76,26 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                                     width = 70
                                     height = 100
                                     position = LatLng(it.places[i].y.toDouble(), it.places[i].x.toDouble())
+
+                                    when(code) {
+                                        "PM9" -> {
+                                            marker.icon = MarkerIcons.BLACK
+                                            marker.iconTintColor = Color.RED
+                                        }
+                                        "CS2" -> {
+                                            marker.icon = MarkerIcons.BLACK
+                                            marker.iconTintColor = Color.GREEN
+                                        }
+                                        "CE7" -> {
+                                            marker.icon = MarkerIcons.BLACK
+                                            marker.iconTintColor = Color.DKGRAY
+                                        }
+                                        "AD5" -> {
+                                            marker.icon = MarkerIcons.BLACK
+                                            marker.iconTintColor = Color.MAGENTA
+                                        }
+                                    }
+
                                     map = naverMap
                                 }
                                 categoryMarkers.add(marker)
