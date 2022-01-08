@@ -12,6 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
+import com.goldcompany.apps.koreabike.data.Result
+import com.goldcompany.apps.koreabike.data.Result.Success
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import com.goldcompany.apps.koreabike.util.ViewHelper
@@ -19,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SearchAddressFragment : Fragment() {
@@ -84,7 +87,11 @@ class SearchAddressFragment : Fragment() {
                 viewModel.searchAddress(address)
                     .distinctUntilChanged()
                     .collect {
-                        adapter.submitList(it.addressList)
+                        if(it is Success) {
+                            adapter.submitList(it.data.addressList)
+                        } else {
+                            ViewHelper.errorToast(requireContext())
+                        }
                     }
             }
             ViewHelper.hideKeyboard(input)

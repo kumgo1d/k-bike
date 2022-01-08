@@ -3,6 +3,7 @@ package com.goldcompany.apps.koreabike.ui.navigation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.goldcompany.apps.koreabike.data.KBikeRepository
+import com.goldcompany.apps.koreabike.data.Result
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.search_address.Addresses
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,7 @@ class NavigationViewModel@Inject constructor(
         MutableLiveData<String>()
     }
 
-    suspend fun searchAddress(address: String): Flow<Addresses> = flow {
+    suspend fun searchAddress(address: String): Flow<Result<Addresses>> = flow {
         emit(kBikeRepository.searchAddress(address))
     }
 

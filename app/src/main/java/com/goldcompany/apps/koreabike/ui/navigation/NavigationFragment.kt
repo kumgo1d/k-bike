@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
+import com.goldcompany.apps.koreabike.data.Result
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import com.goldcompany.apps.koreabike.util.ViewHelper
@@ -96,7 +97,11 @@ class NavigationFragment : Fragment() {
             viewModel.searchAddress(address)
                 .distinctUntilChanged()
                 .collect {
-                    adapter.submitList(it.addressList)
+                    if(it is Result.Success) {
+                        adapter.submitList(it.data.addressList)
+                    } else {
+                        ViewHelper.errorToast(requireContext())
+                    }
                 }
         }
     }

@@ -10,6 +10,7 @@ import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddressDAO
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,8 +25,17 @@ class KBikeRepository @Inject constructor(
     private val NAVER_API_KEY = "1KYsy93nxRaNmfxdHExFfyAIX89B8sfwePQw7bNP"
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    suspend fun searchAddress(address: String): Addresses = withContext(Dispatchers.IO) {
-        return@withContext kakaoApiService.searchAddress(KAKAO_API_KEY, address = address)
+    suspend fun searchAddress(address: String): Result<Addresses> = withContext(Dispatchers.IO) {
+        try {
+            val addresses = kakaoApiService.searchAddress(KAKAO_API_KEY, address = address)
+            if(addresses != null) {
+                return@withContext Result.Success(addresses)
+            } else {
+                return@withContext Result.Error(Exception("Address is Not Found"))
+            }
+        } catch (e: Exception) {
+            return@withContext Result.Error(e)
+        }
     }
 
     suspend fun searchNearbyPlacesMarker(
