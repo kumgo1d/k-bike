@@ -18,8 +18,13 @@ class NavigationViewModel@Inject constructor(
     val startCoordinate: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-
+    val startAddressName: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
     val endCoordinate: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+    val endAddressName: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
 

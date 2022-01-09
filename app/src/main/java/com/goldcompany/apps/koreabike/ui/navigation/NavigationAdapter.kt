@@ -33,11 +33,14 @@ class NavigationAdapter(
 
         fun bind(item: AddressItem, viewModel: NavigationViewModel, isStart: Boolean) {
             binding.address = item
+
             binding.root.setOnClickListener {
                 if(isStart) {
                     viewModel.startCoordinate.value = "${item.x},${item.y}"
+                    viewModel.startAddressName.value = item.placeName
                 } else {
                     viewModel.endCoordinate.value = "${item.x},${item.y}"
+                    viewModel.endAddressName.value = item.placeName
                 }
 
                 ViewHelper.hideKeyboard(it)

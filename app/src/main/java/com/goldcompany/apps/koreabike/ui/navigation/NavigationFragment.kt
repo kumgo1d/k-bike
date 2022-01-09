@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
@@ -40,10 +41,25 @@ class NavigationFragment : Fragment() {
         binding = FragmentNavigationBinding.inflate(layoutInflater, container, false)
 
         MainActivity.instance.hideBottom()
+        addressNameObserve()
         setTouchListener()
         searchNavAddress()
 
         return binding.root
+    }
+
+    private fun addressNameObserve() {
+        val startAddressObserver = Observer<String> { address ->
+            binding.start.setText(address)
+        }
+
+        viewModel.startAddressName.observe(viewLifecycleOwner, startAddressObserver)
+
+        val endAddressObserver = Observer<String> { address ->
+            binding.end.setText(address)
+        }
+
+        viewModel.endAddressName.observe(viewLifecycleOwner, endAddressObserver)
     }
 
     @SuppressLint("ClickableViewAccessibility")
