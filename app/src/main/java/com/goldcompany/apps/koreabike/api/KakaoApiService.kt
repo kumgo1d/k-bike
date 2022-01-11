@@ -24,7 +24,7 @@ interface KakaoApiService {
         @Query("x") longitude: String,
         @Query("y") latitude: String,
         @Query("radius") radius: Int
-    ): PlaceMarker
+    ): PlaceMarker?
 
     companion object {
         fun create(): KakaoApiService {

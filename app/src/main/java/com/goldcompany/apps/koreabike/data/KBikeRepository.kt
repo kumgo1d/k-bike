@@ -10,9 +10,9 @@ import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddressDAO
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.Exception
 
 @Singleton
 class KBikeRepository @Inject constructor(
@@ -42,14 +42,32 @@ class KBikeRepository @Inject constructor(
         code: String,
         longitude: String,
         latitude: String
-    ): PlaceMarker = withContext(ioDispatcher) {
-        return@withContext kakaoApiService.searchNearbyPlacesMarker(KAKAO_API_KEY, code, longitude, latitude, radius = 10000)
+    ): Result<PlaceMarker> = withContext(ioDispatcher) {
+        try {
+            val markers = kakaoApiService.searchNearbyPlacesMarker(KAKAO_API_KEY, code, longitude, latitude, radius = 10000)
+            if(markers != null) {
+                return@withContext Result.Success(markers)
+            } else {
+                return@withContext Result.Error(Exception("PlaceMarker is Not Found"))
+            }
+        } catch (e: Exception) {
+            return@withContext Result.Error(e)
+        }
     }
 
-    suspend fun getNavigationPath(start: String, goal: String): ResultPath = withContext(ioDispatcher) {
-        return@withContext naverApiService.getPath(
-            NAVER_API_CLIENT_ID, NAVER_API_KEY, start, goal, "tracomfort"
-        )
+    suspend fun getNavigationPath(start: String, goal: String): Result<ResultPath> = withContext(ioDispatcher) {
+        try {
+            val path = naverApiService.getPath(
+                NAVER_API_CLIENT_ID, NAVER_API_KEY, start, goal, "tracomfort"
+            )
+            if(path != null) {
+                return@withContext Result.Success(path)
+            } else {
+                return@withContext Result.Error(Exception("Path Not Found"))
+            }
+        } catch (e: Exception) {
+            return@withContext Result.Error(e)
+        }
     }
 
     suspend fun getAllAddress(): MutableList<UserHistoryAddress> = withContext(ioDispatcher) {

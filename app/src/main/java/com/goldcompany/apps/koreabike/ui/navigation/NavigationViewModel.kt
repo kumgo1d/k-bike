@@ -32,7 +32,7 @@ class NavigationViewModel@Inject constructor(
         emit(kBikeRepository.searchAddress(address))
     }
 
-    suspend fun getNavigationPath(): Flow<ResultPath> = flow {
+    suspend fun getNavigationPath(): Flow<Result<ResultPath>> = flow {
         val start = startCoordinate.value.toString()
         val end = endCoordinate.value.toString()
         emit(kBikeRepository.getNavigationPath(start, end))

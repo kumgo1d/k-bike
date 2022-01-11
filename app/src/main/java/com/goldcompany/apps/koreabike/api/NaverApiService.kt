@@ -17,7 +17,7 @@ interface NaverApiService {
         @Query("start") start: String,
         @Query("goal") goal: String,
         @Query("option") option: String
-    ): ResultPath
+    ): ResultPath?
 
     companion object {
         fun create(): NaverApiService {

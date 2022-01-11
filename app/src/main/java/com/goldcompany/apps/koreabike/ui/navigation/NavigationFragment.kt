@@ -132,15 +132,19 @@ class NavigationFragment : Fragment() {
             viewModel.getNavigationPath()
                 .distinctUntilChanged()
                 .collect {
-                    val bundle = Bundle()
-                    val path = it.route.track[0].path
-                    val duration = it.route.track[0].summary.duration
-                    val distance = it.route.track[0].summary.distance
+                    if(it is Result.Success) {
+                        val bundle = Bundle()
+                        val path = it.data.route.track[0].path
+                        val duration = it.data.route.track[0].summary.duration
+                        val distance = it.data.route.track[0].summary.distance
 
-                    bundle.putInt("duration", duration)
-                    bundle.putInt("distance", distance)
-                    bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
-                    findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
+                        bundle.putInt("duration", duration)
+                        bundle.putInt("distance", distance)
+                        bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
+                        findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
+                    } else {
+                        ViewHelper.errorToast(requireContext())
+                    }
                 }
         }
     }
