@@ -2,7 +2,6 @@ package com.goldcompany.apps.koreabike.ui.bike_map
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,10 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.data.Result
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
-import com.goldcompany.apps.koreabike.util.ViewHelper
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -42,8 +39,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentBikeMapBinding
     private lateinit var naverMap: NaverMap
 
-    private var isNearbyPlaceOverlayMarked = false
-    private var categoryMarkers = mutableListOf<Marker>()
     private var locationMarker = Marker()
 
     private val viewModel by viewModels<BikeMapViewModel>()
@@ -64,49 +59,12 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             val longitude = naverMap.cameraPosition.target.longitude.toString()
 
             lifecycleScope.launch {
-                viewModel.searchNearbyPlacesMarker(code, longitude, latitude)
-                    .distinctUntilChanged()
-                    .collect { placeMarker ->
-                        if(placeMarker is Result.Success) {
-                            for(i in placeMarker.data.places.indices) {
-                                if(isNearbyPlaceOverlayMarked) {
-                                    categoryMarkers[0].map = null
-                                    categoryMarkers.removeAt(0)
-                                } else {
-                                    val marker = Marker()
-                                    marker.apply {
-                                        width = 70
-                                        height = 100
-                                        position = LatLng(placeMarker.data.places[i].y.toDouble(), placeMarker.data.places[i].x.toDouble())
-
-                                        when(code) {
-                                            "PM9" -> {
-                                                marker.icon = MarkerIcons.BLACK
-                                                marker.iconTintColor = Color.RED
-                                            }
-                                            "CS2" -> {
-                                                marker.icon = MarkerIcons.BLACK
-                                                marker.iconTintColor = Color.GREEN
-                                            }
-                                            "CE7" -> {
-                                                marker.icon = MarkerIcons.BLACK
-                                                marker.iconTintColor = Color.DKGRAY
-                                            }
-                                            "AD5" -> {
-                                                marker.icon = MarkerIcons.BLACK
-                                                marker.iconTintColor = Color.MAGENTA
-                                            }
-                                        }
-                                        map = naverMap
-                                    }
-                                    categoryMarkers.add(marker)
-                                }
-                            }
-                            isNearbyPlaceOverlayMarked = !isNearbyPlaceOverlayMarked
-                        } else {
-                            ViewHelper.errorToast(requireContext())
-                        }
+                if(viewModel.markers.value != null) {
+                    viewModel.markers.value!!.forEach {
+                        it.map = null
                     }
+                }
+                viewModel.searchNearbyPlacesMarker(naverMap, code, longitude, latitude)
             }
         }
 

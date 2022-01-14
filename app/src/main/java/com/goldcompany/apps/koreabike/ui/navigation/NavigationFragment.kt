@@ -41,11 +41,18 @@ class NavigationFragment : Fragment() {
         binding = FragmentNavigationBinding.inflate(layoutInflater, container, false)
 
         MainActivity.instance.hideBottom()
+        setAdapter()
         addressNameObserve()
         setTouchListener()
         searchNavAddress()
 
         return binding.root
+    }
+
+    private fun setAdapter() {
+        adapter = NavigationAdapter(viewModel)
+        binding.addressRecyclerView.adapter = adapter
+        binding.addressRecyclerView.addItemDecoration(AddressAdapterDecoration())
     }
 
     private fun addressNameObserve() {
@@ -95,21 +102,19 @@ class NavigationFragment : Fragment() {
         view.setOnClickListener {
             binding.addressRecyclerView.adapter = null
         }
+
         view.setOnKeyListener { _, keyCode, _ ->
             if(keyCode == KeyEvent.KEYCODE_ENTER && !view.text.isNullOrEmpty())  {
-                searchAddress(view.text.toString(), isStart)
+                viewModel.isStart.value = isStart
+                searchAddress(view.text.toString())
                 clearFocus()
             }
             false
         }
     }
 
-    private fun searchAddress(address: String, isStart: Boolean) {
+    private fun searchAddress(address: String) {
         lifecycleScope.launch {
-            adapter = NavigationAdapter(viewModel, isStart)
-            binding.addressRecyclerView.adapter = adapter
-            binding.addressRecyclerView.addItemDecoration(AddressAdapterDecoration())
-
             viewModel.searchAddress(address)
                 .distinctUntilChanged()
                 .collect {
@@ -124,7 +129,7 @@ class NavigationFragment : Fragment() {
 
     private fun checkAddressAndNavigateApi() {
         if(!viewModel.isAddressNullOrSame()) {
-            Toast.makeText(requireContext(), "주소를 잘못 입력하였습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), R.string.wrong_address_input, Toast.LENGTH_SHORT).show()
             return
         }
 

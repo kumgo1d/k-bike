@@ -15,6 +15,9 @@ import javax.inject.Inject
 class NavigationViewModel@Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
+    val isStart: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
     val startCoordinate: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }

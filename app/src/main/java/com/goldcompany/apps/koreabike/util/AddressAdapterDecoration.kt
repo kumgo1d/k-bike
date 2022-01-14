@@ -17,15 +17,12 @@ class AddressAdapterDecoration : RecyclerView.ItemDecoration() {
         super.getItemOffsets(outRect, view, parent, state)
 
         val position = parent.getChildAdapterPosition(view)
-        val count = state.itemCount
         val offset = 20
 
         if(position == 0) {
             outRect.top = offset
-        } else if(position == count-1) {
             outRect.bottom = offset
         } else {
-            outRect.top = offset
             outRect.bottom = offset
         }
     }

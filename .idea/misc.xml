@@ -5,8 +5,9 @@
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.17592592592592593" />
         <entry key="..\:/Users/jungh/Documents/Git/K-Bike/app/src/main/res/layout/activity_main.xml" value="0.12335359675785208" />
-        <entry key="..\:/Users/jungh/Documents/Git/K-Bike/app/src/main/res/layout/fragment_bike_map.xml" value="0.264" />
+        <entry key="..\:/Users/jungh/Documents/Git/K-Bike/app/src/main/res/layout/fragment_bike_map.xml" value="0.1" />
         <entry key="..\:/Users/jungh/Documents/Git/K-Bike/app/src/main/res/layout/fragment_history_place.xml" value="0.24592391304347827" />
+        <entry key="..\:/Users/jungh/Documents/Git/K-Bike/app/src/main/res/layout/fragment_navigation.xml" value="0.264" />
         <entry key="..\:/Users/jungh/Documents/Git/K-Bike/app/src/main/res/layout/fragment_search_address.xml" value="0.128" />
         <entry key="..\:/Users/jungh/Documents/Git/K-Bike/app/src/main/res/layout/item_category_button.xml" value="0.12132725430597771" />
         <entry key="..\:/Users/jungh/Documents/Git/K-Bike/app/src/main/res/layout/item_favorite_place_list.xml" value="0.24592391304347827" />
