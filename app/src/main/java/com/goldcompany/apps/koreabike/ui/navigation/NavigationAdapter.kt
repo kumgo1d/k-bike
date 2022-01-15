@@ -2,18 +2,16 @@ package com.goldcompany.apps.koreabike.ui.navigation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.ViewHelper
 
 class NavigationAdapter(
     private val viewModel: NavigationViewModel
-    ): ListAdapter<AddressItem, NavigationAdapter.ViewHolder>(NavigationAddressDiffCallback()) {
+    ): PagingDataAdapter<AddressItem, NavigationAdapter.ViewHolder>(NavigationAddressDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -26,7 +24,7 @@ class NavigationAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), viewModel)
+        getItem(position)?.let { holder.bind(it, viewModel) }
     }
 
     class ViewHolder(private val binding: ItemSearchAddressBinding): RecyclerView.ViewHolder(binding.root) {

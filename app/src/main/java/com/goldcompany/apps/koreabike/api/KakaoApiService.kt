@@ -14,8 +14,9 @@ interface KakaoApiService {
     @GET("v2/local/search/keyword.json")
     suspend fun searchAddress(
         @Header("Authorization") key: String,
-        @Query("query") address: String
-    ): Addresses?
+        @Query("query") address: String,
+        @Query("page") page: Int
+    ): Addresses
 
     @GET("v2/local/search/category.json")
     suspend fun searchNearbyPlacesMarker(

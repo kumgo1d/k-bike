@@ -2,9 +2,13 @@ package com.goldcompany.apps.koreabike.ui.navigation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.data.Result
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
+import com.goldcompany.apps.koreabike.data.search_address.AddressItem
 import com.goldcompany.apps.koreabike.data.search_address.Addresses
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -31,8 +35,19 @@ class NavigationViewModel@Inject constructor(
         MutableLiveData<String>()
     }
 
-    suspend fun searchAddress(address: String): Flow<Result<Addresses>> = flow {
-        emit(kBikeRepository.searchAddress(address))
+    private var currentQuery: String? = null
+    private var currentSearchResult: Flow<PagingData<AddressItem>>? = null
+
+    fun searchAddress(address: String): Flow<PagingData<AddressItem>> {
+        val lastResult = currentSearchResult
+        if (address == currentQuery && lastResult != null) {
+            return lastResult
+        }
+        currentQuery = address
+        val newResult: Flow<PagingData<AddressItem>> = kBikeRepository.getSearchAddressStream(address)
+            .cachedIn(viewModelScope)
+        currentSearchResult = newResult
+        return newResult
     }
 
     suspend fun getNavigationPath(): Flow<Result<ResultPath>> = flow {

@@ -1,14 +1,20 @@
 package com.goldcompany.apps.koreabike.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarker
 import com.goldcompany.apps.koreabike.api.KakaoApiService
 import com.goldcompany.apps.koreabike.api.NaverApiService
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
+import com.goldcompany.apps.koreabike.data.search_address.AddressItem
 import com.goldcompany.apps.koreabike.data.search_address.Addresses
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddressDAO
+import com.goldcompany.apps.koreabike.ui.search_address.SearchAddressPagingSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,17 +31,19 @@ class KBikeRepository @Inject constructor(
     private val NAVER_API_KEY = "1KYsy93nxRaNmfxdHExFfyAIX89B8sfwePQw7bNP"
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    suspend fun searchAddress(address: String): Result<Addresses> = withContext(Dispatchers.IO) {
-        try {
-            val addresses = kakaoApiService.searchAddress(KAKAO_API_KEY, address = address)
-            if(addresses != null) {
-                return@withContext Result.Success(addresses)
-            } else {
-                return@withContext Result.Error(Exception("Address is Not Found"))
-            }
-        } catch (e: Exception) {
-            return@withContext Result.Error(e)
-        }
+    suspend fun searchAddress(address: String, page: Int): Addresses = withContext(Dispatchers.IO) {
+        return@withContext kakaoApiService.searchAddress(KAKAO_API_KEY, address = address, page)
+    }
+
+    fun getSearchAddressStream(address: String): Flow<PagingData<AddressItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 1,
+                initialLoadSize = 10,
+                enablePlaceholders = true
+            ),
+            pagingSourceFactory = { SearchAddressPagingSource(kakaoApiService, address) }
+        ).flow
     }
 
     suspend fun searchNearbyPlacesMarker(

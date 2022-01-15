@@ -117,12 +117,8 @@ class NavigationFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.searchAddress(address)
                 .distinctUntilChanged()
-                .collect {
-                    if(it is Result.Success) {
-                        adapter.submitList(it.data.addressList)
-                    } else {
-                        ViewHelper.errorToast(requireContext())
-                    }
+                .collect { result ->
+                    adapter.submitData(result)
                 }
         }
     }

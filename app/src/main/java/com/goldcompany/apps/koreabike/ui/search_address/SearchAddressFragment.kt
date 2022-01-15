@@ -12,12 +12,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
-import com.goldcompany.apps.koreabike.data.Result
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import com.goldcompany.apps.koreabike.util.ViewHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
@@ -81,21 +81,15 @@ class SearchAddressFragment : Fragment() {
     }
 
     private fun searchAddress(input: AppCompatEditText) {
-        binding.searchAddressLoading.visibility = View.VISIBLE
         input.clearFocus()
 
         if(!input.text.isNullOrEmpty()) {
             val address = binding.searchAddressInput.text.toString()
 
             lifecycleScope.launch {
-                viewModel.searchAddress(address)
-                    .distinctUntilChanged()
-                    .collect { result ->
-                        if(result is Result.Success) {
-                            adapter.submitList(result.data.addressList)
-                        }
-                    }
-                binding.searchAddressLoading.visibility = View.GONE
+                viewModel.searchAddress(address).collectLatest { result ->
+                    adapter.submitData(result)
+                }
             }
             ViewHelper.hideKeyboard(input)
         }

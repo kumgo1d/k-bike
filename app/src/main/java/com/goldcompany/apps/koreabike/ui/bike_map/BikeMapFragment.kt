@@ -35,6 +35,10 @@ interface BikeMapHandler {
 @AndroidEntryPoint
 class BikeMapFragment : Fragment(), OnMapReadyCallback {
 
+    companion object {
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
+
     private lateinit var locationSource: FusedLocationSource
     private lateinit var binding: FragmentBikeMapBinding
     private lateinit var naverMap: NaverMap
@@ -76,10 +80,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                 requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
-    }
-
-    companion object {
-        const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 
     override fun onCreateView(

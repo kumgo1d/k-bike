@@ -3,8 +3,8 @@ package com.goldcompany.apps.koreabike.ui.search_address
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
@@ -12,7 +12,7 @@ import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 
 class SearchAddressAdapter(
     private val viewModel: SearchAddressViewModel
-): ListAdapter<AddressItem, SearchAddressAdapter.ViewHolder>(SearchAddressDiffCallback()) {
+): PagingDataAdapter<AddressItem, SearchAddressAdapter.ViewHolder>(SearchAddressDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -25,7 +25,7 @@ class SearchAddressAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        getItem(position)?.let { holder.bind(it) }
     }
 
     inner class ViewHolder(private val binding: ItemSearchAddressBinding) : RecyclerView.ViewHolder(binding.root) {
