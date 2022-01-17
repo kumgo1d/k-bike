@@ -11,7 +11,7 @@ import com.goldcompany.apps.koreabike.data.search_address.AddressItem
 import com.goldcompany.apps.koreabike.data.search_address.Addresses
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddressDAO
-import com.goldcompany.apps.koreabike.ui.search_address.SearchAddressPagingSource
+import com.goldcompany.apps.koreabike.data.search_address.SearchAddressPagingSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

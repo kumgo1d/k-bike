@@ -1,9 +1,8 @@
-package com.goldcompany.apps.koreabike.ui.search_address
+package com.goldcompany.apps.koreabike.data.search_address
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.goldcompany.apps.koreabike.api.KakaoApiService
-import com.goldcompany.apps.koreabike.data.search_address.AddressItem
 import retrofit2.HttpException
 import java.io.IOException
 

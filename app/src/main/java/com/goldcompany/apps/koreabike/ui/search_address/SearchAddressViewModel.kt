@@ -5,13 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.goldcompany.apps.koreabike.data.KBikeRepository
-import com.goldcompany.apps.koreabike.data.Result
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
-import com.goldcompany.apps.koreabike.data.search_address.Addresses
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

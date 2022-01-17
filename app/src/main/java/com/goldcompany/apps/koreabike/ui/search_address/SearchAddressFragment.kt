@@ -8,17 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
+import com.goldcompany.apps.koreabike.util.LoadingStateAdapter
 import com.goldcompany.apps.koreabike.util.ViewHelper
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -44,7 +45,10 @@ class SearchAddressFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        binding.searchAddressList.adapter = adapter
+        binding.searchAddressList.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = LoadingStateAdapter(adapter::retry),
+            footer = LoadingStateAdapter(adapter::retry)
+        )
         binding.searchAddressList.addItemDecoration(AddressAdapterDecoration())
     }
 
@@ -89,6 +93,12 @@ class SearchAddressFragment : Fragment() {
             lifecycleScope.launch {
                 viewModel.searchAddress(address).collectLatest { result ->
                     adapter.submitData(result)
+                }
+            }
+
+            lifecycleScope.launch {
+                adapter.loadStateFlow.collectLatest { loadState ->
+                    binding.searchAddressLoading.isVisible = loadState.refresh is LoadState.Loading
                 }
             }
             ViewHelper.hideKeyboard(input)

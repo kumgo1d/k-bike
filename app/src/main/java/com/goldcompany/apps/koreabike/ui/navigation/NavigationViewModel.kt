@@ -9,7 +9,6 @@ import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.data.Result
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
-import com.goldcompany.apps.koreabike.data.search_address.Addresses
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
