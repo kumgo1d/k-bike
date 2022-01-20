@@ -10,18 +10,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.data.Result
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
+import com.goldcompany.apps.koreabike.util.LoadingStateAdapter
 import com.goldcompany.apps.koreabike.util.ViewHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.util.ArrayList
@@ -51,7 +55,10 @@ class NavigationFragment : Fragment() {
 
     private fun setAdapter() {
         adapter = NavigationAdapter(viewModel)
-        binding.addressRecyclerView.adapter = adapter
+        binding.addressRecyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = LoadingStateAdapter(adapter::retry),
+            footer = LoadingStateAdapter(adapter::retry)
+        )
         binding.addressRecyclerView.addItemDecoration(AddressAdapterDecoration())
     }
 
@@ -114,6 +121,12 @@ class NavigationFragment : Fragment() {
     }
 
     private fun searchAddress(address: String) {
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadState ->
+                binding.navigationAddressLoading.isVisible = loadState.refresh is LoadState.Loading
+            }
+        }
+
         lifecycleScope.launch {
             viewModel.searchAddress(address)
                 .distinctUntilChanged()

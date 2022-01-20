@@ -91,14 +91,14 @@ class SearchAddressFragment : Fragment() {
             val address = binding.searchAddressInput.text.toString()
 
             lifecycleScope.launch {
-                viewModel.searchAddress(address).collectLatest { result ->
-                    adapter.submitData(result)
+                adapter.loadStateFlow.collectLatest { loadState ->
+                    binding.searchAddressLoading.isVisible = loadState.refresh is LoadState.Loading
                 }
             }
 
             lifecycleScope.launch {
-                adapter.loadStateFlow.collectLatest { loadState ->
-                    binding.searchAddressLoading.isVisible = loadState.refresh is LoadState.Loading
+                viewModel.searchAddress(address).collectLatest { result ->
+                    adapter.submitData(result)
                 }
             }
             ViewHelper.hideKeyboard(input)

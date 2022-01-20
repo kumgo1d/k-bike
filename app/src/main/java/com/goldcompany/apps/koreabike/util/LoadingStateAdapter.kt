@@ -8,7 +8,6 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.ItemNetworkStateBinding
-import com.goldcompany.apps.koreabike.ui.search_address.SearchAddressAdapter
 
 class LoadingStateAdapter(
     private val retryCallback: () -> Unit
