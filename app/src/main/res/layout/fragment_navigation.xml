@@ -38,7 +38,7 @@
                 android:paddingVertical="8dp"
                 android:paddingHorizontal="10dp"
                 android:background="@android:color/background_light"
-                android:hint="출발지를 입력해주세요."
+                android:hint="@string/have_to_input_departure"
                 android:singleLine="true"/>
 
         </com.google.android.material.card.MaterialCardView>
@@ -64,7 +64,7 @@
                 android:paddingVertical="8dp"
                 android:paddingHorizontal="10dp"
                 android:background="@android:color/background_light"
-                android:hint="도착지를 입력해주세요."
+                android:hint="@string/have_to_input_destination"
                 android:singleLine="true"/>
 
         </com.google.android.material.card.MaterialCardView>

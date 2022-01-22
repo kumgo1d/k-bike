@@ -26,9 +26,7 @@ class KBikeRepository @Inject constructor(
     private val naverApiService: NaverApiService,
     private val addressDao: UserHistoryAddressDAO
 ) {
-    private val KAKAO_API_KEY = "KakaoAK 09ab5a332869126358f643b6ff26abc8"
-    private val NAVER_API_CLIENT_ID = "fe7iwsbkl5"
-    private val NAVER_API_KEY = "1KYsy93nxRaNmfxdHExFfyAIX89B8sfwePQw7bNP"
+
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     suspend fun searchAddress(address: String, page: Int): Addresses = withContext(Dispatchers.IO) {

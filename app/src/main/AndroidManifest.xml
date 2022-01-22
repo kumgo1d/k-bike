@@ -23,13 +23,7 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-7722749686662698~6319817377"/>
 
-        <meta-data
-            android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="fe7iwsbkl5" />
 
     </application>
 </manifest>
