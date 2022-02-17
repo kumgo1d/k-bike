@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomNav: BottomNavigationView
-    private lateinit var banner: AdView
+//    private lateinit var banner: AdView
 
     companion object {
         lateinit var instance: MainActivity
@@ -32,15 +32,15 @@ class MainActivity : AppCompatActivity() {
 
         MobileAds.initialize(this)
 
-        setAdBanner()
+//        setAdBanner()
         setBottomNav()
     }
 
-    private fun setAdBanner() {
-        banner = binding.publisherAdView
-        val adRequest = AdManagerAdRequest.Builder().build()
-        banner.loadAd(adRequest)
-    }
+//    private fun setAdBanner() {
+//        banner = binding.publisherAdView
+//        val adRequest = AdManagerAdRequest.Builder().build()
+//        banner.loadAd(adRequest)
+//    }
 
     private fun setBottomNav() {
         bottomNav = binding.bottomNavigationView
@@ -50,12 +50,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun hideBottom() {
-        banner.visibility = View.GONE
+//        banner.visibility = View.GONE
         bottomNav.visibility = View.GONE
     }
 
     fun showBottom() {
-        banner.visibility = View.VISIBLE
+//        banner.visibility = View.VISIBLE
         bottomNav.visibility = View.VISIBLE
     }
 }
