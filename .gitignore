@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /local.properties
+/.idea
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -15,3 +16,5 @@
 *.jks
 app/release/app-release.aab
 key/pwd.txt
+app/src/main/AndroidManifest.xml
+app/src/main/java/com/goldcompany/apps/koreabike/data/KBikeRepository.kt
