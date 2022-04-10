@@ -6,7 +6,6 @@ import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.data.Result
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +22,7 @@ class BikeMapViewModel @Inject constructor(
         MutableLiveData<List<Marker>>()
     }
 
-    suspend fun searchNearbyPlacesMarker(naverMap: NaverMap, code: String, longitude: String, latitude: String) {
+    suspend fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String) {
         val placeMarkers = mutableListOf<Marker>()
         val result = kBikeRepository.searchNearbyPlacesMarker(code, longitude, latitude)
         if (result is Result.Success) {
@@ -52,7 +51,6 @@ class BikeMapViewModel @Inject constructor(
                             marker.iconTintColor = Color.MAGENTA
                         }
                     }
-                    map = naverMap
                 }
                 placeMarkers.add(marker)
             }

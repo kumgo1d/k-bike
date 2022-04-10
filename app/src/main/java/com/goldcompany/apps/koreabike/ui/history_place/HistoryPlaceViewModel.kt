@@ -11,7 +11,12 @@ import javax.inject.Inject
 class HistoryPlaceViewModel@Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
-    private val addressList = MutableLiveData<MutableList<UserHistoryAddress>?>()
+    private val _addressList = MutableLiveData<MutableList<UserHistoryAddress>?>()
+    val addressList: LiveData<MutableList<UserHistoryAddress>?> = _addressList
+
+    init {
+        loadAddress()
+    }
 
     fun setCurrentAddress(address: UserHistoryAddress) {
         viewModelScope.launch {
@@ -40,14 +45,9 @@ class HistoryPlaceViewModel@Inject constructor(
         }
     }
 
-    fun getAddress(): LiveData<MutableList<UserHistoryAddress>?> {
-        loadAddress()
-        return addressList
-    }
-
     private fun loadAddress() {
         viewModelScope.launch {
-            addressList.value = kBikeRepository.getAllAddress()
+            _addressList.value = kBikeRepository.getAllAddress()
         }
     }
 }

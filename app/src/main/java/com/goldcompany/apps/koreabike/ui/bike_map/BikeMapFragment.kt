@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.MainActivity
@@ -63,12 +64,15 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             val longitude = naverMap.cameraPosition.target.longitude.toString()
 
             lifecycleScope.launch {
-                if(viewModel.markers.value != null) {
-                    viewModel.markers.value!!.forEach {
-                        it.map = null
+                viewModel.markers.value?.forEach { it.map = null }
+                viewModel.searchNearbyPlacesMarker(code, longitude, latitude)
+
+                val markerObserver = Observer<List<Marker>> { markers ->
+                    markers.forEach {
+                        it.map = naverMap
                     }
                 }
-                viewModel.searchNearbyPlacesMarker(naverMap, code, longitude, latitude)
+                viewModel.markers.observe(viewLifecycleOwner, markerObserver)
             }
         }
 

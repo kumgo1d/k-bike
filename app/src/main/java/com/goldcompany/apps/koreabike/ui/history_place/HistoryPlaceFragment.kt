@@ -38,7 +38,7 @@ class HistoryPlaceFragment : Fragment() {
         binding.favoriteAddressList.adapter = adapter
         binding.favoriteAddressList.addItemDecoration(AddressAdapterDecoration())
 
-        viewModel.getAddress().observe(viewLifecycleOwner) {
+        viewModel.addressList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }
