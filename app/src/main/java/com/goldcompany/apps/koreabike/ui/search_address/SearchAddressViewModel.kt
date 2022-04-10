@@ -26,8 +26,7 @@ class SearchAddressViewModel@Inject constructor(
             return lastResult
         }
         currentQuery = address
-        val newResult: Flow<PagingData<AddressItem>> = kBikeRepository.getSearchAddressStream(address)
-            .cachedIn(viewModelScope)
+        val newResult: Flow<PagingData<AddressItem>> = kBikeRepository.getSearchAddressStream(address).cachedIn(viewModelScope)
         currentSearchResult = newResult
         return newResult
     }

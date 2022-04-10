@@ -20,3 +20,4 @@ app/src/main/AndroidManifest.xml
 app/src/main/java/com/goldcompany/apps/koreabike/data/KBikeRepository.kt
 app/src/main/java/com/goldcompany/apps/koreabike/data/KBikeRepository.kt
 app/src/main/AndroidManifest.xml
+app/src/main/java/com/goldcompany/apps/koreabike/data/search_address/SearchAddressPagingSource.kt
