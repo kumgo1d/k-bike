@@ -51,7 +51,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
-            if(isGranted) {
+            if (isGranted) {
                 Toast.makeText(requireContext(), R.string.enable_location_service, Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(requireContext(), R.string.go_set_location, Toast.LENGTH_SHORT).show()
@@ -77,7 +77,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
 
         override fun checkPermissionAndGetMyLocation() {
-            if(checkLocationPermission()) {
+            if (checkLocationPermission()) {
                 locationMarker.map = null
                 setCameraPositionToMyLocation()
             } else {
@@ -163,13 +163,13 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         val latitude = address?.latitude ?: 37.5643
         val longitude = address?.longitude ?: 126.9801
 
-        if(checkLocationPermission() && address != null) {
+        if (checkLocationPermission() && address != null) {
             val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
 
             naverMap.cameraPosition = cameraPosition
             setUserLocationMarker(latitude, longitude)
 
-        } else if(checkLocationPermission() && address == null) {
+        } else if (checkLocationPermission() && address == null) {
             setCameraPositionToMyLocation()
         } else {
             val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)

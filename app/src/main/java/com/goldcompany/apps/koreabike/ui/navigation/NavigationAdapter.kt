@@ -33,7 +33,7 @@ class NavigationAdapter(
             binding.address = item
 
             binding.root.setOnClickListener {
-                if(viewModel.isStart.value == true) {
+                if (viewModel.isStart.value == true) {
                     viewModel.startCoordinate.value = "${item.x},${item.y}"
                     viewModel.startAddressName.value = item.placeName
                 } else {

@@ -111,7 +111,7 @@ class NavigationFragment : Fragment() {
         }
 
         view.setOnKeyListener { _, keyCode, _ ->
-            if(keyCode == KeyEvent.KEYCODE_ENTER && !view.text.isNullOrEmpty())  {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && !view.text.isNullOrEmpty())  {
                 viewModel.isStart.value = isStart
                 searchAddress(view.text.toString())
                 clearFocus()
@@ -137,7 +137,7 @@ class NavigationFragment : Fragment() {
     }
 
     private fun checkAddressAndNavigateApi() {
-        if(!viewModel.isAddressNullOrSame()) {
+        if (!viewModel.isAddressNullOrSame()) {
             Toast.makeText(requireContext(), R.string.wrong_address_input, Toast.LENGTH_SHORT).show()
             return
         }
@@ -146,7 +146,7 @@ class NavigationFragment : Fragment() {
             viewModel.getNavigationPath()
                 .distinctUntilChanged()
                 .collect {
-                    if(it is Result.Success) {
+                    if (it is Result.Success) {
                         val bundle = Bundle()
                         val path = it.data.route.track[0].path
                         val duration = it.data.route.track[0].summary.duration

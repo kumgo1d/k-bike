@@ -34,7 +34,7 @@ class SearchAddressViewModel@Inject constructor(
     fun setCurrentAddress(userAddress: UserHistoryAddress) {
         viewModelScope.launch {
             val current: UserHistoryAddress? = kBikeRepository.getAddress()
-            if(current != null ) updateAddressUnselect(current.date)
+            if (current != null ) updateAddressUnselect(current.date)
             insertAddress(userAddress)
         }
     }

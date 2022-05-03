@@ -19,7 +19,7 @@ class AddressAdapterDecoration : RecyclerView.ItemDecoration() {
         val position = parent.getChildAdapterPosition(view)
         val offset = 20
 
-        if(position == 0) {
+        if (position == 0) {
             outRect.top = offset
         }
     }
@@ -33,7 +33,7 @@ class AddressAdapterDecoration : RecyclerView.ItemDecoration() {
         val left = parent.paddingStart.toFloat()
         val right = (parent.width - parent.paddingEnd).toFloat()
 
-        for(i in 0 until parent.childCount) {
+        for (i in 0 until parent.childCount) {
             val child = parent.getChildAt(i)
             val layoutParams = child.layoutParams as RecyclerView.LayoutParams
             //divider를 그리기 위한 top, bottom. 높이 2f.

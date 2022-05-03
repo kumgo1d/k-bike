@@ -50,12 +50,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun hideBottom() {
-//        banner.visibility = View.GONE
         bottomNav.visibility = View.GONE
     }
 
     fun showBottom() {
-//        banner.visibility = View.VISIBLE
         bottomNav.visibility = View.VISIBLE
     }
 }
