@@ -66,13 +66,11 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             lifecycleScope.launch {
                 viewModel.markers.value?.forEach { it.map = null }
                 viewModel.searchNearbyPlacesMarker(code, longitude, latitude)
-
-                val markerObserver = Observer<List<Marker>> { markers ->
+                viewModel.markers.observe(viewLifecycleOwner) { markers ->
                     markers.forEach {
                         it.map = naverMap
                     }
                 }
-                viewModel.markers.observe(viewLifecycleOwner, markerObserver)
             }
         }
 

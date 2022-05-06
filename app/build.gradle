@@ -21,8 +21,8 @@ android {
         applicationId "com.goldcompany.apps.koreabike"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 8
-        versionName "1.8"
+        versionCode 9
+        versionName "1.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'

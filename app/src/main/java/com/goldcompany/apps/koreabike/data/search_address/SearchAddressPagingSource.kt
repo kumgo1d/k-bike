@@ -10,7 +10,7 @@ class SearchAddressPagingSource(
     private val service: KakaoApiService,
     private val address: String
 ) : PagingSource<Int, AddressItem>() {
-    private val KAKAO_API_KEY = "KakaoAK 09ab5a332869126358f643b6ff26abc8"
+    private val KAKAO_API_KEY = "KakaoAK de38bbec19bc46dc2b73966b8333f703"
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, AddressItem> {
         val position = params.key ?: 1

@@ -63,17 +63,13 @@ class NavigationFragment : Fragment() {
     }
 
     private fun addressNameObserve() {
-        val startAddressObserver = Observer<String> { address ->
+        viewModel.startAddressName.observe(viewLifecycleOwner) { address ->
             binding.start.setText(address)
         }
 
-        viewModel.startAddressName.observe(viewLifecycleOwner, startAddressObserver)
-
-        val endAddressObserver = Observer<String> { address ->
+        viewModel.endAddressName.observe(viewLifecycleOwner) { address ->
             binding.end.setText(address)
         }
-
-        viewModel.endAddressName.observe(viewLifecycleOwner, endAddressObserver)
     }
 
     @SuppressLint("ClickableViewAccessibility")

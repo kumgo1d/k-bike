@@ -18,9 +18,16 @@ class BikeMapViewModel @Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
 
-    val markers: MutableLiveData<List<Marker>> by lazy {
-        MutableLiveData<List<Marker>>()
+    companion object {
+        private const val MARKER_WIDTH = 70
+        private const val MARKER_HEIGHT = 100
+        private const val PHARMACY = "PM9"
+        private const val CONVENIENCE_STORE = "CS2"
+        private const val CAFE = "CE7"
+        private const val ACCOMMODATION = "AD5"
     }
+
+    val markers: MutableLiveData<List<Marker>> by lazy { MutableLiveData<List<Marker>>() }
 
     suspend fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String) {
         val placeMarkers = mutableListOf<Marker>()
@@ -29,24 +36,24 @@ class BikeMapViewModel @Inject constructor(
             result.data.places.forEach { place ->
                 val marker = Marker()
                 marker.apply {
-                    width = 70
-                    height = 100
+                    width = MARKER_WIDTH
+                    height = MARKER_HEIGHT
                     position = LatLng(place.y.toDouble(), place.x.toDouble())
 
                     when (code) {
-                        "PM9" -> {
+                        PHARMACY -> {
                             marker.icon = MarkerIcons.BLACK
                             marker.iconTintColor = Color.RED
                         }
-                        "CS2" -> {
+                        CONVENIENCE_STORE -> {
                             marker.icon = MarkerIcons.BLACK
                             marker.iconTintColor = Color.GREEN
                         }
-                        "CE7" -> {
+                        CAFE -> {
                             marker.icon = MarkerIcons.BLACK
                             marker.iconTintColor = Color.DKGRAY
                         }
-                        "AD5" -> {
+                        ACCOMMODATION -> {
                             marker.icon = MarkerIcons.BLACK
                             marker.iconTintColor = Color.MAGENTA
                         }
