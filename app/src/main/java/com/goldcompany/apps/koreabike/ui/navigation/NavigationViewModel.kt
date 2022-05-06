@@ -18,21 +18,11 @@ import javax.inject.Inject
 class NavigationViewModel@Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
-    val isStart: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
-    val startCoordinate: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
-    val startAddressName: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
-    val endCoordinate: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
-    val endAddressName: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
+    val isStart: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val startCoordinate: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val startAddressName: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val endCoordinate: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val endAddressName: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
     private var currentQuery: String? = null
     private var currentSearchResult: Flow<PagingData<AddressItem>>? = null
@@ -59,7 +49,7 @@ class NavigationViewModel@Inject constructor(
         val startCoordinate = startCoordinate.value
         val endCoordinate = endCoordinate.value
 
-        if(startCoordinate.isNullOrEmpty() || endCoordinate.isNullOrEmpty()) {
+        if (startCoordinate.isNullOrEmpty() || endCoordinate.isNullOrEmpty()) {
             return false
         } else if(startCoordinate == endCoordinate) {
             return false

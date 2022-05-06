@@ -70,7 +70,7 @@ class SearchAddressFragment : Fragment() {
         }
 
         binding.searchAddressInput.setOnKeyListener { _, keyCode, _ ->
-            when(keyCode) {
+            when (keyCode) {
                 KeyEvent.KEYCODE_ENTER -> {
                     searchAddress(binding.searchAddressInput)
                     true
@@ -87,7 +87,7 @@ class SearchAddressFragment : Fragment() {
     private fun searchAddress(input: EditText) {
         input.clearFocus()
 
-        if(!input.text.isNullOrEmpty()) {
+        if (!input.text.isNullOrEmpty()) {
             val address = binding.searchAddressInput.text.toString()
 
             lifecycleScope.launch {

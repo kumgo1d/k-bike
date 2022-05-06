@@ -30,7 +30,7 @@ class WebContainerFragment : Fragment() {
     }
 
     fun onButtonClick(view: View) {
-        when(view) {
+        when (view) {
             binding.seoulButton.button -> {
                 browseWebPage(Constants.SEOUL)
             }

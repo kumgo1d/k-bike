@@ -30,11 +30,11 @@ class HistoryPlaceViewModel@Inject constructor(
                 selected = true
             )
 
-            if(current?.date.toString() == selected.date.toString()) {
+            if (current?.date.toString() == selected.date.toString()) {
                 return@launch
             }
 
-            if(current != null) kBikeRepository.updateAddressUnselect(current.date)
+            if (current != null) kBikeRepository.updateAddressUnselect(current.date)
             kBikeRepository.insertAddress(address)
         }
     }
