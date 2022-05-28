@@ -27,7 +27,12 @@ class BikeMapViewModel @Inject constructor(
         private const val ACCOMMODATION = "AD5"
     }
 
-    val markers: MutableLiveData<List<Marker>> by lazy { MutableLiveData<List<Marker>>() }
+    val markers by lazy { MutableLiveData<List<Marker>>() }
+    val isMarked by lazy { MutableLiveData<Boolean>() }
+
+    init {
+        isMarked.postValue(false)
+    }
 
     suspend fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String) {
         val placeMarkers = mutableListOf<Marker>()

@@ -64,13 +64,18 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             val longitude = naverMap.cameraPosition.target.longitude.toString()
 
             lifecycleScope.launch {
-                viewModel.markers.value?.forEach { it.map = null }
-                viewModel.searchNearbyPlacesMarker(code, longitude, latitude)
-                viewModel.markers.observe(viewLifecycleOwner) { markers ->
-                    markers.forEach {
-                        it.map = naverMap
+                if (viewModel.isMarked.value == true) {
+                    viewModel.markers.value?.forEach { it.map = null }
+
+                } else {
+                    viewModel.searchNearbyPlacesMarker(code, longitude, latitude)
+                    viewModel.markers.observe(viewLifecycleOwner) { markers ->
+                        markers.forEach {
+                            it.map = naverMap
+                        }
                     }
                 }
+                viewModel.isMarked.value = !viewModel.isMarked.value!!
             }
         }
 
