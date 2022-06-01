@@ -16,7 +16,6 @@ class KBikeRepository @Inject constructor(
     private val kBikeRemoteDataSource: KBikeRemoteDataSource,
     private val kBikeLocalDataSource: KBikeLocalDataSource
 ) {
-
     suspend fun searchAddress(
         address:String,
         page: Int

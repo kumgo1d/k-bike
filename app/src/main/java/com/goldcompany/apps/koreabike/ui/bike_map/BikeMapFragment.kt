@@ -102,8 +102,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         MainActivity.instance.showBottom()
 
         startMap()
-        setUpSearchNavigation()
-        setUpSearchAddress()
 
         return binding.root
     }
@@ -116,6 +114,13 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setUpSearchNavigation()
+        setUpSearchAddress()
     }
 
     private fun setUpSearchNavigation() {
