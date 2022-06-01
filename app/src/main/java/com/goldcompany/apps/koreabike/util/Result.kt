@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.data
+package com.goldcompany.apps.koreabike.util
 
 sealed class Result<out R> {
     data class Success<out T>(val data: T) : Result<T>()

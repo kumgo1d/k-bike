@@ -3,7 +3,7 @@ package com.goldcompany.apps.koreabike.ui.bike_map
 import android.graphics.Color
 import androidx.lifecycle.*
 import com.goldcompany.apps.koreabike.data.KBikeRepository
-import com.goldcompany.apps.koreabike.data.Result
+import com.goldcompany.apps.koreabike.util.Result
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.Marker
