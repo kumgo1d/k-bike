@@ -12,9 +12,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.goldcompany.apps.koreabike.MainActivity
@@ -46,6 +44,9 @@ class NavigationFragment : Fragment() {
 
         MainActivity.instance.hideBottom()
         setAdapter()
+        addressNameObserve()
+        setTouchListener()
+        searchNavAddress()
 
         return binding.root
     }
@@ -59,15 +60,7 @@ class NavigationFragment : Fragment() {
         binding.addressRecyclerView.addItemDecoration(AddressAdapterDecoration())
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        observeAddressName()
-        setTouchListener()
-        searchNavAddress()
-    }
-
-    private fun observeAddressName() {
+    private fun addressNameObserve() {
         viewModel.startAddressName.observe(viewLifecycleOwner) { address ->
             binding.start.setText(address)
         }
@@ -89,7 +82,9 @@ class NavigationFragment : Fragment() {
         }
 
         binding.navigateButton.setOnClickListener {
-            checkAddressAndNavigateApi()
+            lifecycleScope.launch {
+                checkAddressAndNavigateApi()
+            }
         }
     }
 
@@ -120,22 +115,18 @@ class NavigationFragment : Fragment() {
     }
 
     private fun searchAddress(address: String) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                adapter.loadStateFlow.collectLatest { loadState ->
-                    binding.navigationAddressLoading.isVisible = loadState.refresh is LoadState.Loading
-                }
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadState ->
+                binding.navigationAddressLoading.isVisible = loadState.refresh is LoadState.Loading
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.searchAddress(address)
-                    .distinctUntilChanged()
-                    .collect { result ->
-                        adapter.submitData(result)
-                    }
-            }
+        lifecycleScope.launch {
+            viewModel.searchAddress(address)
+                .distinctUntilChanged()
+                .collect { result ->
+                    adapter.submitData(result)
+                }
         }
     }
 
@@ -145,26 +136,24 @@ class NavigationFragment : Fragment() {
             return
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.getNavigationPath()
-                    .distinctUntilChanged()
-                    .collect {
-                        if (it is Result.Success) {
-                            val bundle = Bundle()
-                            val path = it.data.route.track[0].path
-                            val duration = it.data.route.track[0].summary.duration
-                            val distance = it.data.route.track[0].summary.distance
+        lifecycleScope.launch {
+            viewModel.getNavigationPath()
+                .distinctUntilChanged()
+                .collect {
+                    if (it is Result.Success) {
+                        val bundle = Bundle()
+                        val path = it.data.route.track[0].path
+                        val duration = it.data.route.track[0].summary.duration
+                        val distance = it.data.route.track[0].summary.distance
 
-                            bundle.putInt("duration", duration)
-                            bundle.putInt("distance", distance)
-                            bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
-                            findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
-                        } else {
-                            ViewHelper.errorToast(requireContext())
-                        }
+                        bundle.putInt("duration", duration)
+                        bundle.putInt("distance", distance)
+                        bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
+                        findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
+                    } else {
+                        ViewHelper.errorToast(requireContext())
                     }
-            }
+                }
         }
     }
 
