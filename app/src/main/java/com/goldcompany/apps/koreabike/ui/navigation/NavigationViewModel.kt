@@ -9,6 +9,7 @@ import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.util.Result
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
+import com.goldcompany.apps.koreabike.util.succeeded
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -42,6 +43,7 @@ class NavigationViewModel @Inject constructor(
     suspend fun getNavigationPath(): Flow<Result<ResultPath>> = flow {
         val start = startCoordinate.value.toString()
         val end = endCoordinate.value.toString()
+
         emit(kBikeRepository.getNavigationPath(start, end))
     }
 
@@ -51,7 +53,7 @@ class NavigationViewModel @Inject constructor(
 
         if (startCoordinate.isNullOrEmpty() || endCoordinate.isNullOrEmpty()) {
             return false
-        } else if(startCoordinate == endCoordinate) {
+        } else if (startCoordinate == endCoordinate) {
             return false
         }
         return true

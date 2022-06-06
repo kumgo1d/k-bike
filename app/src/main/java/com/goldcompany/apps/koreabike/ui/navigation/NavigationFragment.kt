@@ -41,14 +41,17 @@ class NavigationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNavigationBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         MainActivity.instance.hideBottom()
+
         setAdapter()
         addressNameObserve()
         setTouchListener()
         searchNavAddress()
-
-        return binding.root
     }
 
     private fun setAdapter() {
@@ -82,9 +85,7 @@ class NavigationFragment : Fragment() {
         }
 
         binding.navigateButton.setOnClickListener {
-            lifecycleScope.launch {
-                checkAddressAndNavigateApi()
-            }
+            checkAddressAndNavigateApi()
         }
     }
 
