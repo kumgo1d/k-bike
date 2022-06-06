@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
-class NavigationViewModel @Inject constructor(
+class NavigationViewModel@Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
     val isStart: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }

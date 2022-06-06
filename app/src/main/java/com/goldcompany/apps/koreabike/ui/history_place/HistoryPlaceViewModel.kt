@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HistoryPlaceViewModel @Inject constructor(
+class HistoryPlaceViewModel@Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
     private val _addressList = MutableLiveData<List<UserHistoryAddress>?>()

@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchAddressViewModel @Inject constructor(
+class SearchAddressViewModel@Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
 
