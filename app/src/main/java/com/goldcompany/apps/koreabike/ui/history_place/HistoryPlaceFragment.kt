@@ -37,15 +37,23 @@ class HistoryPlaceFragment : Fragment() {
         adapter = FavoritePlaceAdapter(viewModel)
         binding.favoriteAddressList.adapter = adapter
         binding.favoriteAddressList.addItemDecoration(AddressAdapterDecoration())
-
-        viewModel.addressList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
     }
 
     private fun addListener() {
         binding.appBar.navigationBackButton.setOnClickListener {
             findNavController().popBackStack()
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        observeAddress()
+    }
+
+    private fun observeAddress() {
+        viewModel.addressList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
         }
     }
 }
