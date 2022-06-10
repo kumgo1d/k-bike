@@ -18,6 +18,7 @@ import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
+import com.goldcompany.apps.koreabike.util.ViewHelper
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -66,7 +67,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             lifecycleScope.launch {
                 if (viewModel.isMarked.value == true) {
                     viewModel.markers.value?.forEach { it.map = null }
-
                 } else {
                     viewModel.searchNearbyPlacesMarker(code, longitude, latitude)
                     viewModel.markers.observe(viewLifecycleOwner) { markers ->
@@ -75,7 +75,12 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                         }
                     }
                 }
-                viewModel.isMarked.value = !viewModel.isMarked.value!!
+
+                try {
+                    viewModel.isMarked.value = !viewModel.isMarked.value!!
+                } catch (e: NullPointerException) {
+                    ViewHelper.errorToast(requireContext())
+                }
             }
         }
 

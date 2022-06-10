@@ -1,10 +1,11 @@
 package com.goldcompany.apps.koreabike.ui.bike_map
 
 import android.graphics.Color
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.goldcompany.apps.koreabike.data.KBikeRepository
-import com.goldcompany.apps.koreabike.util.Result
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
+import com.goldcompany.apps.koreabike.util.Result
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
@@ -17,15 +18,6 @@ import javax.inject.Inject
 class BikeMapViewModel @Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
-
-    companion object {
-        private const val MARKER_WIDTH = 70
-        private const val MARKER_HEIGHT = 100
-        private const val PHARMACY = "PM9"
-        private const val CONVENIENCE_STORE = "CS2"
-        private const val CAFE = "CE7"
-        private const val ACCOMMODATION = "AD5"
-    }
 
     val markers by lazy { MutableLiveData<List<Marker>>() }
     val isMarked by lazy { MutableLiveData<Boolean>() }
@@ -73,5 +65,14 @@ class BikeMapViewModel @Inject constructor(
 
     suspend fun getAddress(): Flow<UserHistoryAddress?> = flow {
         emit(kBikeRepository.getAddress())
+    }
+
+    companion object {
+        private const val MARKER_WIDTH = 70
+        private const val MARKER_HEIGHT = 100
+        private const val PHARMACY = "PM9"
+        private const val CONVENIENCE_STORE = "CS2"
+        private const val CAFE = "CE7"
+        private const val ACCOMMODATION = "AD5"
     }
 }

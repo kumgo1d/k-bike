@@ -51,13 +51,7 @@ class SearchAddressViewModelTest {
     }
 
     @Test
-    fun searchAddress_pagingDataLoaded() {
-        mainCoroutineRule.runBlockingTest {
-            val result = Result.Success(
-                viewModel.searchAddress("현대백화점")
-            )
-
-            Assert.assertEquals("", result)
-        }
+    fun searchAddress_pagingDataLoaded() = runBlockingTest {
+        Assert.assertNotNull(viewModel.searchAddress("현대백화점"))
     }
 }
