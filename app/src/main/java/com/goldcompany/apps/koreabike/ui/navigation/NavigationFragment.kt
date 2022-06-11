@@ -64,12 +64,12 @@ class NavigationFragment : Fragment() {
     }
 
     private fun addressNameObserve() {
-        viewModel.startAddressName.observe(viewLifecycleOwner) { address ->
-            binding.start.setText(address)
+        viewModel.startAddress.observe(viewLifecycleOwner) { address ->
+            binding.start.setText(address.addressName)
         }
 
-        viewModel.endAddressName.observe(viewLifecycleOwner) { address ->
-            binding.end.setText(address)
+        viewModel.endAddress.observe(viewLifecycleOwner) { address ->
+            binding.end.setText(address.addressName)
         }
     }
 

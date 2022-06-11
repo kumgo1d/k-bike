@@ -34,13 +34,12 @@ class NavigationAdapter(
 
             binding.root.setOnClickListener {
                 if (viewModel.isStart.value == true) {
-                    viewModel.startCoordinate.value = "${item.x},${item.y}"
-                    viewModel.startAddressName.value = item.placeName
+                    val coordinate = "${item.x},${item.y}"
+                    viewModel.startAddress.value = NavAddress(item.placeName, coordinate)
                 } else {
-                    viewModel.endCoordinate.value = "${item.x},${item.y}"
-                    viewModel.endAddressName.value = item.placeName
+                    val coordinate = "${item.x},${item.y}"
+                    viewModel.endAddress.value = NavAddress(item.placeName, coordinate)
                 }
-
                 ViewHelper.hideKeyboard(it)
             }
         }

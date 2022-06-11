@@ -28,7 +28,7 @@ class SearchAddressViewModelTest {
     //makes each task executed one after another
     //prevents asynchronous operations
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     //default coroutine dispatcher is the viewModelScope
     //viewModelScope is the Dispatchers.Main and Dispatchers.Main uses
@@ -37,7 +37,7 @@ class SearchAddressViewModelTest {
     //need to swap that dispatcher with a test dispatcher.
     @ExperimentalCoroutinesApi
     @get:Rule
-    var mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: SearchAddressViewModel
 
