@@ -42,11 +42,23 @@ class NavigationViewModel @Inject constructor(
         return newResult
     }
 
-    suspend fun getNavigationPath(): Flow<Result<ResultPath>> = flow {
-        val start = startAddress.value?.addressName ?: ""
-        val end = endAddress.value?.addressName ?: ""
+    suspend fun getNavigationPath(): Flow<ResultPath> = flow {
+        val start = startAddress.value?.coordinate ?: ""
+        val end = endAddress.value?.coordinate ?: ""
 
-        emit(kBikeRepository.getNavigationPath(start, end))
+        val result = kBikeRepository.getNavigationPath(start, end)
+        if (result is Result.Success) {
+            emit(result.data)
+        } else {
+            emit(
+                ResultPath(
+                    code = 9999,
+                    currentDateTime = "0",
+                    message = "Error",
+                    route = null
+                )
+            )
+        }
     }
 
     fun isAddressNullOrSame(): Boolean {

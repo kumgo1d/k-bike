@@ -60,10 +60,10 @@ class KBikeRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun getNavigationPath(start: String, goal: String): Result<ResultPath> = withContext(ioDispatcher) {
+    suspend fun getNavigationPath(start: String, end: String): Result<ResultPath> = withContext(ioDispatcher) {
         try {
             val path = naverApiService.getPath(
-                NAVER_API_CLIENT_ID, NAVER_API_KEY, start, goal, "tracomfort"
+                NAVER_API_CLIENT_ID, NAVER_API_KEY, start, end
             )
             if(path != null) {
                 return@withContext Result.Success(path)

@@ -16,7 +16,7 @@ interface NaverApiService {
         @Header("X-NCP-APIGW-API-KEY") apiKey: String,
         @Query("start") start: String,
         @Query("goal") goal: String,
-        @Query("option") option: String
+        @Query("option") option: String = "tracomfort"
     ): ResultPath?
 
     companion object {

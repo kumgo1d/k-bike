@@ -20,7 +20,6 @@ import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import com.goldcompany.apps.koreabike.util.LoadingStateAdapter
-import com.goldcompany.apps.koreabike.util.Result
 import com.goldcompany.apps.koreabike.util.ViewHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -101,15 +100,13 @@ class NavigationFragment : Fragment() {
     }
 
     private fun addressEditTextListener(view: EditText, isStart: Boolean) {
-        view.setOnClickListener {
-            binding.addressRecyclerView.adapter = null
-        }
-
-        view.setOnKeyListener { _, keyCode, _ ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && !view.text.isNullOrEmpty())  {
-                viewModel.isStart.value = isStart
-                searchAddress(view.text.toString())
-                clearFocus()
+        view.setOnKeyListener { v, keyCode, _ ->
+            if (v.hasFocus()) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && !view.text.isNullOrEmpty())  {
+                    viewModel.isStart.value = isStart
+                    searchAddress(view.text.toString())
+                    clearFocus()
+                }
             }
             false
         }
@@ -140,12 +137,12 @@ class NavigationFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.getNavigationPath()
                 .distinctUntilChanged()
-                .collect {
-                    if (it is Result.Success) {
+                .collect { result ->
+                    if (result.route != null) {
                         val bundle = Bundle()
-                        val path = it.data.route.track[0].path
-                        val duration = it.data.route.track[0].summary.duration
-                        val distance = it.data.route.track[0].summary.distance
+                        val path = result.route.comfort[0].path
+                        val duration = result.route.comfort[0].summary.duration
+                        val distance = result.route.comfort[0].summary.distance
 
                         bundle.putInt("duration", duration)
                         bundle.putInt("distance", distance)
