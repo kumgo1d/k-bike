@@ -42,10 +42,7 @@ class NavigationViewModel @Inject constructor(
         return newResult
     }
 
-    suspend fun getNavigationPath(): Flow<ResultPath> = flow {
-        val start = startAddress.value?.coordinate ?: ""
-        val end = endAddress.value?.coordinate ?: ""
-
+    suspend fun getNavigationPath(start: String, end: String): Flow<ResultPath> = flow {
         val result = kBikeRepository.getNavigationPath(start, end)
         if (result is Result.Success) {
             emit(result.data)

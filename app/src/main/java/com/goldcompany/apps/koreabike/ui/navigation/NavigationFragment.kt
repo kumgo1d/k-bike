@@ -3,6 +3,7 @@ package com.goldcompany.apps.koreabike.ui.navigation
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -135,7 +136,11 @@ class NavigationFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.getNavigationPath()
+            Log.d("dfdfdf", "${viewModel.startAddress.value?.coordinate}, ${viewModel.endAddress.value?.coordinate}")
+            viewModel.getNavigationPath(
+                viewModel.startAddress.value?.coordinate.toString(),
+                viewModel.endAddress.value?.coordinate.toString()
+            )
                 .distinctUntilChanged()
                 .collect { result ->
                     if (result.route != null) {
