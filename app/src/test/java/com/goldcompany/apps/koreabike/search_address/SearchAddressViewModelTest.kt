@@ -6,7 +6,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.goldcompany.apps.koreabike.MainCoroutineRule
 import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.ui.search_address.SearchAddressViewModel
-import com.goldcompany.apps.koreabike.util.Result
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,16 +21,20 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
 //robolectric 에러 방지를 위해 SDK 버전 명시
-@Config(sdk = [Build.VERSION_CODES.O])
+@Config(sdk = [Build.VERSION_CODES.O], application = HiltTestApplication::class)
 //코루틴 테스트를 위해 명시
 @ExperimentalCoroutinesApi
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class SearchAddressViewModelTest {
 
     //makes each task executed one after another
     //prevents asynchronous operations
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    var instantExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
 
     //default coroutine dispatcher is the viewModelScope
     //viewModelScope is the Dispatchers.Main and Dispatchers.Main uses
@@ -37,7 +43,7 @@ class SearchAddressViewModelTest {
     //need to swap that dispatcher with a test dispatcher.
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: SearchAddressViewModel
 
@@ -45,7 +51,7 @@ class SearchAddressViewModelTest {
     private lateinit var repository: KBikeRepository
 
     @Before
-    fun setupViewModel() {
+    fun setup() {
         MockKAnnotations.init(this, relaxed = true)
         viewModel = SearchAddressViewModel(repository)
     }

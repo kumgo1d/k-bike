@@ -8,6 +8,9 @@ import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.ui.navigation.NavigationViewModel
 import com.goldcompany.apps.koreabike.util.Result
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,27 +23,33 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import javax.inject.Inject
 
-@Config(sdk = [Build.VERSION_CODES.O])
+@HiltAndroidTest
+@Config(sdk = [Build.VERSION_CODES.O], application = HiltTestApplication::class)
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class NavigationViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    var instantExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
 
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var viewModel: NavigationViewModel
+    lateinit var viewModel: NavigationViewModel
 
     @MockK
-    private lateinit var repository: KBikeRepository
+    lateinit var repository: KBikeRepository
 
     @Before
-    fun setupViewModel() {
+    fun setup() {
         MockKAnnotations.init(this, relaxed = true)
+        hiltRule.inject()
         viewModel = NavigationViewModel(repository)
     }
 
