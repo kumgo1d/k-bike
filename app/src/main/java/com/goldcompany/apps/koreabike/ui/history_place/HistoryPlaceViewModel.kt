@@ -11,6 +11,7 @@ import javax.inject.Inject
 class HistoryPlaceViewModel @Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
+
     private val _addressList = MutableLiveData<List<UserHistoryAddress>?>()
     val addressList: LiveData<List<UserHistoryAddress>?> = _addressList
 

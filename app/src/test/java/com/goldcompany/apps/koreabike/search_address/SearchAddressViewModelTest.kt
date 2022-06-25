@@ -21,10 +21,9 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
 //robolectric 에러 방지를 위해 SDK 버전 명시
-@Config(sdk = [Build.VERSION_CODES.O], application = HiltTestApplication::class)
+@Config(sdk = [Build.VERSION_CODES.O])
 //코루틴 테스트를 위해 명시
 @ExperimentalCoroutinesApi
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class SearchAddressViewModelTest {
 
@@ -32,9 +31,6 @@ class SearchAddressViewModelTest {
     //prevents asynchronous operations
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
 
     //default coroutine dispatcher is the viewModelScope
     //viewModelScope is the Dispatchers.Main and Dispatchers.Main uses

@@ -136,7 +136,6 @@ class NavigationFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            Log.d("dfdfdf", "${viewModel.startAddress.value?.coordinate}, ${viewModel.endAddress.value?.coordinate}")
             viewModel.getNavigationPath(
                 viewModel.startAddress.value?.coordinate.toString(),
                 viewModel.endAddress.value?.coordinate.toString()
