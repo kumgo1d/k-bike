@@ -1,14 +1,16 @@
 package com.goldcompany.apps.koreabike.ui.navigation
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.goldcompany.apps.koreabike.Constants
 import com.goldcompany.apps.koreabike.data.KBikeRepository
-import com.goldcompany.apps.koreabike.util.Result
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
+import com.goldcompany.apps.koreabike.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -26,6 +28,9 @@ class NavigationViewModel @Inject constructor(
     val isStart: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val startAddress: MutableLiveData<NavAddress> by lazy { MutableLiveData<NavAddress>() }
     val endAddress: MutableLiveData<NavAddress> by lazy { MutableLiveData<NavAddress>() }
+
+    private val _resultMessage = MutableLiveData<String>()
+    val resultMessage: LiveData<String> = _resultMessage
 
     private var currentQuery: String? = null
     private var currentSearchResult: Flow<PagingData<AddressItem>>? = null
@@ -47,6 +52,7 @@ class NavigationViewModel @Inject constructor(
         if (result is Result.Success) {
             emit(result.data)
         } else {
+            _resultMessage.postValue(Constants.RESULT_ERROR)
             emit(
                 ResultPath(
                     code = 9999,
@@ -58,13 +64,15 @@ class NavigationViewModel @Inject constructor(
         }
     }
 
-    fun isAddressNullOrSame(): Boolean {
+    fun isAddressCorrect(): Boolean {
         val startCoordinate = startAddress.value?.coordinate ?: ""
         val endCoordinate = endAddress.value?.coordinate ?: ""
 
         if (startCoordinate.isEmpty() || endCoordinate.isEmpty()) {
+            _resultMessage.postValue(Constants.RESULT_ERROR)
             return false
         } else if (startCoordinate == endCoordinate) {
+            _resultMessage.postValue(Constants.RESULT_ERROR)
             return false
         }
         return true

@@ -10,4 +10,7 @@ object Constants {
     const val DAEJEON = "http://m.tashu.or.kr/m/memberAction.do?process=station"
     const val CHANGWON = "https://app.nubija.com"
     const val GWANGJU = "https://tarangge.gwangju.go.kr/sts/subPage01.do"
+
+    const val RESULT_ERROR = "ERROR"
+    const val RESULT_SUCCESS = "SUCCESS"
 }

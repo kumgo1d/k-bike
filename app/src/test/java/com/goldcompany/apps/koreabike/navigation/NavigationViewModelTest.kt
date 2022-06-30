@@ -26,11 +26,11 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 class NavigationViewModelTest {
 
-    @get:Rule
+    @get:Rule(order = 0)
     var instantExecutorRule = InstantTaskExecutorRule()
 
     @ExperimentalCoroutinesApi
-    @get:Rule
+    @get:Rule(order = 1)
     var mainCoroutineRule = MainCoroutineRule()
 
     @MockK

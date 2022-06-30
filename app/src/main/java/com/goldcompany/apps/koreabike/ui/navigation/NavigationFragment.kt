@@ -3,19 +3,18 @@ package com.goldcompany.apps.koreabike.ui.navigation
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.goldcompany.apps.koreabike.Constants
 import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
@@ -48,10 +47,19 @@ class NavigationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         MainActivity.instance.hideBottom()
 
+        observeResultMessage()
         setAdapter()
         addressNameObserve()
         setTouchListener()
         searchNavAddress()
+    }
+
+    private fun observeResultMessage() {
+        viewModel.resultMessage.observe(viewLifecycleOwner) { message ->
+            when (message) {
+                Constants.RESULT_ERROR -> ViewHelper.errorToast(requireContext())
+            }
+        }
     }
 
     private fun setAdapter() {
@@ -130,10 +138,7 @@ class NavigationFragment : Fragment() {
     }
 
     private fun checkAddressAndNavigateApi() {
-        if (!viewModel.isAddressNullOrSame()) {
-            Toast.makeText(requireContext(), R.string.wrong_address_input, Toast.LENGTH_SHORT).show()
-            return
-        }
+        if (!viewModel.isAddressCorrect()) return
 
         lifecycleScope.launch {
             viewModel.getNavigationPath(
@@ -152,8 +157,6 @@ class NavigationFragment : Fragment() {
                         bundle.putInt("distance", distance)
                         bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
                         findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
-                    } else {
-                        ViewHelper.errorToast(requireContext())
                     }
                 }
         }
