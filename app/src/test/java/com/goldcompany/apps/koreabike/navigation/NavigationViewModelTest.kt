@@ -3,8 +3,12 @@ package com.goldcompany.apps.koreabike.navigation
 
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
 import com.goldcompany.apps.koreabike.MainCoroutineRule
 import com.goldcompany.apps.koreabike.data.KBikeRepository
+import com.goldcompany.apps.koreabike.db.KBikeDatabase
+import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddressDAO
 import com.goldcompany.apps.koreabike.ui.navigation.NavigationViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -33,6 +37,9 @@ class NavigationViewModelTest {
     @get:Rule(order = 1)
     var mainCoroutineRule = MainCoroutineRule()
 
+    private lateinit var database: KBikeDatabase
+    private lateinit var dao: UserHistoryAddressDAO
+
     @MockK
     private lateinit var repository: KBikeRepository
     @MockK
@@ -41,6 +48,11 @@ class NavigationViewModelTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this, relaxed = true)
+        database = Room.inMemoryDatabaseBuilder(
+            ApplicationProvider.getApplicationContext(),
+            KBikeDatabase::class.java
+        ).allowMainThreadQueries().build()
+        dao = database.userAddressDAO()
         repository = mockk()
         viewModel = NavigationViewModel(repository)
     }
