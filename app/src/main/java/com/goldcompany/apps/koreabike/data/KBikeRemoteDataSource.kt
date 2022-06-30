@@ -3,6 +3,7 @@ package com.goldcompany.apps.koreabike.data
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.goldcompany.apps.koreabike.BuildConfig
 import com.goldcompany.apps.koreabike.api.KakaoApiService
 import com.goldcompany.apps.koreabike.api.NaverApiService
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
@@ -23,9 +24,9 @@ class KBikeRemoteDataSource @Inject constructor(
     private val kakaoApiService: KakaoApiService,
     private val naverApiService: NaverApiService
 ) {
-    private val KAKAO_API_KEY = "KakaoAK de38bbec19bc46dc2b73966b8333f703"
-    private val NAVER_API_CLIENT_ID = "fe7iwsbkl5"
-    private val NAVER_API_KEY = "1KYsy93nxRaNmfxdHExFfyAIX89B8sfwePQw7bNP"
+    private val KAKAO_API_KEY = BuildConfig.KAKAO_API_KEY
+    private val NAVER_API_CLIENT_ID = BuildConfig.NAVER_API_CLIENT_ID
+    private val NAVER_API_KEY = BuildConfig.NAVER_API_KEY
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     suspend fun searchAddress(address: String, page: Int): Addresses = withContext(Dispatchers.IO) {
