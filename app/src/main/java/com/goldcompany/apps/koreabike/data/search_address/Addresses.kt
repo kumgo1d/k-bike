@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class Addresses(
     @SerializedName("documents") val addressList: List<AddressItem>,
-    val meta: Meta
+    val meta: AddressMetaData
 )

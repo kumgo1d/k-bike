@@ -11,6 +11,7 @@ import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarker
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
 import com.goldcompany.apps.koreabike.data.search_address.Addresses
 import com.goldcompany.apps.koreabike.data.search_address.SearchAddressPagingSource
+import com.goldcompany.apps.koreabike.util.Resource
 import com.goldcompany.apps.koreabike.util.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +52,7 @@ class KBikeRemoteDataSource @Inject constructor(
     ): Result<PlaceMarker> = withContext(ioDispatcher) {
         try {
             val markers = kakaoApiService.searchNearbyPlacesMarker(KAKAO_API_KEY, code, longitude, latitude, radius = 10000)
-            if(markers != null) {
+            if (markers != null) {
                 return@withContext Result.Success(markers)
             } else {
                 return@withContext Result.Error(Exception("PlaceMarker is Not Found"))
@@ -61,18 +62,16 @@ class KBikeRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun getNavigationPath(start: String, end: String): Result<ResultPath> = withContext(ioDispatcher) {
+    suspend fun getNavigationPath(start: String, end: String): Resource<ResultPath> = withContext(ioDispatcher) {
         try {
-            val path = naverApiService.getPath(
-                NAVER_API_CLIENT_ID, NAVER_API_KEY, start, end
-            )
-            if(path != null) {
-                return@withContext Result.Success(path)
+            val path = naverApiService.getPath(NAVER_API_CLIENT_ID, NAVER_API_KEY, start, end)
+            if (path != null) {
+                return@withContext Resource.success(path)
             } else {
-                return@withContext Result.Error(Exception("Path Not Found"))
+                return@withContext Resource.error("Path Not Found", null)
             }
         } catch (e: Exception) {
-            return@withContext Result.Error(e)
+            return@withContext Resource.error(e.toString(), null)
         }
     }
 }

@@ -10,7 +10,9 @@ import com.goldcompany.apps.koreabike.Constants
 import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
+import com.goldcompany.apps.koreabike.util.Resource
 import com.goldcompany.apps.koreabike.util.Result
+import com.goldcompany.apps.koreabike.util.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -49,18 +51,23 @@ class NavigationViewModel @Inject constructor(
 
     suspend fun getNavigationPath(start: String, end: String): Flow<ResultPath> = flow {
         val result = kBikeRepository.getNavigationPath(start, end)
-        if (result is Result.Success) {
-            emit(result.data)
-        } else {
-            _resultMessage.postValue(Constants.RESULT_ERROR)
-            emit(
-                ResultPath(
-                    code = 9999,
-                    currentDateTime = "0",
-                    message = "Error",
-                    route = null
+
+        when (result.status) {
+            Status.SUCCESS -> result.data?.let { emit(it) }
+            Status.ERROR -> {
+                _resultMessage.postValue(Constants.RESULT_ERROR)
+                emit(
+                    ResultPath(
+                        code = 9999,
+                        currentDateTime = "0",
+                        message = "Error",
+                        route = null
+                    )
                 )
-            )
+            }
+            Status.LOADING -> {
+
+            }
         }
     }
 
