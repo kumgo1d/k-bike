@@ -21,8 +21,8 @@ android {
         applicationId "com.goldcompany.apps.koreabike"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 9
-        versionName "1.9"
+        versionCode 10
+        versionName "1.9.1"
         buildConfigField("String", "KAKAO_API_KEY", KAKAO_API_KEY)
         buildConfigField("String", "NAVER_API_KEY", NAVER_API_KEY)
         buildConfigField("String", "NAVER_API_CLIENT_ID", NAVER_API_CLIENT_ID)
