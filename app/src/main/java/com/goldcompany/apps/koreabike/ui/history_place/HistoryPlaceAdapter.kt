@@ -14,25 +14,28 @@ class FavoritePlaceAdapter(
 ): ListAdapter<UserHistoryAddress, FavoritePlaceAdapter.ViewHolder>(HistoryAddressDiffCallback()) {
 
     inner class ViewHolder(private val binding: ItemFavoritePlaceListBinding) : RecyclerView.ViewHolder(binding.root) {
-        var item: UserHistoryAddress? = null
-
-        init {
-            binding.placeItemDelete.setOnClickListener {
-                viewModel.deleteAddress(item!!)
-                val list = currentList.toMutableList()
-                list.remove(item!!)
-                submitList(list)
-            }
-
-            binding.root.setOnClickListener {
-                viewModel.setCurrentAddress(item!!)
-                Navigation.findNavController(binding.root).navigate(HistoryPlaceFragmentDirections.actionGlobalMapView())
-            }
-        }
 
         fun setList(item: UserHistoryAddress) {
             binding.address = item
-            this.item = item
+
+            setDeleteButtonListener(item)
+            setItemClickListener(item)
+        }
+
+        private fun setDeleteButtonListener(item: UserHistoryAddress) {
+            binding.placeItemDelete.setOnClickListener {
+                viewModel.deleteAddress(item)
+                val list = currentList.toMutableList()
+                list.remove(item)
+                submitList(list)
+            }
+        }
+
+        private fun setItemClickListener(item: UserHistoryAddress) {
+            binding.root.setOnClickListener {
+                viewModel.setCurrentAddress(item)
+                Navigation.findNavController(binding.root).navigate(HistoryPlaceFragmentDirections.actionGlobalMapView())
+            }
         }
     }
 

@@ -115,8 +115,9 @@ class SearchAddressFragment : Fragment() {
                     adapter.submitData(result)
                 }
             }
-            ViewHelper.hideKeyboard(input)
         }
+
+        ViewHelper.hideKeyboard(input)
     }
 
     override fun onStop() {

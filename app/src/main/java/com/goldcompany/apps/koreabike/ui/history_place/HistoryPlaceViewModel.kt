@@ -12,18 +12,10 @@ class HistoryPlaceViewModel @Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
 
-    private val _addressList = MutableLiveData<List<UserHistoryAddress>?>()
-    val addressList: LiveData<List<UserHistoryAddress>?> = _addressList
-
-    init {
-        loadAddress()
+    private val _addressList = liveData<List<UserHistoryAddress>> {
+        emit(kBikeRepository.getAllAddress())
     }
-
-    private fun loadAddress() {
-        viewModelScope.launch {
-            _addressList.value = kBikeRepository.getAllAddress()
-        }
-    }
+    val addressList: LiveData<List<UserHistoryAddress>> = _addressList
 
     fun setCurrentAddress(address: UserHistoryAddress) {
         viewModelScope.launch {
