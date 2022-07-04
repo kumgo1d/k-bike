@@ -26,10 +26,10 @@
     <!--        ads:adUnitId="ca-app-pub-7722749686662698/1468791859"-->
 <!--    ads:adUnitId="/6499/example/banner"-->
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/bottom_navigation_menu"/>
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:id="@+id/bottom_navigation_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:menu="@menu/bottom_navigation_menu"/>-->
 
 </LinearLayout>

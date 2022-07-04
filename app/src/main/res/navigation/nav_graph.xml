@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/web_view_container">
+    app:startDestination="@id/map_view">
 
     <fragment
         android:id="@+id/search_address_fragment"
@@ -42,26 +42,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/web_view"
-        android:name="com.goldcompany.apps.koreabike.ui.webview.WebViewFragment"
-        android:label="WebViewFragment">
-        <argument
-            android:name="url"
-            app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/web_view_container"
-        android:name="com.goldcompany.apps.koreabike.ui.webview.WebContainerFragment"
-        android:label="WebContainerFragment" >
-        <action
-            android:id="@+id/action_web_view_container_to_web_view"
-            app:destination="@id/web_view"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-    </fragment>
-    <fragment
         android:id="@+id/navigationFragment"
         android:name="com.goldcompany.apps.koreabike.ui.navigation.NavigationFragment"
         android:label="fragment_navigation"
@@ -74,11 +54,13 @@
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
     </fragment>
+
     <action
         android:id="@+id/action_global_map_view"
         app:destination="@id/map_view"
         app:popUpTo="@id/map_view"
         app:popUpToInclusive="true"/>
+
     <fragment
         android:id="@+id/navigationMapFragment"
         android:name="com.goldcompany.apps.koreabike.ui.navigation.NavigationResultFragment"

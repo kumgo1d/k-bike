@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.goldcompany.apps.koreabike.Constants
+import com.goldcompany.apps.koreabike.data.BaseRepository
 import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.data.driving.ResultPath
 import com.goldcompany.apps.koreabike.data.search_address.AddressItem
@@ -63,9 +64,7 @@ class NavigationViewModel @Inject constructor(
                     )
                 )
             }
-            Status.LOADING -> {
-
-            }
+            Status.LOADING -> {}
         }
     }
 

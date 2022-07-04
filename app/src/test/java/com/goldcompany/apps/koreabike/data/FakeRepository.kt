@@ -48,7 +48,7 @@ class FakeRepository: BaseRepository  {
         return if (networkError) {
             Resource.error("Network Error", null)
         } else {
-            Resource.success(ResultPath(9999, "", "success", null))
+            Resource.success(ResultPath(9999, "", "길찾기를 성공하였습니다.", null))
         }
     }
 

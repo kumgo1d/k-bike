@@ -21,8 +21,8 @@ android {
         applicationId "com.goldcompany.apps.koreabike"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 10
-        versionName "1.9.1"
+        versionCode 11
+        versionName "1.9.2"
         buildConfigField("String", "KAKAO_API_KEY", KAKAO_API_KEY)
         buildConfigField("String", "NAVER_API_KEY", NAVER_API_KEY)
         buildConfigField("String", "NAVER_API_CLIENT_ID", NAVER_API_CLIENT_ID)
@@ -104,6 +104,9 @@ dependencies {
 
     //hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$androidx_hilt_version"
+    // When using Kotlin.
+    kapt "androidx.hilt:hilt-compiler:$androidx_hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
 

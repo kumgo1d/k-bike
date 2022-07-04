@@ -104,7 +104,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.handler = handler
-        MainActivity.instance.showBottom()
 
         startMap()
 

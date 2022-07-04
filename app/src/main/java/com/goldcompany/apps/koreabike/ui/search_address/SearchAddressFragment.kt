@@ -36,7 +36,6 @@ class SearchAddressFragment : Fragment() {
     ): View {
         binding = FragmentSearchAddressBinding.inflate(inflater, container, false)
 
-        MainActivity.instance.hideBottom()
         setAdapter()
         setButtonListener()
 

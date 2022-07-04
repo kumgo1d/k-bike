@@ -6,6 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.goldcompany.apps.koreabike.MainCoroutineRule
+import com.goldcompany.apps.koreabike.data.FakeRepository
 import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.db.KBikeDatabase
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddressDAO
@@ -41,8 +42,6 @@ class NavigationViewModelTest {
     private lateinit var dao: UserHistoryAddressDAO
 
     @MockK
-    private lateinit var repository: KBikeRepository
-    @MockK
     private lateinit var viewModel: NavigationViewModel
 
     @Before
@@ -53,8 +52,8 @@ class NavigationViewModelTest {
             KBikeDatabase::class.java
         ).allowMainThreadQueries().build()
         dao = database.userAddressDAO()
-        repository = mockk()
-        viewModel = NavigationViewModel(repository)
+
+        viewModel = NavigationViewModel(FakeRepository())
     }
 
     @Test
@@ -62,8 +61,6 @@ class NavigationViewModelTest {
         val start = "126.976861018866,37.5759689663327"
         val end = "127.011795743342,37.2869569586225"
         val message = "길찾기를 성공하였습니다."
-
-        every { runBlockingTest { repository.getNavigationPath(start, end) } } returns mockk()
 
         val result = viewModel.getNavigationPath(start, end).first()
         Assert.assertEquals(message, result.message)

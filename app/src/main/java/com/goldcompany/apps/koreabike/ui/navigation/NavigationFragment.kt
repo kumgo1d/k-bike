@@ -30,10 +30,10 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class NavigationFragment : Fragment() {
 
+    private val viewModel by viewModels<NavigationViewModel>()
+
     private lateinit var binding: FragmentNavigationBinding
     private lateinit var adapter: NavigationAdapter
-
-    private val viewModel by viewModels<NavigationViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +45,6 @@ class NavigationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MainActivity.instance.hideBottom()
 
         observeResultMessage()
         setAdapter()
