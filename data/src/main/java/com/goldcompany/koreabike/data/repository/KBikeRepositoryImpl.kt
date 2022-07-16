@@ -21,7 +21,7 @@ class KBikeRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAllAddress(): MutableList<Address> {
+    override suspend fun getAllAddress(): List<Address> {
         TODO("Not yet implemented")
     }
 

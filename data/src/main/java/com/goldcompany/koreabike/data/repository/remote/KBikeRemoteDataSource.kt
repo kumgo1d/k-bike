@@ -4,6 +4,7 @@ import com.goldcompany.koreabike.data.model.address.ApiAddress
 import com.goldcompany.koreabike.data.model.address.ApiAddressResult
 import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
 import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResult
+import javax.inject.Inject
 
 interface KBikeRemoteDataSource {
     suspend fun searchAddress(address: String, page: Int): ApiAddressResult
@@ -17,4 +18,8 @@ interface KBikeRemoteDataSource {
     ): ApiPlaceMarkerResult
 
     suspend fun getNavigationPath(start: String, end: String): ApiNavigationResultPath
+}
+
+class KBikeRemoteDataSourceImpl @Inject constructor() {
+
 }

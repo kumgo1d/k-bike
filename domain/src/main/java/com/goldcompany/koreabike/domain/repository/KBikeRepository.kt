@@ -11,7 +11,7 @@ interface KBikeRepository {
         latitude: String
     ): List<Address>
 
-    suspend fun getAllAddress(): MutableList<Address>
+    suspend fun getAllAddress(): List<Address>
 
     suspend fun getAddress(): Address?
 

@@ -4,5 +4,5 @@ import com.goldcompany.koreabike.domain.model.Address
 import com.goldcompany.koreabike.domain.repository.KBikeRepository
 
 class GetAllHistoryAddressUseCase(private val repository: KBikeRepository) {
-    suspend fun excute(): List<Address> = repository.getAllAddress()
+    suspend fun invoke(): List<Address> = repository.getAllAddress()
 }
