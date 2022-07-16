@@ -16,5 +16,3 @@
 *.jks
 app/release/app-release.aab
 key/pwd.txt
-app/src/main/AndroidManifest.xml
-gradle.properties
