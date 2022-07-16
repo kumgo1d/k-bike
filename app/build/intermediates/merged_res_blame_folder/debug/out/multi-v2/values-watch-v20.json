@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-watch-v20/values-watch-v20.xml",
+            "map": [
+                {
+                    "source": "/Users/gold/.gradle/caches/transforms-3/182e405ee6e4904f314d5e3ab2fcef6c/transformed/appcompat-1.2.0/res/values-watch-v20/values-watch-v20.xml",
+                    "from": {
+                        "startLines": "2,5,8",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,214,385",
+                        "endLines": "4,7,10",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "209,380,553"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/item_favorite_place_list.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/item_favorite_place_list.xml"
+    },
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/item_app_bar.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/item_app_bar.xml"
+    },
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/item_search_address.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/item_search_address.xml"
+    },
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_search_address.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/fragment_search_address.xml"
+    },
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_history_place.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/fragment_history_place.xml"
+    },
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/item_category_button.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/item_category_button.xml"
+    },
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_navigation_result.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/fragment_navigation_result.xml"
+    },
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/item_network_state.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/item_network_state.xml"
+    },
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_bike_map.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/fragment_bike_map.xml"
+    },
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/activity_main.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/activity_main.xml"
+    },
+    {
+        "merged": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_navigation.xml",
+        "source": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/src/main/res/layout/fragment_navigation.xml"
+    }
+]

@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/gold/Documents/GitHub/SeoulPublicBike/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v18/values-v18.xml",
+            "map": [
+                {
+                    "source": "/Users/gold/.gradle/caches/transforms-3/182e405ee6e4904f314d5e3ab2fcef6c/transformed/appcompat-1.2.0/res/values-v18/values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "48",
+                        "endOffsets": "99"
+                    }
+                }
+            ]
+        }
+    ]
+}

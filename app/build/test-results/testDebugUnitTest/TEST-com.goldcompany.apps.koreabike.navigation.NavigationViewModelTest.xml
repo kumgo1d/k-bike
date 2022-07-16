@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.goldcompany.apps.koreabike.navigation.NavigationViewModelTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2022-07-04T14:03:13" hostname="Kums-Mac-mini.local" time="2.822">
+  <properties/>
+  <testcase name="getNavigationPathTest" classname="com.goldcompany.apps.koreabike.navigation.NavigationViewModelTest" time="2.822">
+    <failure message="java.lang.NullPointerException: No password supplied for PKCS#12 KeyStore." type="java.lang.NullPointerException">java.lang.NullPointerException: No password supplied for PKCS#12 KeyStore.
+	at org.bouncycastle.jcajce.provider.keystore.pkcs12.PKCS12KeyStoreSpi.engineLoad(Unknown Source)
+	at java.base/java.security.KeyStore.load(KeyStore.java:1479)
+	at java.base/sun.security.ssl.TrustStoreManager$TrustAnchorManager.loadKeyStore(TrustStoreManager.java:365)
+	at java.base/sun.security.ssl.TrustStoreManager$TrustAnchorManager.getTrustedCerts(TrustStoreManager.java:313)
+	at java.base/sun.security.ssl.TrustStoreManager.getTrustedCerts(TrustStoreManager.java:55)
+	at java.base/sun.security.ssl.TrustManagerFactoryImpl.engineInit(TrustManagerFactoryImpl.java:49)
+	at java.base/javax.net.ssl.TrustManagerFactory.init(TrustManagerFactory.java:278)
+	at okhttp3.internal.Util.platformTrustManager(Util.java:640)
+	at okhttp3.OkHttpClient.&lt;init&gt;(OkHttpClient.java:228)
+	at okhttp3.OkHttpClient$Builder.build(OkHttpClient.java:1015)
+	at com.goldcompany.apps.koreabike.api.KakaoApiService$Companion.create(KakaoApiService.kt:33)
+	at com.goldcompany.apps.koreabike.navigation.NavigationViewModelTest.setup(NavigationViewModelTest.kt:64)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+	at org.junit.rules.TestWatcher$1.evaluate(TestWatcher.java:61)
+	at org.junit.rules.TestWatcher$1.evaluate(TestWatcher.java:61)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:546)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$0(SandboxTestRunner.java:252)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:89)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+</failure>
+  </testcase>
+  <system-out><![CDATA[[Robolectric] com.goldcompany.apps.koreabike.navigation.NavigationViewModelTest.getNavigationPathTest: sdk=26; resources=BINARY
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
