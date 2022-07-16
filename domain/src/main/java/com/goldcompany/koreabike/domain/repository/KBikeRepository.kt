@@ -5,7 +5,7 @@ import com.goldcompany.koreabike.domain.model.Address
 interface KBikeRepository {
     fun searchAddress(address: String, page: Int): List<Address>
 
-    suspend fun searchNearbyPlacesMarker(
+    suspend fun searchNearbyPlaces(
         code: String,
         longitude: String,
         latitude: String

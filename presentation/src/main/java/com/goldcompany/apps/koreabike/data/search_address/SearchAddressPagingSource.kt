@@ -3,16 +3,17 @@ package com.goldcompany.apps.koreabike.data.search_address
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.goldcompany.apps.koreabike.BuildConfig
-import com.goldcompany.apps.koreabike.api.KakaoApiService
+import com.goldcompany.koreabike.data.api.KakaoApiService
+import com.goldcompany.koreabike.data.model.address.ApiAddress
 import retrofit2.HttpException
 import java.io.IOException
 
 class SearchAddressPagingSource(
     private val service: KakaoApiService,
     private val address: String
-) : PagingSource<Int, AddressItem>() {
+) : PagingSource<Int, ApiAddress>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, AddressItem> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ApiAddress> {
         val position = params.key ?: 1
         return try {
             val response = service.searchAddress(BuildConfig.KAKAO_API_KEY, address = address, position)
@@ -29,7 +30,7 @@ class SearchAddressPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, AddressItem>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, ApiAddress>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)

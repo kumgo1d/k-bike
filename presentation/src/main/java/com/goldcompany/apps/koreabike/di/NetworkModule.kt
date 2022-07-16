@@ -1,7 +1,7 @@
 package com.goldcompany.apps.koreabike.di
 
-import com.goldcompany.apps.koreabike.api.KakaoApiService
-import com.goldcompany.apps.koreabike.api.NaverApiService
+import com.goldcompany.koreabike.data.api.KakaoApiService
+import com.goldcompany.koreabike.data.api.NaverApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

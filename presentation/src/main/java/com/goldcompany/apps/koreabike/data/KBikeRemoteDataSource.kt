@@ -4,12 +4,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.goldcompany.apps.koreabike.BuildConfig
-import com.goldcompany.apps.koreabike.api.KakaoApiService
-import com.goldcompany.apps.koreabike.api.NaverApiService
-import com.goldcompany.apps.koreabike.data.driving.ResultPath
-import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarker
-import com.goldcompany.apps.koreabike.data.search_address.AddressItem
-import com.goldcompany.apps.koreabike.data.search_address.Addresses
+import com.goldcompany.koreabike.data.api.KakaoApiService
+import com.goldcompany.koreabike.data.api.NaverApiService
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
+import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResult
+import com.goldcompany.koreabike.data.model.address.ApiAddress
+import com.goldcompany.koreabike.data.model.address.ApiAddressResult
 import com.goldcompany.apps.koreabike.data.search_address.SearchAddressPagingSource
 import com.goldcompany.apps.koreabike.util.Resource
 import com.goldcompany.apps.koreabike.util.Result
@@ -30,11 +30,11 @@ class KBikeRemoteDataSource @Inject constructor(
     private val NAVER_API_KEY = BuildConfig.NAVER_API_KEY
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    suspend fun searchAddress(address: String, page: Int): Addresses = withContext(Dispatchers.IO) {
+    suspend fun searchAddress(address: String, page: Int): ApiAddressResult = withContext(Dispatchers.IO) {
         return@withContext kakaoApiService.searchAddress(KAKAO_API_KEY, address = address, page)
     }
 
-    fun getSearchAddressStream(address: String): Flow<PagingData<AddressItem>> {
+    fun getSearchAddressStream(address: String): Flow<PagingData<ApiAddress>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 1,
@@ -49,7 +49,7 @@ class KBikeRemoteDataSource @Inject constructor(
         code: String,
         longitude: String,
         latitude: String
-    ): Result<PlaceMarker> = withContext(ioDispatcher) {
+    ): Result<ApiPlaceMarkerResult> = withContext(ioDispatcher) {
         try {
             val markers = kakaoApiService.searchNearbyPlacesMarker(KAKAO_API_KEY, code, longitude, latitude, radius = 10000)
             if (markers != null) {
@@ -62,7 +62,7 @@ class KBikeRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun getNavigationPath(start: String, end: String): Resource<ResultPath> = withContext(ioDispatcher) {
+    suspend fun getNavigationPath(start: String, end: String): Resource<ApiNavigationResultPath> = withContext(ioDispatcher) {
         try {
             val path = naverApiService.getPath(NAVER_API_CLIENT_ID, NAVER_API_KEY, start, end)
             if (path != null) {

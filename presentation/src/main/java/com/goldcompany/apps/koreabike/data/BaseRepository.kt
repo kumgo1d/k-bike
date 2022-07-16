@@ -1,30 +1,30 @@
 package com.goldcompany.apps.koreabike.data
 
 import androidx.paging.PagingData
-import com.goldcompany.apps.koreabike.data.driving.ResultPath
-import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarker
-import com.goldcompany.apps.koreabike.data.search_address.AddressItem
-import com.goldcompany.apps.koreabike.data.search_address.Addresses
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
+import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResult
+import com.goldcompany.koreabike.data.model.address.ApiAddress
+import com.goldcompany.koreabike.data.model.address.ApiAddressResult
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.goldcompany.apps.koreabike.util.Resource
 import com.goldcompany.apps.koreabike.util.Result
 import kotlinx.coroutines.flow.Flow
 
 interface BaseRepository {
-    suspend fun searchAddress(address: String, page: Int): Addresses
+    suspend fun searchAddress(address: String, page: Int): ApiAddressResult
 
-    fun getSearchAddressStream(address: String): Flow<PagingData<AddressItem>>
+    fun getSearchAddressStream(address: String): Flow<PagingData<ApiAddress>>
 
     suspend fun searchNearbyPlacesMarker(
         code: String,
         longitude: String,
         latitude: String
-    ): Result<PlaceMarker>
+    ): Result<ApiPlaceMarkerResult>
 
     suspend fun getNavigationPath(
         start: String,
         end: String
-    ): Resource<ResultPath>
+    ): Resource<ApiNavigationResultPath>
 
     suspend fun getAllAddress(): MutableList<UserHistoryAddress>
 

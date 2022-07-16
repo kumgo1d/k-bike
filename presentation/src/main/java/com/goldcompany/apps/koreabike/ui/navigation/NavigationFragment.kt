@@ -15,7 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.goldcompany.apps.koreabike.Constants
-import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
@@ -146,11 +145,11 @@ class NavigationFragment : Fragment() {
             )
                 .distinctUntilChanged()
                 .collect { result ->
-                    if (result.route != null) {
+                    if (result.apiNavigationRoute != null) {
                         val bundle = Bundle()
-                        val path = result.route.comfort[0].path
-                        val duration = result.route.comfort[0].summary.duration
-                        val distance = result.route.comfort[0].summary.distance
+                        val path = result.apiNavigationRoute.comfort[0].path
+                        val duration = result.apiNavigationRoute.comfort[0].summary.duration
+                        val distance = result.apiNavigationRoute.comfort[0].summary.distance
 
                         bundle.putInt("duration", duration)
                         bundle.putInt("distance", distance)

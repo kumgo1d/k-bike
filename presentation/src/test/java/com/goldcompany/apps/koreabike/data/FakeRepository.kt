@@ -1,12 +1,12 @@
 package com.goldcompany.apps.koreabike.data
 
 import androidx.paging.PagingData
-import com.goldcompany.apps.koreabike.data.driving.ResultPath
-import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarkerMetaData
-import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarker
-import com.goldcompany.apps.koreabike.data.search_address.AddressItem
-import com.goldcompany.apps.koreabike.data.search_address.AddressMetaData
-import com.goldcompany.apps.koreabike.data.search_address.Addresses
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
+import com.goldcompany.koreabike.data.model.place.PlaceMarkerMetaData
+import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResult
+import com.goldcompany.koreabike.data.model.address.ApiAddress
+import com.goldcompany.koreabike.data.model.address.AddressMetaData
+import com.goldcompany.koreabike.data.model.address.ApiAddressResult
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.goldcompany.apps.koreabike.util.Resource
 import com.goldcompany.apps.koreabike.util.Result
@@ -22,11 +22,11 @@ class FakeRepository: BaseRepository  {
             field = value
         }
 
-    override suspend fun searchAddress(address: String, page: Int): Addresses {
-        return Addresses(listOf(), AddressMetaData(false, 9999, 9999))
+    override suspend fun searchAddress(address: String, page: Int): ApiAddressResult {
+        return ApiAddressResult(listOf(), AddressMetaData(false, 9999, 9999))
     }
 
-    override fun getSearchAddressStream(address: String): Flow<PagingData<AddressItem>> {
+    override fun getSearchAddressStream(address: String): Flow<PagingData<ApiAddress>> {
         return flow {  }
     }
 
@@ -34,21 +34,21 @@ class FakeRepository: BaseRepository  {
         code: String,
         longitude: String,
         latitude: String
-    ): Result<PlaceMarker> {
+    ): Result<ApiPlaceMarkerResult> {
         return if (networkError) {
             Result.Error(Exception("network error"))
         } else {
             Result.Success(
-                PlaceMarker(listOf(), PlaceMarkerMetaData(false, 9999, 9999))
+                ApiPlaceMarkerResult(listOf(), PlaceMarkerMetaData(false, 9999, 9999))
             )
         }
     }
 
-    override suspend fun getNavigationPath(start: String, end: String): Resource<ResultPath> {
+    override suspend fun getNavigationPath(start: String, end: String): Resource<ApiNavigationResultPath> {
         return if (networkError) {
             Resource.error("Network Error", null)
         } else {
-            Resource.success(ResultPath(9999, "", "길찾기를 성공하였습니다.", null))
+            Resource.success(ApiNavigationResultPath(9999, "", "길찾기를 성공하였습니다.", null))
         }
     }
 

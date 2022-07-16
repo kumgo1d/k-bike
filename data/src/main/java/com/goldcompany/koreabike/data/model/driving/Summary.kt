@@ -1,7 +1,4 @@
-package com.goldcompany.apps.koreabike.data.driving
-
-import com.goldcompany.koreabike.data.model.driving.Goal
-import com.goldcompany.koreabike.data.model.driving.Start
+package com.goldcompany.koreabike.data.model.driving
 
 data class Summary(
     val bbox: List<List<Double>>,

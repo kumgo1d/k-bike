@@ -1,9 +1,7 @@
-package com.goldcompany.apps.koreabike.api
+package com.goldcompany.koreabike.data.api
 
-import com.goldcompany.apps.koreabike.Constants
-import com.goldcompany.koreabike.data.api.KakaoApiService
-import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResult
 import com.goldcompany.koreabike.data.model.address.ApiAddressResult
+import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResult
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -29,12 +27,14 @@ interface KakaoApiService {
     ): ApiPlaceMarkerResult?
 
     companion object {
+        private const val KAKAO_BASE_URL = "https://dapi.kakao.com/"
+
         fun create(): KakaoApiService {
             val client = OkHttpClient.Builder()
                 .build()
 
             return Retrofit.Builder()
-                .baseUrl(Constants.KAKAO_BASE_URL)
+                .baseUrl(KAKAO_BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

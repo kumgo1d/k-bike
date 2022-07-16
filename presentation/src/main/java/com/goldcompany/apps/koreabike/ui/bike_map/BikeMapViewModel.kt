@@ -30,7 +30,7 @@ class BikeMapViewModel @Inject constructor(
         val placeMarkers = mutableListOf<Marker>()
         val result = kBikeRepository.searchNearbyPlacesMarker(code, longitude, latitude)
         if (result is Result.Success) {
-            result.data.places.forEach { place ->
+            result.data.apiPlaces.forEach { place ->
                 val marker = Marker()
                 marker.apply {
                     width = MARKER_WIDTH

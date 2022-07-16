@@ -6,7 +6,7 @@
     <data>
         <variable
             name="address"
-            type="com.goldcompany.apps.koreabike.data.search_address.AddressItem" />
+            type="com.goldcompany.koreabike.data.model.address.ApiAddress" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

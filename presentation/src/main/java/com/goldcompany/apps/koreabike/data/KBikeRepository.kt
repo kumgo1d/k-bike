@@ -1,10 +1,10 @@
 package com.goldcompany.apps.koreabike.data
 
 import androidx.paging.PagingData
-import com.goldcompany.apps.koreabike.data.driving.ResultPath
-import com.goldcompany.apps.koreabike.data.place_marker.PlaceMarker
-import com.goldcompany.apps.koreabike.data.search_address.AddressItem
-import com.goldcompany.apps.koreabike.data.search_address.Addresses
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
+import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResult
+import com.goldcompany.koreabike.data.model.address.ApiAddress
+import com.goldcompany.koreabike.data.model.address.ApiAddressResult
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.goldcompany.apps.koreabike.util.Resource
 import com.goldcompany.apps.koreabike.util.Result
@@ -20,22 +20,22 @@ class KBikeRepository @Inject constructor(
     override suspend fun searchAddress(
         address:String,
         page: Int
-    ): Addresses = kBikeRemoteDataSource.searchAddress(address, page)
+    ): ApiAddressResult = kBikeRemoteDataSource.searchAddress(address, page)
 
     override fun getSearchAddressStream(
         address: String
-    ): Flow<PagingData<AddressItem>> = kBikeRemoteDataSource.getSearchAddressStream(address)
+    ): Flow<PagingData<ApiAddress>> = kBikeRemoteDataSource.getSearchAddressStream(address)
 
     override suspend fun searchNearbyPlacesMarker(
         code: String,
         longitude: String,
         latitude: String
-    ): Result<PlaceMarker> = kBikeRemoteDataSource.searchNearbyPlacesMarker(code, longitude, latitude)
+    ): Result<ApiPlaceMarkerResult> = kBikeRemoteDataSource.searchNearbyPlacesMarker(code, longitude, latitude)
 
     override suspend fun getNavigationPath(
         start: String,
         end: String
-    ): Resource<ResultPath> = kBikeRemoteDataSource.getNavigationPath(start, end)
+    ): Resource<ApiNavigationResultPath> = kBikeRemoteDataSource.getNavigationPath(start, end)
 
     override suspend fun getAllAddress(): MutableList<UserHistoryAddress> = kBikeLocalDataSource.getAllAddress()
 

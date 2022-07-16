@@ -1,14 +1,19 @@
 package com.goldcompany.koreabike.data.repository
 
+import com.goldcompany.koreabike.data.repository.local.KBikeLocalDataSource
+import com.goldcompany.koreabike.data.repository.remote.KBikeRemoteDataSource
 import com.goldcompany.koreabike.domain.model.Address
 import com.goldcompany.koreabike.domain.repository.KBikeRepository
 
-class KBikeRepositoryImpl : KBikeRepository {
+class KBikeRepositoryImpl(
+    private val localDataSource: KBikeLocalDataSource,
+    private val remoteDataSource: KBikeRemoteDataSource
+) : KBikeRepository {
     override fun searchAddress(address: String, page: Int): List<Address> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun searchNearbyPlacesMarker(
+    override suspend fun searchNearbyPlaces(
         code: String,
         longitude: String,
         latitude: String

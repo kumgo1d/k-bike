@@ -1,7 +1,5 @@
-package com.goldcompany.apps.koreabike.api
+package com.goldcompany.koreabike.data.api
 
-import com.goldcompany.apps.koreabike.Constants
-import com.goldcompany.koreabike.data.api.NaverApiService
 import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -21,12 +19,14 @@ interface NaverApiService {
     ): ApiNavigationResultPath?
 
     companion object {
+        private const val NAVER_API = "https://naveropenapi.apigw.ntruss.com/"
+
         fun create(): NaverApiService {
             val client = OkHttpClient.Builder()
                 .build()
 
             return Retrofit.Builder()
-                .baseUrl(Constants.NAVER_API)
+                .baseUrl(NAVER_API)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

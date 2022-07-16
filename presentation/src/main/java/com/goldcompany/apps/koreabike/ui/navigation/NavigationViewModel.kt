@@ -7,10 +7,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.goldcompany.apps.koreabike.Constants
-import com.goldcompany.apps.koreabike.data.BaseRepository
 import com.goldcompany.apps.koreabike.data.KBikeRepository
-import com.goldcompany.apps.koreabike.data.driving.ResultPath
-import com.goldcompany.apps.koreabike.data.search_address.AddressItem
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
+import com.goldcompany.koreabike.data.model.address.ApiAddress
 import com.goldcompany.apps.koreabike.util.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -34,21 +33,21 @@ class NavigationViewModel @Inject constructor(
     val resultMessage: LiveData<String> = _resultMessage
 
     private var currentQuery: String? = null
-    private var currentSearchResult: Flow<PagingData<AddressItem>>? = null
+    private var currentSearchResult: Flow<PagingData<ApiAddress>>? = null
 
-    fun searchAddress(address: String): Flow<PagingData<AddressItem>> {
+    fun searchAddress(address: String): Flow<PagingData<ApiAddress>> {
         val lastResult = currentSearchResult
         if (address == currentQuery && lastResult != null) {
             return lastResult
         }
         currentQuery = address
-        val newResult: Flow<PagingData<AddressItem>> = kBikeRepository.getSearchAddressStream(address)
+        val newResult: Flow<PagingData<ApiAddress>> = kBikeRepository.getSearchAddressStream(address)
             .cachedIn(viewModelScope)
         currentSearchResult = newResult
         return newResult
     }
 
-    suspend fun getNavigationPath(start: String, end: String): Flow<ResultPath> = flow {
+    suspend fun getNavigationPath(start: String, end: String): Flow<ApiNavigationResultPath> = flow {
         val result = kBikeRepository.getNavigationPath(start, end)
 
         when (result.status) {
@@ -56,11 +55,11 @@ class NavigationViewModel @Inject constructor(
             Status.ERROR -> {
                 _resultMessage.postValue(Constants.RESULT_ERROR)
                 emit(
-                    ResultPath(
+                    ApiNavigationResultPath(
                         code = 9999,
                         currentDateTime = "0",
                         message = "Error",
-                        route = null
+                        apiNavigationRoute = null
                     )
                 )
             }
