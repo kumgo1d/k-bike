@@ -6,10 +6,10 @@ import androidx.paging.PagingData
 import com.goldcompany.apps.koreabike.BuildConfig
 import com.goldcompany.koreabike.data.api.KakaoApiService
 import com.goldcompany.koreabike.data.api.NaverApiService
-import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
-import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResult
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
+import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResponse
 import com.goldcompany.koreabike.data.model.address.ApiAddress
-import com.goldcompany.koreabike.data.model.address.ApiAddressResult
+import com.goldcompany.koreabike.data.model.address.ApiAddressResponse
 import com.goldcompany.apps.koreabike.data.search_address.SearchAddressPagingSource
 import com.goldcompany.apps.koreabike.util.Resource
 import com.goldcompany.apps.koreabike.util.Result
@@ -30,7 +30,7 @@ class KBikeRemoteDataSource @Inject constructor(
     private val NAVER_API_KEY = BuildConfig.NAVER_API_KEY
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    suspend fun searchAddress(address: String, page: Int): ApiAddressResult = withContext(Dispatchers.IO) {
+    suspend fun searchAddress(address: String, page: Int): ApiAddressResponse = withContext(Dispatchers.IO) {
         return@withContext kakaoApiService.searchAddress(KAKAO_API_KEY, address = address, page)
     }
 
@@ -49,7 +49,7 @@ class KBikeRemoteDataSource @Inject constructor(
         code: String,
         longitude: String,
         latitude: String
-    ): Result<ApiPlaceMarkerResult> = withContext(ioDispatcher) {
+    ): Result<ApiPlaceMarkerResponse> = withContext(ioDispatcher) {
         try {
             val markers = kakaoApiService.searchNearbyPlacesMarker(KAKAO_API_KEY, code, longitude, latitude, radius = 10000)
             if (markers != null) {
@@ -62,7 +62,7 @@ class KBikeRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun getNavigationPath(start: String, end: String): Resource<ApiNavigationResultPath> = withContext(ioDispatcher) {
+    suspend fun getNavigationPath(start: String, end: String): Resource<ApiNavigationPathResponse> = withContext(ioDispatcher) {
         try {
             val path = naverApiService.getPath(NAVER_API_CLIENT_ID, NAVER_API_KEY, start, end)
             if (path != null) {

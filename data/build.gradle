@@ -2,7 +2,6 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -14,6 +13,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField("String", "KAKAO_API_KEY", KAKAO_API_KEY)
+        buildConfigField("String", "NAVER_API_KEY", NAVER_API_KEY)
+        buildConfigField("String", "NAVER_API_CLIENT_ID", NAVER_API_CLIENT_ID)
     }
 
     buildTypes {
@@ -49,11 +52,4 @@ dependencies {
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-
-    //hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$androidx_hilt_version"
-    // When using Kotlin.
-    kapt "androidx.hilt:hilt-compiler:$androidx_hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 }

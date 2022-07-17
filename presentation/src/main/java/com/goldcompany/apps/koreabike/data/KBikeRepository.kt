@@ -1,10 +1,10 @@
 package com.goldcompany.apps.koreabike.data
 
 import androidx.paging.PagingData
-import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
-import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResult
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
+import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResponse
 import com.goldcompany.koreabike.data.model.address.ApiAddress
-import com.goldcompany.koreabike.data.model.address.ApiAddressResult
+import com.goldcompany.koreabike.data.model.address.ApiAddressResponse
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.goldcompany.apps.koreabike.util.Resource
 import com.goldcompany.apps.koreabike.util.Result
@@ -20,7 +20,7 @@ class KBikeRepository @Inject constructor(
     override suspend fun searchAddress(
         address:String,
         page: Int
-    ): ApiAddressResult = kBikeRemoteDataSource.searchAddress(address, page)
+    ): ApiAddressResponse = kBikeRemoteDataSource.searchAddress(address, page)
 
     override fun getSearchAddressStream(
         address: String
@@ -30,12 +30,12 @@ class KBikeRepository @Inject constructor(
         code: String,
         longitude: String,
         latitude: String
-    ): Result<ApiPlaceMarkerResult> = kBikeRemoteDataSource.searchNearbyPlacesMarker(code, longitude, latitude)
+    ): Result<ApiPlaceMarkerResponse> = kBikeRemoteDataSource.searchNearbyPlacesMarker(code, longitude, latitude)
 
     override suspend fun getNavigationPath(
         start: String,
         end: String
-    ): Resource<ApiNavigationResultPath> = kBikeRemoteDataSource.getNavigationPath(start, end)
+    ): Resource<ApiNavigationPathResponse> = kBikeRemoteDataSource.getNavigationPath(start, end)
 
     override suspend fun getAllAddress(): MutableList<UserHistoryAddress> = kBikeLocalDataSource.getAllAddress()
 
