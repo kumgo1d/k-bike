@@ -9,7 +9,7 @@ class KBikeRepositoryImpl(
     private val localDataSource: KBikeLocalDataSource,
     private val remoteDataSource: KBikeRemoteDataSource
 ) : KBikeRepository {
-    override fun searchAddress(address: String, page: Int): List<Address> {
+    override suspend fun searchAddress(address: String, page: Int): List<Address> {
         TODO("Not yet implemented")
     }
 
