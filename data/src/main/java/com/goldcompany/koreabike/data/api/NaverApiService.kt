@@ -1,6 +1,6 @@
 package com.goldcompany.koreabike.data.api
 
-import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,7 +16,7 @@ interface NaverApiService {
         @Query("start") start: String,
         @Query("goal") goal: String,
         @Query("option") option: String = "tracomfort"
-    ): ApiNavigationPathResponse
+    ): ApiNavigationResultPath?
 
     companion object {
         private const val NAVER_API = "https://naveropenapi.apigw.ntruss.com/"

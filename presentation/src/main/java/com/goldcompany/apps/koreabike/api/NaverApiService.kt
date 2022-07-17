@@ -2,7 +2,7 @@ package com.goldcompany.apps.koreabike.api
 
 import com.goldcompany.apps.koreabike.Constants
 import com.goldcompany.koreabike.data.api.NaverApiService
-import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -18,7 +18,7 @@ interface NaverApiService {
         @Query("start") start: String,
         @Query("goal") goal: String,
         @Query("option") option: String = "tracomfort"
-    ): ApiNavigationPathResponse?
+    ): ApiNavigationResultPath?
 
     companion object {
         fun create(): NaverApiService {

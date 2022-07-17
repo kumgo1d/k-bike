@@ -8,7 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.goldcompany.apps.koreabike.Constants
 import com.goldcompany.apps.koreabike.data.KBikeRepository
-import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationResultPath
 import com.goldcompany.koreabike.data.model.address.ApiAddress
 import com.goldcompany.apps.koreabike.util.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,7 +47,7 @@ class NavigationViewModel @Inject constructor(
         return newResult
     }
 
-    suspend fun getNavigationPath(start: String, end: String): Flow<ApiNavigationPathResponse> = flow {
+    suspend fun getNavigationPath(start: String, end: String): Flow<ApiNavigationResultPath> = flow {
         val result = kBikeRepository.getNavigationPath(start, end)
 
         when (result.status) {
@@ -55,7 +55,7 @@ class NavigationViewModel @Inject constructor(
             Status.ERROR -> {
                 _resultMessage.postValue(Constants.RESULT_ERROR)
                 emit(
-                    ApiNavigationPathResponse(
+                    ApiNavigationResultPath(
                         code = 9999,
                         currentDateTime = "0",
                         message = "Error",

@@ -1,7 +1,7 @@
 package com.goldcompany.koreabike.data.api
 
-import com.goldcompany.koreabike.data.model.address.ApiAddressResponse
-import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResponse
+import com.goldcompany.koreabike.data.model.address.ApiAddressResult
+import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResult
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -15,7 +15,7 @@ interface KakaoApiService {
         @Header("Authorization") key: String,
         @Query("query") address: String,
         @Query("page") page: Int
-    ): ApiAddressResponse
+    ): ApiAddressResult
 
     @GET("v2/local/search/category.json")
     suspend fun searchNearbyPlacesMarker(
@@ -24,7 +24,7 @@ interface KakaoApiService {
         @Query("x") longitude: String,
         @Query("y") latitude: String,
         @Query("radius") radius: Int
-    ): ApiPlaceMarkerResponse
+    ): ApiPlaceMarkerResult?
 
     companion object {
         private const val KAKAO_BASE_URL = "https://dapi.kakao.com/"
