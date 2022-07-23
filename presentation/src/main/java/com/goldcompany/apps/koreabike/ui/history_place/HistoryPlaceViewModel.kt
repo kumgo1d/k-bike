@@ -3,6 +3,7 @@ package com.goldcompany.apps.koreabike.ui.history_place
 import androidx.lifecycle.*
 import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
+import com.goldcompany.koreabike.domain.model.Address
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -12,12 +13,12 @@ class HistoryPlaceViewModel @Inject constructor(
     private val kBikeRepository: KBikeRepository
 ) : ViewModel() {
 
-    private val _addressList = liveData<List<UserHistoryAddress>> {
+    private val _addressList = liveData<List<Address>> {
         emit(kBikeRepository.getAllAddress())
     }
-    val addressList: LiveData<List<UserHistoryAddress>> = _addressList
+    val addressList: LiveData<List<Address>> = _addressList
 
-    fun setCurrentAddress(address: UserHistoryAddress) {
+    fun setCurrentAddress(address: Address) {
         viewModelScope.launch {
             val current = kBikeRepository.getAddress()
             val selected = UserHistoryAddress(
@@ -38,7 +39,7 @@ class HistoryPlaceViewModel @Inject constructor(
         }
     }
 
-    fun deleteAddress(address: UserHistoryAddress) {
+    fun deleteAddress(address: Address) {
         viewModelScope.launch {
             kBikeRepository.deleteAddress(address)
         }

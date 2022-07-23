@@ -1,5 +1,8 @@
 package com.goldcompany.koreabike.data.repository
 
+import com.goldcompany.koreabike.data.mapper.mapperAddressToUserAddressEntity
+import com.goldcompany.koreabike.data.mapper.mapperApiAddressToAddress
+import com.goldcompany.koreabike.data.mapper.mapperUserAddressEntityToAddress
 import com.goldcompany.koreabike.data.repository.local.KBikeLocalDataSource
 import com.goldcompany.koreabike.data.repository.remote.KBikeRemoteDataSource
 import com.goldcompany.koreabike.domain.model.Address
@@ -10,7 +13,9 @@ class KBikeRepositoryImpl(
     private val remoteDataSource: KBikeRemoteDataSource
 ) : KBikeRepository {
     override suspend fun searchAddress(address: String, page: Int): List<Address> {
-        TODO("Not yet implemented")
+        return remoteDataSource.searchAddress(address, page).addressList.map {
+            mapperApiAddressToAddress(it)
+        }
     }
 
     override suspend fun searchNearbyPlaces(
@@ -18,26 +23,30 @@ class KBikeRepositoryImpl(
         longitude: String,
         latitude: String
     ): List<Address> {
-        TODO("Not yet implemented")
+        return remoteDataSource.searchNearbyPlaces(code, longitude, latitude).apiPlaces.map {
+            mapperApiAddressToAddress(it)
+        }
     }
 
     override suspend fun getAllAddress(): List<Address> {
-        TODO("Not yet implemented")
+        return localDataSource.getAllAddress().map {
+            mapperUserAddressEntityToAddress(it)
+        }
     }
 
     override suspend fun getAddress(): Address? {
-        TODO("Not yet implemented")
+        return localDataSource.getAddress()?.let { mapperUserAddressEntityToAddress(it) }
     }
 
     override suspend fun updateAddressUnselect(date: Long) {
-        TODO("Not yet implemented")
+        localDataSource.updateAddressUnselect(date)
     }
 
     override suspend fun insertAddress(address: Address) {
-        TODO("Not yet implemented")
+        localDataSource.insertAddress(mapperAddressToUserAddressEntity(address))
     }
 
     override suspend fun deleteAddress(address: Address) {
-        TODO("Not yet implemented")
+        localDataSource.deleteAddress(mapperAddressToUserAddressEntity(address))
     }
 }

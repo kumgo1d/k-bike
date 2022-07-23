@@ -9,7 +9,9 @@ import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Singleton
 
+@Singleton
 interface KBikeRemoteDataSource {
     suspend fun searchAddress(address: String, page: Int): ApiAddressResponse
 

@@ -5,7 +5,6 @@ data class Address(
     val addressName: String,
     val roadAddressName: String,
     val categoryName: String,
-    val distance: String,
     val phone: String,
     val placeName: String,
     val placeUrl: String,

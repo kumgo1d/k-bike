@@ -1,7 +1,9 @@
 package com.goldcompany.koreabike.domain.repository
 
 import com.goldcompany.koreabike.domain.model.Address
+import javax.inject.Singleton
 
+@Singleton
 interface KBikeRepository {
     suspend fun searchAddress(address: String, page: Int): List<Address>
 

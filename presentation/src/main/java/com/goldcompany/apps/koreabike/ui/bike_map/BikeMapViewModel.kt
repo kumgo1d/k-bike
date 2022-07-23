@@ -3,9 +3,10 @@ package com.goldcompany.apps.koreabike.ui.bike_map
 import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.goldcompany.apps.koreabike.data.KBikeRepository
-import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.goldcompany.apps.koreabike.util.Result
+import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.usecase.GetCurrentAddressUseCase
+import com.goldcompany.koreabike.domain.usecase.SearchNearbyPlacesForMarkerUseCase
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
@@ -16,55 +17,50 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BikeMapViewModel @Inject constructor(
-    private val kBikeRepository: KBikeRepository
+    private val searchNearbyPlacesForMarkerUseCase: SearchNearbyPlacesForMarkerUseCase,
+    private val getCurrentAddressUseCase: GetCurrentAddressUseCase
 ) : ViewModel() {
 
     val markers by lazy { MutableLiveData<List<Marker>>() }
-    val isMarked by lazy { MutableLiveData<Boolean>() }
-
-    init {
-        isMarked.postValue(false)
-    }
+    val isMarked by lazy { MutableLiveData(false) }
 
     suspend fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String) {
         val placeMarkers = mutableListOf<Marker>()
-        val result = kBikeRepository.searchNearbyPlacesMarker(code, longitude, latitude)
-        if (result is Result.Success) {
-            result.data.apiPlaces.forEach { place ->
-                val marker = Marker()
-                marker.apply {
-                    width = MARKER_WIDTH
-                    height = MARKER_HEIGHT
-                    position = LatLng(place.y.toDouble(), place.x.toDouble())
+        val result = searchNearbyPlacesForMarkerUseCase(code, longitude, latitude)
+        result.forEach { place ->
+            val marker = Marker()
+            marker.apply {
+                width = MARKER_WIDTH
+                height = MARKER_HEIGHT
+                position = LatLng(place.y.toDouble(), place.x.toDouble())
 
-                    when (code) {
-                        PHARMACY -> {
-                            marker.icon = MarkerIcons.BLACK
-                            marker.iconTintColor = Color.RED
-                        }
-                        CONVENIENCE_STORE -> {
-                            marker.icon = MarkerIcons.BLACK
-                            marker.iconTintColor = Color.GREEN
-                        }
-                        CAFE -> {
-                            marker.icon = MarkerIcons.BLACK
-                            marker.iconTintColor = Color.DKGRAY
-                        }
-                        ACCOMMODATION -> {
-                            marker.icon = MarkerIcons.BLACK
-                            marker.iconTintColor = Color.MAGENTA
-                        }
+                when (code) {
+                    PHARMACY -> {
+                        marker.icon = MarkerIcons.BLACK
+                        marker.iconTintColor = Color.RED
+                    }
+                    CONVENIENCE_STORE -> {
+                        marker.icon = MarkerIcons.BLACK
+                        marker.iconTintColor = Color.GREEN
+                    }
+                    CAFE -> {
+                        marker.icon = MarkerIcons.BLACK
+                        marker.iconTintColor = Color.DKGRAY
+                    }
+                    ACCOMMODATION -> {
+                        marker.icon = MarkerIcons.BLACK
+                        marker.iconTintColor = Color.MAGENTA
                     }
                 }
-                placeMarkers.add(marker)
             }
-
-            markers.value = placeMarkers
+            placeMarkers.add(marker)
         }
+
+        markers.value = placeMarkers
     }
 
-    suspend fun getAddress(): Flow<UserHistoryAddress?> = flow {
-        emit(kBikeRepository.getAddress())
+    suspend fun getAddress(): Flow<Address?> = flow {
+        emit(getCurrentAddressUseCase())
     }
 
     companion object {

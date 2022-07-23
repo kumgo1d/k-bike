@@ -9,6 +9,5 @@ import timber.log.Timber
 class KBikeApplication: Application() {
     override fun onCreate() {
         super.onCreate()
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
 }

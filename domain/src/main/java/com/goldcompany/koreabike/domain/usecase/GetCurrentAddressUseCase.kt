@@ -4,6 +4,6 @@ import com.goldcompany.koreabike.domain.model.Address
 import com.goldcompany.koreabike.domain.repository.KBikeRepository
 import javax.inject.Inject
 
-class GetAllHistoryAddressUseCase @Inject constructor(private val repository: KBikeRepository) {
-    suspend operator fun invoke(): List<Address> = repository.getAllAddress()
+class GetCurrentAddressUseCase @Inject constructor(private val repository: KBikeRepository) {
+    suspend operator fun invoke(): Address? = repository.getAddress()
 }

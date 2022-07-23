@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.di
+package com.goldcompany.koreabike.data.module
 
 import com.goldcompany.koreabike.data.api.KakaoApiService
 import com.goldcompany.koreabike.data.api.NaverApiService
@@ -13,13 +13,9 @@ import javax.inject.Singleton
 class NetworkModule {
     @Singleton
     @Provides
-    fun provideKakaoApiService(): KakaoApiService {
-        return KakaoApiService.create()
-    }
+    fun provideKakaoApiService(): KakaoApiService = KakaoApiService.create()
 
     @Singleton
     @Provides
-    fun provideNaverApiService(): NaverApiService {
-        return NaverApiService.create()
-    }
+    fun provideNaverApiService(): NaverApiService = NaverApiService.create()
 }
