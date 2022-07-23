@@ -2,7 +2,10 @@ package com.goldcompany.koreabike.data.mapper
 
 import com.goldcompany.koreabike.data.db.AddressEntity
 import com.goldcompany.koreabike.data.model.address.ApiAddress
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationTrack
 import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.navigation.Navigation
+import com.goldcompany.koreabike.domain.model.navigation.NavigationTrack
 
 fun mapperApiAddressToAddress(apiAddress: ApiAddress): Address {
     return Address(
@@ -45,4 +48,18 @@ fun mapperAddressToUserAddressEntity(address: Address): AddressEntity {
         latitude = address.x.toDouble(),
         longitude = address.y.toDouble()
     )
+}
+
+fun mapperApiRouteToNavigation(tracks: List<ApiNavigationTrack>): Navigation {
+    val list = arrayListOf<NavigationTrack>()
+    tracks.forEach {
+        list.add(
+            NavigationTrack(
+                path = it.path,
+                distance = it.summary.distance,
+                duration = it.summary.duration
+            )
+        )
+    }
+    return Navigation(list)
 }

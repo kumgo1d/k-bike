@@ -91,7 +91,7 @@ class NavigationFragment : Fragment() {
         }
 
         binding.navigateButton.setOnClickListener {
-            checkAddressAndNavigateApi()
+//            checkAddressAndNavigateApi()
         }
     }
 
@@ -120,44 +120,19 @@ class NavigationFragment : Fragment() {
     }
 
     private fun searchAddress(address: String) {
-        lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest { loadState ->
-                binding.navigationAddressLoading.isVisible = loadState.refresh is LoadState.Loading
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.searchAddress(address)
-                .distinctUntilChanged()
-                .collect { result ->
-                    adapter.submitData(result)
-                }
-        }
-    }
-
-    private fun checkAddressAndNavigateApi() {
-        if (!viewModel.isAddressCorrect()) return
-
-        lifecycleScope.launch {
-            viewModel.getNavigationPath(
-                viewModel.startAddress.value?.coordinate.toString(),
-                viewModel.endAddress.value?.coordinate.toString()
-            )
-                .distinctUntilChanged()
-                .collect { result ->
-                    if (result.apiNavigationRoute != null) {
-                        val bundle = Bundle()
-                        val path = result.apiNavigationRoute.comfort[0].path
-                        val duration = result.apiNavigationRoute.comfort[0].summary.duration
-                        val distance = result.apiNavigationRoute.comfort[0].summary.distance
-
-                        bundle.putInt("duration", duration)
-                        bundle.putInt("distance", distance)
-                        bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
-                        findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
-                    }
-                }
-        }
+//        lifecycleScope.launch {
+//            adapter.loadStateFlow.collectLatest { loadState ->
+//                binding.navigationAddressLoading.isVisible = loadState.refresh is LoadState.Loading
+//            }
+//        }
+//
+//        lifecycleScope.launch {
+//            viewModel.searchAddress(address, 0)
+//                .distinctUntilChanged()
+//                .collect { result ->
+//                    adapter.submitData(result)
+//                }
+//        }
     }
 
     override fun onStop() {

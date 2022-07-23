@@ -1,6 +1,7 @@
 package com.goldcompany.koreabike.domain.repository
 
 import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.navigation.Navigation
 import javax.inject.Singleton
 
 @Singleton
@@ -16,7 +17,7 @@ interface KBikeRepository {
     suspend fun getNavigationPath(
         start: String,
         end: String
-    )
+    ): Navigation
 
     suspend fun getAllAddress(): List<Address>
 

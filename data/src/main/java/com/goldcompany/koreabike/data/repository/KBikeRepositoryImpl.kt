@@ -2,10 +2,12 @@ package com.goldcompany.koreabike.data.repository
 
 import com.goldcompany.koreabike.data.mapper.mapperAddressToUserAddressEntity
 import com.goldcompany.koreabike.data.mapper.mapperApiAddressToAddress
+import com.goldcompany.koreabike.data.mapper.mapperApiRouteToNavigation
 import com.goldcompany.koreabike.data.mapper.mapperUserAddressEntityToAddress
 import com.goldcompany.koreabike.data.repository.local.KBikeLocalDataSource
 import com.goldcompany.koreabike.data.repository.remote.KBikeRemoteDataSource
 import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.navigation.Navigation
 import com.goldcompany.koreabike.domain.repository.KBikeRepository
 
 class KBikeRepositoryImpl(
@@ -28,8 +30,8 @@ class KBikeRepositoryImpl(
         }
     }
 
-    override suspend fun getNavigationPath(start: String, end: String) {
-
+    override suspend fun getNavigationPath(start: String, end: String): Navigation {
+        return mapperApiRouteToNavigation(remoteDataSource.getNavigationPath(start, end).apiNavigationRoute!!.comfort)
     }
 
     override suspend fun getAllAddress(): List<Address> {

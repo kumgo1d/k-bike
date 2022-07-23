@@ -7,10 +7,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.goldcompany.apps.koreabike.Constants
-import com.goldcompany.apps.koreabike.data.KBikeRepository
-import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
-import com.goldcompany.koreabike.data.model.address.ApiAddress
 import com.goldcompany.apps.koreabike.util.Status
+import com.goldcompany.koreabike.data.model.address.ApiAddress
+import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
+import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.navigation.Navigation
+import com.goldcompany.koreabike.domain.usecase.GetNavigationPathUseCase
 import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +26,8 @@ data class NavAddress(
 
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
-    private val searchAddressUseCase: SearchAddressUseCase
+    private val searchAddressUseCase: SearchAddressUseCase,
+    private val getNavigationPathUseCase: GetNavigationPathUseCase
 ) : ViewModel() {
     val isStart: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val startAddress: MutableLiveData<NavAddress> by lazy { MutableLiveData<NavAddress>() }
@@ -33,38 +36,12 @@ class NavigationViewModel @Inject constructor(
     private val _resultMessage = MutableLiveData<String>()
     val resultMessage: LiveData<String> = _resultMessage
 
-    private var currentQuery: String? = null
-    private var currentSearchResult: Flow<PagingData<ApiAddress>>? = null
-
-    suspend fun searchAddress(address: String): Flow<PagingData<ApiAddress>> {
-        val lastResult = currentSearchResult
-        if (address == currentQuery && lastResult != null) {
-            return lastResult
-        }
-        currentQuery = address
-        val newResult: Flow<PagingData<ApiAddress>> = searchAddressUseCase(address).cachedIn(viewModelScope)
-        currentSearchResult = newResult
-        return newResult
+    suspend fun searchAddress(address: String, page: Int): Flow<List<Address>> = flow {
+        emit(searchAddressUseCase(address, page))
     }
 
-    suspend fun getNavigationPath(start: String, end: String): Flow<ApiNavigationPathResponse> = flow {
-        val result = kBikeRepository.getNavigationPath(start, end)
-
-        when (result.status) {
-            Status.SUCCESS -> result.data?.let { emit(it) }
-            Status.ERROR -> {
-                _resultMessage.postValue(Constants.RESULT_ERROR)
-                emit(
-                    ApiNavigationPathResponse(
-                        code = 9999,
-                        currentDateTime = "0",
-                        message = "Error",
-                        apiNavigationRoute = null
-                    )
-                )
-            }
-            Status.LOADING -> {}
-        }
+    suspend fun getNavigationPath(start: String, end: String): Flow<Navigation> = flow {
+        emit(getNavigationPathUseCase(start, end))
     }
 
     fun isAddressCorrect(): Boolean {
