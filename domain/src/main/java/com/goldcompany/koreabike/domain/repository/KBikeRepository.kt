@@ -13,11 +13,16 @@ interface KBikeRepository {
         latitude: String
     ): List<Address>
 
+    suspend fun getNavigationPath(
+        start: String,
+        end: String
+    )
+
     suspend fun getAllAddress(): List<Address>
 
     suspend fun getAddress(): Address?
 
-    suspend fun updateAddressUnselect(date: Long)
+    suspend fun updateCurrentAddressUnselected(id: String)
 
     suspend fun insertAddress(address: Address)
 

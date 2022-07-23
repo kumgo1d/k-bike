@@ -28,6 +28,10 @@ class KBikeRepositoryImpl(
         }
     }
 
+    override suspend fun getNavigationPath(start: String, end: String) {
+
+    }
+
     override suspend fun getAllAddress(): List<Address> {
         return localDataSource.getAllAddress().map {
             mapperUserAddressEntityToAddress(it)
@@ -38,8 +42,8 @@ class KBikeRepositoryImpl(
         return localDataSource.getAddress()?.let { mapperUserAddressEntityToAddress(it) }
     }
 
-    override suspend fun updateAddressUnselect(date: Long) {
-        localDataSource.updateAddressUnselect(date)
+    override suspend fun updateCurrentAddressUnselected(id: String) {
+        localDataSource.updateCurrentAddressUnselected(id)
     }
 
     override suspend fun insertAddress(address: Address) {

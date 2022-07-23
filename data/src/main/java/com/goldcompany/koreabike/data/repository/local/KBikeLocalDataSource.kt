@@ -2,7 +2,6 @@ package com.goldcompany.koreabike.data.repository.local
 
 import com.goldcompany.koreabike.data.db.AddressDAO
 import com.goldcompany.koreabike.data.db.AddressEntity
-import com.goldcompany.koreabike.data.mapper.mapperUserAddressEntityToAddress
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,7 +13,7 @@ interface KBikeLocalDataSource {
 
     suspend fun getAddress(): AddressEntity?
 
-    suspend fun updateAddressUnselect(date: Long)
+    suspend fun updateCurrentAddressUnselected(id: String)
 
     suspend fun insertAddress(address: AddressEntity)
 
@@ -32,8 +31,8 @@ class KBikeLocalDataSourceImpl(private val addressDAO: AddressDAO): KBikeLocalDa
         return@withContext addressDAO.getAddress()
     }
 
-    override suspend fun updateAddressUnselect(date: Long) = withContext(ioDispatcher) {
-        addressDAO.updateAddressUnselect(date)
+    override suspend fun updateCurrentAddressUnselected(id: String) = withContext(ioDispatcher) {
+        addressDAO.updateCurrentAddressUnselected(id)
     }
 
     override suspend fun insertAddress(address: AddressEntity) {

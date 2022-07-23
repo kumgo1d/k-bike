@@ -11,6 +11,7 @@ import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
 import com.goldcompany.koreabike.data.model.address.ApiAddress
 import com.goldcompany.apps.koreabike.util.Status
+import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -23,7 +24,7 @@ data class NavAddress(
 
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
-    private val kBikeRepository: KBikeRepository
+    private val searchAddressUseCase: SearchAddressUseCase
 ) : ViewModel() {
     val isStart: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val startAddress: MutableLiveData<NavAddress> by lazy { MutableLiveData<NavAddress>() }
@@ -35,14 +36,13 @@ class NavigationViewModel @Inject constructor(
     private var currentQuery: String? = null
     private var currentSearchResult: Flow<PagingData<ApiAddress>>? = null
 
-    fun searchAddress(address: String): Flow<PagingData<ApiAddress>> {
+    suspend fun searchAddress(address: String): Flow<PagingData<ApiAddress>> {
         val lastResult = currentSearchResult
         if (address == currentQuery && lastResult != null) {
             return lastResult
         }
         currentQuery = address
-        val newResult: Flow<PagingData<ApiAddress>> = kBikeRepository.getSearchAddressStream(address)
-            .cachedIn(viewModelScope)
+        val newResult: Flow<PagingData<ApiAddress>> = searchAddressUseCase(address).cachedIn(viewModelScope)
         currentSearchResult = newResult
         return newResult
     }

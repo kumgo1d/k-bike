@@ -1,9 +1,7 @@
 package com.goldcompany.koreabike.domain.module
 
 import com.goldcompany.koreabike.domain.repository.KBikeRepository
-import com.goldcompany.koreabike.domain.usecase.GetAllHistoryAddressUseCase
-import com.goldcompany.koreabike.domain.usecase.GetCurrentAddressUseCase
-import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase
+import com.goldcompany.koreabike.domain.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +19,12 @@ class UseCaseModule {
 
     @Singleton
     @Provides
+    fun provideSearchNearbyPlacesUseCase(
+        repository: KBikeRepository
+    ): SearchNearbyPlacesForMarkerUseCase = SearchNearbyPlacesForMarkerUseCase(repository)
+
+    @Singleton
+    @Provides
     fun provideGetAllHistoryAddressUseCase(
         repository: KBikeRepository
     ): GetAllHistoryAddressUseCase = GetAllHistoryAddressUseCase(repository)
@@ -30,4 +34,22 @@ class UseCaseModule {
     fun provideGetCurrentAddressUseCase(
         repository: KBikeRepository
     ): GetCurrentAddressUseCase = GetCurrentAddressUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideCurrentAddressUnselectedUseCase(
+        repository: KBikeRepository
+    ): UpdateCurrentAddressUnselectedUseCase = UpdateCurrentAddressUnselectedUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideInsertAddressUseCase(
+        repository: KBikeRepository
+    ): InsertAddressUseCase = InsertAddressUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideDeleteAddressUseCase(
+        repository: KBikeRepository
+    ): DeleteAddressUseCase = DeleteAddressUseCase(repository)
 }
