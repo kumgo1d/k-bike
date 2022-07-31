@@ -6,7 +6,7 @@
     <data>
         <variable
             name="address"
-            type="com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress" />
+            type="com.goldcompany.koreabike.domain.model.Address" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@{address.keyword}"
+            android:text="@{address.categoryName}"
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/place_item_drawable"
@@ -49,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@{address.address}"
+            android:text="@{address.addressName}"
             android:textColor="@android:color/darker_gray"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"

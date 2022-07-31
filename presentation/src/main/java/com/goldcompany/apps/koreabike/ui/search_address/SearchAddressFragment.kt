@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import com.goldcompany.apps.koreabike.util.LoadingStateAdapter
@@ -110,9 +109,9 @@ class SearchAddressFragment : Fragment() {
             }
 
             lifecycleScope.launch {
-                viewModel.searchAddress(address).collectLatest { result ->
-                    adapter.submitData(result)
-                }
+//                viewModel.searchAddress(address).collectLatest { result ->
+//                    adapter.submitData(result)
+//                }
             }
         }
 

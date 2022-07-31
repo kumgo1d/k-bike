@@ -3,7 +3,6 @@ package com.goldcompany.apps.koreabike.ui.bike_map
 import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.goldcompany.apps.koreabike.util.Result
 import com.goldcompany.koreabike.domain.model.Address
 import com.goldcompany.koreabike.domain.usecase.GetCurrentAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.SearchNearbyPlacesForMarkerUseCase

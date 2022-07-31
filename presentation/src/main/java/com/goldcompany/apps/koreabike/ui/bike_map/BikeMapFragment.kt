@@ -11,14 +11,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.goldcompany.apps.koreabike.MainActivity
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
-import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
 import com.goldcompany.apps.koreabike.util.ViewHelper
+import com.goldcompany.koreabike.domain.model.Address
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -171,9 +169,9 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun setCameraPosition(address: UserHistoryAddress?) {
-        val latitude = address?.latitude ?: 37.5643
-        val longitude = address?.longitude ?: 126.9801
+    private fun setCameraPosition(address: Address?) {
+        val latitude = address?.x?.toDouble() ?: 37.5643
+        val longitude = address?.y?.toDouble() ?: 126.9801
 
         if (checkLocationPermission() && address != null) {
             val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)

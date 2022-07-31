@@ -6,13 +6,12 @@ import androidx.navigation.Navigation
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.goldcompany.koreabike.data.model.address.ApiAddress
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
-import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
+import com.goldcompany.koreabike.domain.model.Address
 
 class SearchAddressAdapter(
     private val viewModel: SearchAddressViewModel
-): PagingDataAdapter<ApiAddress, SearchAddressAdapter.ViewHolder>(SearchAddressDiffCallback()) {
+): PagingDataAdapter<Address, SearchAddressAdapter.ViewHolder>(SearchAddressDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -29,36 +28,28 @@ class SearchAddressAdapter(
     }
 
     inner class ViewHolder(private val binding: ItemSearchAddressBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ApiAddress) {
+        fun bind(item: Address) {
             binding.address = item
 
             itemView.setOnClickListener {
-                val userAddress = UserHistoryAddress(
-                    latitude = item.y.toDouble(),
-                    longitude = item.x.toDouble(),
-                    address = item.addressName,
-                    keyword = item.placeName,
-                    selected = true
-                )
-
-                viewModel.setCurrentAddress(userAddress)
+                viewModel.setCurrentAddress(item)
                 Navigation.findNavController(itemView).popBackStack()
             }
         }
     }
 }
 
-private class SearchAddressDiffCallback : DiffUtil.ItemCallback<ApiAddress>() {
+private class SearchAddressDiffCallback : DiffUtil.ItemCallback<Address>() {
     override fun areItemsTheSame(
-        oldItem: ApiAddress,
-        newItem: ApiAddress
+        oldItem: Address,
+        newItem: Address
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: ApiAddress,
-        newItem: ApiAddress
+        oldItem: Address,
+        newItem: Address
     ): Boolean {
         return oldItem == newItem
     }

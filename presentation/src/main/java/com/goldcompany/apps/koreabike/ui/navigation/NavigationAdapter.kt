@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.koreabike.data.model.address.ApiAddress
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.ViewHelper
+import com.goldcompany.koreabike.domain.model.Address
 
 class NavigationAdapter(
     private val viewModel: NavigationViewModel
-    ): PagingDataAdapter<ApiAddress, NavigationAdapter.ViewHolder>(NavigationAddressDiffCallback()) {
+    ): PagingDataAdapter<Address, NavigationAdapter.ViewHolder>(NavigationAddressDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -28,8 +29,7 @@ class NavigationAdapter(
     }
 
     class ViewHolder(private val binding: ItemSearchAddressBinding): RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: ApiAddress, viewModel: NavigationViewModel) {
+        fun bind(item: Address, viewModel: NavigationViewModel) {
             binding.address = item
 
             binding.root.setOnClickListener {
@@ -46,17 +46,17 @@ class NavigationAdapter(
     }
 }
 
-private class NavigationAddressDiffCallback : DiffUtil.ItemCallback<ApiAddress>() {
+private class NavigationAddressDiffCallback : DiffUtil.ItemCallback<Address>() {
     override fun areItemsTheSame(
-        oldItem: ApiAddress,
-        newItem: ApiAddress
+        oldItem: Address,
+        newItem: Address
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: ApiAddress,
-        newItem: ApiAddress
+        oldItem: Address,
+        newItem: Address
     ): Boolean {
         return oldItem == newItem
     }

@@ -5,7 +5,7 @@ import androidx.room.Entity
 
 @Entity(tableName = "user_address", primaryKeys = ["id"])
 class AddressEntity(
-    @ColumnInfo(defaultValue = "0") val selected: Boolean,
+    @ColumnInfo(defaultValue = "0") var selected: Boolean,
     @ColumnInfo val date: Long = System.currentTimeMillis(),
     @ColumnInfo val id: String,
     @ColumnInfo val latitude: Double,

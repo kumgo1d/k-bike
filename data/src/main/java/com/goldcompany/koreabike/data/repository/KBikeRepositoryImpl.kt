@@ -53,6 +53,8 @@ class KBikeRepositoryImpl(
     }
 
     override suspend fun deleteAddress(address: Address) {
-        localDataSource.deleteAddress(mapperAddressToUserAddressEntity(address))
+        val newAddress = mapperAddressToUserAddressEntity(address)
+        newAddress.selected = true
+        localDataSource.deleteAddress(newAddress)
     }
 }

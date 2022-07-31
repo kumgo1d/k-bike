@@ -7,22 +7,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.databinding.ItemFavoritePlaceListBinding
-import com.goldcompany.apps.koreabike.db.history_address.UserHistoryAddress
+import com.goldcompany.koreabike.domain.model.Address
 
 class FavoritePlaceAdapter(
     private val viewModel: HistoryPlaceViewModel
-): ListAdapter<UserHistoryAddress, FavoritePlaceAdapter.ViewHolder>(HistoryAddressDiffCallback()) {
+): ListAdapter<Address, FavoritePlaceAdapter.ViewHolder>(HistoryAddressDiffCallback()) {
 
     inner class ViewHolder(private val binding: ItemFavoritePlaceListBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun setList(item: UserHistoryAddress) {
+        fun setList(item: Address) {
             binding.address = item
 
             setDeleteButtonListener(item)
             setItemClickListener(item)
         }
 
-        private fun setDeleteButtonListener(item: UserHistoryAddress) {
+        private fun setDeleteButtonListener(item: Address) {
             binding.placeItemDelete.setOnClickListener {
                 viewModel.deleteAddress(item)
                 val list = currentList.toMutableList()
@@ -31,7 +31,7 @@ class FavoritePlaceAdapter(
             }
         }
 
-        private fun setItemClickListener(item: UserHistoryAddress) {
+        private fun setItemClickListener(item: Address) {
             binding.root.setOnClickListener {
                 viewModel.setCurrentAddress(item)
                 Navigation.findNavController(binding.root).navigate(HistoryPlaceFragmentDirections.actionGlobalMapView())
@@ -54,18 +54,18 @@ class FavoritePlaceAdapter(
     }
 }
 
-private class HistoryAddressDiffCallback : DiffUtil.ItemCallback<UserHistoryAddress>() {
+private class HistoryAddressDiffCallback : DiffUtil.ItemCallback<Address>() {
     override fun areItemsTheSame(
-        oldItem: UserHistoryAddress,
-        newItem: UserHistoryAddress
+        oldItem: Address,
+        newItem: Address
     ): Boolean {
-        return oldItem.address == newItem.address
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: UserHistoryAddress,
-        newItem: UserHistoryAddress
+        oldItem: Address,
+        newItem: Address
     ): Boolean {
-        return oldItem.address == newItem.address
+        return oldItem == newItem
     }
 }
