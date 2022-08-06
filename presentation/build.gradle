@@ -24,10 +24,6 @@ android {
         versionCode 11
         versionName "1.9.2"
 
-        buildConfigField("String", "KAKAO_API_KEY", KAKAO_API_KEY)
-        buildConfigField("String", "NAVER_API_KEY", NAVER_API_KEY)
-        buildConfigField("String", "NAVER_API_CLIENT_ID", NAVER_API_CLIENT_ID)
-
         testInstrumentationRunner "com.goldcompany.apps.koreabike.KBikeTestRunner"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'

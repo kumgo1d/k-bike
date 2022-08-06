@@ -1,5 +1,7 @@
 package com.goldcompany.apps.koreabike.ui.search_address
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -23,10 +25,20 @@ class SearchAddressViewModel @Inject constructor(
     private val insertAddressUseCase: InsertAddressUseCase
 ) : ViewModel() {
 
+    private val _addressList = MutableLiveData<List<Address>>()
+    val addressList: LiveData<List<Address>> = _addressList
+
     fun setCurrentAddress(newAddress: Address) {
         viewModelScope.launch {
             getCurrentAddressUseCase()?.let { updateCurrentAddressUnselectedUseCase(it.id) }
             insertAddressUseCase(newAddress)
+        }
+    }
+
+    fun searchAddress(address: String, page: Int) {
+        viewModelScope.launch {
+            val response = searchAddressUseCase(address, page)
+            _addressList.postValue(response)
         }
     }
 }

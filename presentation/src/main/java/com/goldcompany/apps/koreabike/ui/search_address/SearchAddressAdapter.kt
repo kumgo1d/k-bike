@@ -4,14 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
+import com.goldcompany.apps.koreabike.util.AddressDiffUtil
 import com.goldcompany.koreabike.domain.model.Address
 
 class SearchAddressAdapter(
     private val viewModel: SearchAddressViewModel
-): PagingDataAdapter<Address, SearchAddressAdapter.ViewHolder>(SearchAddressDiffCallback()) {
+): ListAdapter<Address, SearchAddressAdapter.ViewHolder>(AddressDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -36,21 +37,5 @@ class SearchAddressAdapter(
                 Navigation.findNavController(itemView).popBackStack()
             }
         }
-    }
-}
-
-private class SearchAddressDiffCallback : DiffUtil.ItemCallback<Address>() {
-    override fun areItemsTheSame(
-        oldItem: Address,
-        newItem: Address
-    ): Boolean {
-        return oldItem.id == newItem.id
-    }
-
-    override fun areContentsTheSame(
-        oldItem: Address,
-        newItem: Address
-    ): Boolean {
-        return oldItem == newItem
     }
 }

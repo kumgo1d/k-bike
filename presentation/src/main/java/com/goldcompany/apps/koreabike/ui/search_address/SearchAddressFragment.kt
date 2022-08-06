@@ -34,20 +34,27 @@ class SearchAddressFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchAddressBinding.inflate(inflater, container, false)
-
         setAdapter()
-        setButtonListener()
 
         return binding.root
     }
 
     private fun setAdapter() {
         adapter = SearchAddressAdapter(viewModel)
-        binding.searchAddressList.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = LoadingStateAdapter(adapter::retry),
-            footer = LoadingStateAdapter(adapter::retry)
-        )
+        binding.searchAddressList.adapter = adapter
         binding.searchAddressList.addItemDecoration(AddressAdapterDecoration())
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeSearchAddressList()
+        setButtonListener()
+    }
+
+    private fun observeSearchAddressList() {
+        viewModel.addressList.observe(viewLifecycleOwner) { list ->
+            adapter.submitList(list)
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -101,18 +108,7 @@ class SearchAddressFragment : Fragment() {
 
         if (!input.text.isNullOrEmpty()) {
             val address = binding.searchAddressInput.text.toString()
-
-            lifecycleScope.launch {
-                adapter.loadStateFlow.collectLatest { loadState ->
-                    binding.searchAddressLoading.isVisible = loadState.refresh is LoadState.Loading
-                }
-            }
-
-            lifecycleScope.launch {
-//                viewModel.searchAddress(address).collectLatest { result ->
-//                    adapter.submitData(result)
-//                }
-            }
+            viewModel.searchAddress(address, 1)
         }
 
         ViewHelper.hideKeyboard(input)

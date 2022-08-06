@@ -1,8 +1,8 @@
 package com.goldcompany.koreabike.data.repository.remote
 
+import com.goldcompany.koreabike.data.BuildConfig
 import com.goldcompany.koreabike.data.api.KakaoApiService
 import com.goldcompany.koreabike.data.api.NaverApiService
-import com.goldcompany.koreabike.data.model.address.ApiAddress
 import com.goldcompany.koreabike.data.model.address.ApiAddressResponse
 import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
 import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResponse
@@ -28,9 +28,9 @@ class KBikeRemoteDataSourceImpl(
     private val kakaoApiService: KakaoApiService,
     private val naverApiService: NaverApiService
 ): KBikeRemoteDataSource {
-    private val KAKAO_API_KEY = ""
-    private val NAVER_API_CLIENT_ID = ""
-    private val NAVER_API_KEY = ""
+    private val KAKAO_API_KEY = BuildConfig.KAKAO_API_KEY
+    private val NAVER_API_CLIENT_ID = BuildConfig.NAVER_API_CLIENT_ID
+    private val NAVER_API_KEY = BuildConfig.NAVER_API_KEY
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     override suspend fun searchAddress(address: String, page: Int): ApiAddressResponse = withContext(ioDispatcher) {
