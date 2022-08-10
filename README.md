@@ -16,7 +16,6 @@ Coroutine Flow, Room, DI(Hilt), RxJava <br>
 ![캡처](./images/1.PNG)
 <br><br>
 서비스 화면<br>
-![캡처](./images/2.PNG)
 ![캡처](./images/3.PNG)
 
 
