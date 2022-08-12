@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
-import com.goldcompany.apps.koreabike.util.ViewHelper
+import com.goldcompany.apps.koreabike.util.errorToast
 import com.goldcompany.koreabike.domain.model.Address
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -77,7 +77,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                 try {
                     viewModel.isMarked.value = !viewModel.isMarked.value!!
                 } catch (e: NullPointerException) {
-                    ViewHelper.errorToast(requireContext())
+                    errorToast(requireContext())
                 }
             }
         }

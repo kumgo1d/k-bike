@@ -7,19 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import com.goldcompany.apps.koreabike.databinding.FragmentSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
-import com.goldcompany.apps.koreabike.util.LoadingStateAdapter
-import com.goldcompany.apps.koreabike.util.ViewHelper
+import com.goldcompany.apps.koreabike.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchAddressFragment : Fragment() {
@@ -69,7 +63,7 @@ class SearchAddressFragment : Fragment() {
     private fun touchScreenListenerForHideKeyboard() {
         binding.parentLayout.setOnTouchListener { _, _ ->
             binding.searchAddressInput.clearFocus()
-            ViewHelper.hideKeyboard(binding.root)
+            hideKeyboard(binding.root)
             return@setOnTouchListener true
         }
     }
@@ -111,12 +105,12 @@ class SearchAddressFragment : Fragment() {
             viewModel.searchAddress(address, 1)
         }
 
-        ViewHelper.hideKeyboard(input)
+        hideKeyboard(input)
     }
 
     override fun onStop() {
         super.onStop()
         binding.searchAddressInput.clearFocus()
-        ViewHelper.hideKeyboard(binding.root)
+        hideKeyboard(binding.root)
     }
 }

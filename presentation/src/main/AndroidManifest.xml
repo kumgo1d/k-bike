@@ -16,16 +16,12 @@
         android:name=".KBikeApplication">
         <activity android:name="MainActivity"
             android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-7722749686662698~6319817377"/>
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

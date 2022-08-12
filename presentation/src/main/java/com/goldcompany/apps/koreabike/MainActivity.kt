@@ -6,26 +6,17 @@ import androidx.fragment.app.commit
 import androidx.navigation.fragment.NavHostFragment
 import com.goldcompany.apps.koreabike.databinding.ActivityMainBinding
 import com.goldcompany.apps.koreabike.ui.bike_map.BikeMapFragment
-import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-//    private lateinit var bottomNav: BottomNavigationView
-
-    companion object {
-        lateinit var instance: MainActivity
-            private set
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
-        instance = this
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        MobileAds.initialize(this)
 
         setBottomNav()
     }

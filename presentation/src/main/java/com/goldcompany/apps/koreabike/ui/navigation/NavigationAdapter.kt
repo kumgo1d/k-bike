@@ -5,9 +5,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.goldcompany.koreabike.data.model.address.ApiAddress
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
-import com.goldcompany.apps.koreabike.util.ViewHelper
+import com.goldcompany.apps.koreabike.util.hideKeyboard
 import com.goldcompany.koreabike.domain.model.Address
 
 class NavigationAdapter(
@@ -40,7 +39,7 @@ class NavigationAdapter(
                     val coordinate = "${item.x},${item.y}"
                     viewModel.endAddress.value = NavAddress(item.placeName, coordinate)
                 }
-                ViewHelper.hideKeyboard(it)
+                hideKeyboard(it)
             }
         }
     }

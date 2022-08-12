@@ -2,29 +2,21 @@ package com.goldcompany.apps.koreabike.ui.navigation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import com.goldcompany.apps.koreabike.Constants
-import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import com.goldcompany.apps.koreabike.util.LoadingStateAdapter
-import com.goldcompany.apps.koreabike.util.ViewHelper
+import com.goldcompany.apps.koreabike.util.errorToast
+import com.goldcompany.apps.koreabike.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NavigationFragment : Fragment() {
@@ -55,7 +47,7 @@ class NavigationFragment : Fragment() {
     private fun observeResultMessage() {
         viewModel.resultMessage.observe(viewLifecycleOwner) { message ->
             when (message) {
-                Constants.RESULT_ERROR -> ViewHelper.errorToast(requireContext())
+                Constants.RESULT_ERROR -> errorToast(requireContext())
             }
         }
     }
@@ -98,7 +90,7 @@ class NavigationFragment : Fragment() {
     private fun clearFocus() {
         binding.start.clearFocus()
         binding.end.clearFocus()
-        ViewHelper.hideKeyboard(binding.root)
+        hideKeyboard(binding.root)
     }
 
     private fun searchNavAddress() {
