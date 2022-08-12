@@ -2,6 +2,7 @@ package com.goldcompany.apps.koreabike.ui.bike_map
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +37,13 @@ interface BikeMapHandler {
 class BikeMapFragment : Fragment(), OnMapReadyCallback {
 
     companion object {
+        private const val MARKER_WIDTH = 70
+        private const val MARKER_HEIGHT = 100
+        private const val PHARMACY = "PM9"
+        private const val CONVENIENCE_STORE = "CS2"
+        private const val CAFE = "CE7"
+        private const val ACCOMMODATION = "AD5"
+
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 
@@ -45,6 +53,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
 
     private var locationMarker = Marker()
 
+    private val placeMarkers = mutableListOf<Marker>()
     private val viewModel by viewModels<BikeMapViewModel>()
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -62,24 +71,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             val latitude = naverMap.cameraPosition.target.latitude.toString()
             val longitude = naverMap.cameraPosition.target.longitude.toString()
 
-            lifecycleScope.launch {
-                if (viewModel.isMarked.value == true) {
-                    viewModel.markers.value?.forEach { it.map = null }
-                } else {
-                    viewModel.searchNearbyPlacesMarker(code, longitude, latitude)
-                    viewModel.markers.observe(viewLifecycleOwner) { markers ->
-                        markers.forEach {
-                            it.map = naverMap
-                        }
-                    }
-                }
-
-                try {
-                    viewModel.isMarked.value = !viewModel.isMarked.value!!
-                } catch (e: NullPointerException) {
-                    errorToast(requireContext())
-                }
-            }
+            viewModel.searchNearbyPlacesMarker(code, longitude, latitude)
         }
 
         override fun checkPermissionAndGetMyLocation() {
@@ -121,8 +113,54 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeMarkerAddress()
         setUpSearchNavigation()
         setUpSearchAddress()
+    }
+
+    private fun observeMarkerAddress() {
+        viewModel.markerAddress.observe(viewLifecycleOwner) { result ->
+            clearPlaceMarker()
+            result.forEach { place ->
+                val marker = Marker()
+                marker.apply {
+                    width = MARKER_WIDTH
+                    height = MARKER_HEIGHT
+                    position = LatLng(place.y.toDouble(), place.x.toDouble())
+
+                    when (viewModel.markerCode.value) {
+                        PHARMACY -> {
+                            marker.icon = MarkerIcons.BLACK
+                            marker.iconTintColor = Color.RED
+                        }
+                        CONVENIENCE_STORE -> {
+                            marker.icon = MarkerIcons.BLACK
+                            marker.iconTintColor = Color.GREEN
+                        }
+                        CAFE -> {
+                            marker.icon = MarkerIcons.BLACK
+                            marker.iconTintColor = Color.DKGRAY
+                        }
+                        ACCOMMODATION -> {
+                            marker.icon = MarkerIcons.BLACK
+                            marker.iconTintColor = Color.MAGENTA
+                        }
+                    }
+                }
+                placeMarkers.add(marker)
+            }
+
+            placeMarkers.forEach {
+                it.map = naverMap
+            }
+        }
+    }
+
+    private fun clearPlaceMarker() {
+        placeMarkers.forEach {
+            it.map = null
+        }
+        placeMarkers.clear()
     }
 
     private fun setUpSearchNavigation() {

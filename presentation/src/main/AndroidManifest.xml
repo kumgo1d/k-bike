@@ -3,7 +3,7 @@
     package="com.goldcompany.apps.koreabike">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -16,7 +16,8 @@
         android:name=".KBikeApplication">
         <activity android:name="MainActivity"
             android:theme="@style/SplashTheme"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
