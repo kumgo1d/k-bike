@@ -98,13 +98,11 @@ class SearchAddressFragment : Fragment() {
     }
 
     private fun searchAddress(input: EditText) {
-        input.clearFocus()
-
         if (!input.text.isNullOrEmpty()) {
             val address = binding.searchAddressInput.text.toString()
             viewModel.searchAddress(address, 1)
         }
-
+        input.clearFocus()
         hideKeyboard(input)
     }
 
