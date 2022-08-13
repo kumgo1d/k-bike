@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.Toast.makeText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -17,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
 import com.goldcompany.koreabike.domain.model.Address
+import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -59,9 +61,9 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Toast.makeText(requireContext(), R.string.enable_location_service, Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, R.string.enable_location_service, Snackbar.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(requireContext(), R.string.go_set_location, Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, R.string.go_set_location, Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -207,8 +209,8 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setCameraPosition(address: Address?) {
-        val latitude = address?.x?.toDouble() ?: 37.5643
-        val longitude = address?.y?.toDouble() ?: 126.9801
+        val latitude = address?.y?.toDouble() ?: 37.5643
+        val longitude = address?.x?.toDouble() ?: 126.9801
 
         if (checkLocationPermission() && address != null) {
             val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)

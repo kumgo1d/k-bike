@@ -3,13 +3,7 @@ package com.goldcompany.apps.koreabike.ui.navigation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.goldcompany.apps.koreabike.Constants
-import com.goldcompany.apps.koreabike.util.Status
-import com.goldcompany.koreabike.data.model.address.ApiAddress
-import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
+import com.goldcompany.apps.koreabike.R
 import com.goldcompany.koreabike.domain.model.Address
 import com.goldcompany.koreabike.domain.model.navigation.Navigation
 import com.goldcompany.koreabike.domain.usecase.GetNavigationPathUseCase
@@ -33,8 +27,8 @@ class NavigationViewModel @Inject constructor(
     val startAddress: MutableLiveData<NavAddress> by lazy { MutableLiveData<NavAddress>() }
     val endAddress: MutableLiveData<NavAddress> by lazy { MutableLiveData<NavAddress>() }
 
-    private val _resultMessage = MutableLiveData<String>()
-    val resultMessage: LiveData<String> = _resultMessage
+    private val _resultMessage = MutableLiveData<Int>()
+    val resultMessage: LiveData<Int> = _resultMessage
 
     suspend fun searchAddress(address: String, page: Int): Flow<List<Address>> = flow {
         emit(searchAddressUseCase(address, page))
@@ -49,10 +43,10 @@ class NavigationViewModel @Inject constructor(
         val endCoordinate = endAddress.value?.coordinate ?: ""
 
         if (startCoordinate.isEmpty() || endCoordinate.isEmpty()) {
-            _resultMessage.postValue(Constants.RESULT_ERROR)
+            _resultMessage.postValue(R.string.error_code)
             return false
         } else if (startCoordinate == endCoordinate) {
-            _resultMessage.postValue(Constants.RESULT_ERROR)
+            _resultMessage.postValue(R.string.error_code)
             return false
         }
         return true

@@ -7,15 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.goldcompany.apps.koreabike.Constants
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import com.goldcompany.apps.koreabike.util.LoadingStateAdapter
 import com.goldcompany.apps.koreabike.util.errorToast
 import com.goldcompany.apps.koreabike.util.hideKeyboard
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,9 +47,7 @@ class NavigationFragment : Fragment() {
 
     private fun observeResultMessage() {
         viewModel.resultMessage.observe(viewLifecycleOwner) { message ->
-            when (message) {
-                Constants.RESULT_ERROR -> errorToast(requireContext())
-            }
+            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
         }
     }
 

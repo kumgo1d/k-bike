@@ -2,9 +2,6 @@ package com.goldcompany.koreabike.data.api
 
 import com.goldcompany.koreabike.data.model.address.ApiAddressResponse
 import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResponse
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
@@ -25,20 +22,4 @@ interface KakaoApiService {
         @Query("y") latitude: String,
         @Query("radius") radius: Int
     ): ApiPlaceMarkerResponse
-
-    companion object {
-        private const val KAKAO_BASE_URL = "https://dapi.kakao.com/"
-
-        fun create(): KakaoApiService {
-            val client = OkHttpClient.Builder()
-                .build()
-
-            return Retrofit.Builder()
-                .baseUrl(KAKAO_BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(KakaoApiService::class.java)
-        }
-    }
 }
