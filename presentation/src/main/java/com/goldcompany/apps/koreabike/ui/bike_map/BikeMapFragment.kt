@@ -147,10 +147,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
                 placeMarkers.add(marker)
-            }
-
-            placeMarkers.forEach {
-                it.map = naverMap
+                marker.map = naverMap
             }
         }
     }
