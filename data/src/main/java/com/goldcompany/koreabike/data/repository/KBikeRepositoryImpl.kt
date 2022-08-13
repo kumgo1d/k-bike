@@ -1,5 +1,6 @@
 package com.goldcompany.koreabike.data.repository
 
+import android.util.Log
 import com.goldcompany.koreabike.data.mapper.mapperAddressToUserAddressEntity
 import com.goldcompany.koreabike.data.mapper.mapperApiAddressToAddress
 import com.goldcompany.koreabike.data.mapper.mapperApiRouteToNavigation
@@ -31,7 +32,7 @@ class KBikeRepositoryImpl(
     }
 
     override suspend fun getNavigationPath(start: String, end: String): Navigation {
-        return mapperApiRouteToNavigation(remoteDataSource.getNavigationPath(start, end).apiNavigationRoute!!.comfort)
+        return mapperApiRouteToNavigation(remoteDataSource.getNavigationPath(start, end).apiNavigationRoute.comfort)
     }
 
     override suspend fun getAllAddress(): List<Address> {

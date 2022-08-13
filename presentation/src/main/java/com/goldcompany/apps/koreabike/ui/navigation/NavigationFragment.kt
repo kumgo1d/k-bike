@@ -2,6 +2,7 @@ package com.goldcompany.apps.koreabike.ui.navigation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +10,16 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
-import com.goldcompany.apps.koreabike.util.LoadingStateAdapter
 import com.goldcompany.apps.koreabike.util.hideKeyboard
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NavigationFragment : Fragment() {
@@ -30,13 +34,21 @@ class NavigationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNavigationBinding.inflate(layoutInflater, container, false)
+        setAdapter()
         return binding.root
+    }
+
+    private fun setAdapter() {
+        adapter = NavigationAdapter(viewModel::setNavAddress)
+        binding.addressRecyclerView.addItemDecoration(AddressAdapterDecoration())
+        binding.addressRecyclerView.adapter = adapter
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         observeResultMessage()
+        observeSearchAddressList()
         setAdapter()
         observeNavAddressName()
         setTouchListener()
@@ -49,16 +61,10 @@ class NavigationFragment : Fragment() {
         }
     }
 
-    private fun setAdapter() {
-        adapter = NavigationAdapter(
-            setStartNavAddress = viewModel::setStartNavAddress,
-            setEndNavAddress = viewModel::setEndNavAddress
-        )
-        binding.addressRecyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = LoadingStateAdapter(adapter::retry),
-            footer = LoadingStateAdapter(adapter::retry)
-        )
-        binding.addressRecyclerView.addItemDecoration(AddressAdapterDecoration())
+    private fun observeSearchAddressList() {
+        viewModel.addressList.observe(viewLifecycleOwner) { list ->
+            adapter.submitList(list)
+        }
     }
 
     private fun observeNavAddressName() {
@@ -83,7 +89,7 @@ class NavigationFragment : Fragment() {
         }
 
         binding.navigateButton.setOnClickListener {
-//            checkAddressAndNavigateApi()
+            navigateAddress()
         }
     }
 
@@ -94,16 +100,15 @@ class NavigationFragment : Fragment() {
     }
 
     private fun searchNavAddress() {
-        addressEditTextListener(binding.start, true)
-        addressEditTextListener(binding.end, false)
+        addressEditTextListener(binding.start)
+        addressEditTextListener(binding.end)
     }
 
-    private fun addressEditTextListener(view: EditText, isStart: Boolean) {
+    private fun addressEditTextListener(view: EditText) {
         view.setOnKeyListener { v, keyCode, _ ->
             if (v.hasFocus()) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && !view.text.isNullOrEmpty())  {
-                    viewModel.isStart.value = isStart
-                    searchAddress(view.text.toString())
+                    searchAddress(view)
                     clearFocus()
                 }
             }
@@ -111,20 +116,42 @@ class NavigationFragment : Fragment() {
         }
     }
 
-    private fun searchAddress(address: String) {
-//        lifecycleScope.launch {
-//            adapter.loadStateFlow.collectLatest { loadState ->
-//                binding.navigationAddressLoading.isVisible = loadState.refresh is LoadState.Loading
-//            }
-//        }
-//
-//        lifecycleScope.launch {
-//            viewModel.searchAddress(address, 0)
-//                .distinctUntilChanged()
-//                .collect { result ->
-//                    adapter.submitData(result)
-//                }
-//        }
+    private fun searchAddress(input: EditText) {
+        if (!input.text.isNullOrEmpty()) {
+            when (input) {
+                binding.start -> {
+                    val address = binding.start.text.toString()
+                    viewModel.setIsStart(true)
+                    viewModel.searchAddress(address, 1)
+                }
+                binding.end -> {
+                    val address = binding.end.text.toString()
+                    viewModel.setIsStart(false)
+                    viewModel.searchAddress(address, 1)
+                }
+            }
+        }
+        input.clearFocus()
+        hideKeyboard(input)
+    }
+
+    private fun navigateAddress() {
+        if (viewModel.isAddressCorrect()) {
+            lifecycleScope.launch {
+                viewModel.getNavigationPath()
+                    .collect { result ->
+                        val bundle = Bundle()
+                        val path = result.trackList[0].path
+                        val duration = result.trackList[0].duration
+                        val distance = result.trackList[0].distance
+
+                        bundle.putInt("duration", duration)
+                        bundle.putInt("distance", distance)
+                        bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
+                        findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
+                    }
+            }
+        }
     }
 
     override fun onStop() {

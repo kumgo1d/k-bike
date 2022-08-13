@@ -1,8 +1,10 @@
 package com.goldcompany.apps.koreabike.ui.navigation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.koreabike.domain.model.Address
 import com.goldcompany.koreabike.domain.model.navigation.Navigation
@@ -11,6 +13,7 @@ import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class NavAddress(
@@ -23,7 +26,12 @@ class NavigationViewModel @Inject constructor(
     private val searchAddressUseCase: SearchAddressUseCase,
     private val getNavigationPathUseCase: GetNavigationPathUseCase
 ) : ViewModel() {
-    val isStart: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    private val _isStart = MutableLiveData<Boolean>()
+
+    fun setIsStart(isStart: Boolean) {
+        _isStart.value = isStart
+    }
 
     private val _startAddress = MutableLiveData<NavAddress>()
     val startAddress: LiveData<NavAddress> = _startAddress
@@ -31,22 +39,27 @@ class NavigationViewModel @Inject constructor(
     private val _endAddress = MutableLiveData<NavAddress>()
     val endAddress: LiveData<NavAddress> = _endAddress
 
+    private val _addressList = MutableLiveData<List<Address>>()
+    val addressList: LiveData<List<Address>> = _addressList
+
     private val _resultMessage = MutableLiveData<Int>()
     val resultMessage: LiveData<Int> = _resultMessage
 
-    fun setStartNavAddress(address: NavAddress) {
-        _startAddress.postValue(address)
+    fun setNavAddress(address: NavAddress) {
+        if (_isStart.value == true) _startAddress.value = address
+        else _endAddress.value = address
     }
 
-    fun setEndNavAddress(address: NavAddress) {
-        _endAddress.postValue(address)
+    fun searchAddress(address: String, page: Int) {
+        viewModelScope.launch {
+            val response = searchAddressUseCase(address, page)
+            _addressList.postValue(response)
+        }
     }
 
-    suspend fun searchAddress(address: String, page: Int): Flow<List<Address>> = flow {
-        emit(searchAddressUseCase(address, page))
-    }
-
-    suspend fun getNavigationPath(start: String, end: String): Flow<Navigation> = flow {
+    suspend fun getNavigationPath(): Flow<Navigation> = flow {
+        val start = _startAddress.value?.coordinate ?: ""
+        val end = _endAddress.value?.coordinate ?: ""
         emit(getNavigationPathUseCase(start, end))
     }
 

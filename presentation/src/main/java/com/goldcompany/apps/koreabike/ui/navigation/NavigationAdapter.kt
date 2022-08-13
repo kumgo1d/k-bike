@@ -2,17 +2,16 @@ package com.goldcompany.apps.koreabike.ui.navigation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.hideKeyboard
 import com.goldcompany.koreabike.domain.model.Address
 
 class NavigationAdapter(
-    private val setStartNavAddress: (NavAddress) -> Unit,
-    private val setEndNavAddress: (NavAddress) -> Unit
-): PagingDataAdapter<Address, NavigationAdapter.ViewHolder>(NavigationAddressDiffCallback()) {
+    private val setNavAddress: (NavAddress) -> Unit
+): ListAdapter<Address, NavigationAdapter.ViewHolder>(NavigationAddressDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -31,15 +30,9 @@ class NavigationAdapter(
     inner class ViewHolder(private val binding: ItemSearchAddressBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Address) {
             binding.address = item
-
-            binding.root.setOnClickListener {
-//                if (viewModel.isStart.value == true) {
-//                    val coordinate = "${item.x},${item.y}"
-//                    setStartNavAddress(NavAddress(item.placeName, coordinate))
-//                } else {
-//                    val coordinate = "${item.x},${item.y}"
-//                    setEndNavAddress(NavAddress(item.placeName, coordinate))
-//                }
+            itemView.setOnClickListener {
+                val coordinate = "${item.x},${item.y}"
+                setNavAddress(NavAddress(item.placeName, coordinate))
                 hideKeyboard(it)
             }
         }
