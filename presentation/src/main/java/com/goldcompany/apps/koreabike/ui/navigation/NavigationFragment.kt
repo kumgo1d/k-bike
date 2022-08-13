@@ -7,14 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import com.goldcompany.apps.koreabike.util.LoadingStateAdapter
-import com.goldcompany.apps.koreabike.util.errorToast
 import com.goldcompany.apps.koreabike.util.hideKeyboard
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +38,7 @@ class NavigationFragment : Fragment() {
 
         observeResultMessage()
         setAdapter()
-        addressNameObserve()
+        observeNavAddressName()
         setTouchListener()
         searchNavAddress()
     }
@@ -52,7 +50,10 @@ class NavigationFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        adapter = NavigationAdapter(viewModel)
+        adapter = NavigationAdapter(
+            setStartNavAddress = viewModel::setStartNavAddress,
+            setEndNavAddress = viewModel::setEndNavAddress
+        )
         binding.addressRecyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter(adapter::retry),
             footer = LoadingStateAdapter(adapter::retry)
@@ -60,7 +61,7 @@ class NavigationFragment : Fragment() {
         binding.addressRecyclerView.addItemDecoration(AddressAdapterDecoration())
     }
 
-    private fun addressNameObserve() {
+    private fun observeNavAddressName() {
         viewModel.startAddress.observe(viewLifecycleOwner) { address ->
             binding.start.setText(address.addressName)
         }

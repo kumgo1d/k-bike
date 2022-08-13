@@ -34,7 +34,7 @@ class SearchAddressFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        adapter = SearchAddressAdapter(viewModel)
+        adapter = SearchAddressAdapter(viewModel::setCurrentAddress)
         binding.searchAddressList.adapter = adapter
         binding.searchAddressList.addItemDecoration(AddressAdapterDecoration())
     }

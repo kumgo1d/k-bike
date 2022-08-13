@@ -24,11 +24,23 @@ class NavigationViewModel @Inject constructor(
     private val getNavigationPathUseCase: GetNavigationPathUseCase
 ) : ViewModel() {
     val isStart: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-    val startAddress: MutableLiveData<NavAddress> by lazy { MutableLiveData<NavAddress>() }
-    val endAddress: MutableLiveData<NavAddress> by lazy { MutableLiveData<NavAddress>() }
+
+    private val _startAddress = MutableLiveData<NavAddress>()
+    val startAddress: LiveData<NavAddress> = _startAddress
+
+    private val _endAddress = MutableLiveData<NavAddress>()
+    val endAddress: LiveData<NavAddress> = _endAddress
 
     private val _resultMessage = MutableLiveData<Int>()
     val resultMessage: LiveData<Int> = _resultMessage
+
+    fun setStartNavAddress(address: NavAddress) {
+        _startAddress.postValue(address)
+    }
+
+    fun setEndNavAddress(address: NavAddress) {
+        _endAddress.postValue(address)
+    }
 
     suspend fun searchAddress(address: String, page: Int): Flow<List<Address>> = flow {
         emit(searchAddressUseCase(address, page))

@@ -10,7 +10,7 @@ import com.goldcompany.apps.koreabike.util.AddressDiffUtil
 import com.goldcompany.koreabike.domain.model.Address
 
 class SearchAddressAdapter(
-    private val viewModel: SearchAddressViewModel
+    private val setCurrentAddress: (Address) -> Unit
 ): ListAdapter<Address, SearchAddressAdapter.ViewHolder>(AddressDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,7 +32,7 @@ class SearchAddressAdapter(
             binding.address = item
 
             itemView.setOnClickListener {
-                viewModel.setCurrentAddress(item)
+                setCurrentAddress(item)
                 Navigation.findNavController(itemView).popBackStack()
             }
         }

@@ -34,7 +34,10 @@ class HistoryPlaceFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        adapter = FavoritePlaceAdapter(viewModel)
+        adapter = FavoritePlaceAdapter(
+            setCurrentAddress = viewModel::setCurrentAddress,
+            deleteAddress = viewModel::deleteAddress
+        )
         binding.favoriteAddressList.adapter = adapter
         binding.favoriteAddressList.addItemDecoration(AddressAdapterDecoration())
 

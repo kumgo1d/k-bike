@@ -10,7 +10,8 @@ import com.goldcompany.apps.koreabike.databinding.ItemFavoritePlaceListBinding
 import com.goldcompany.koreabike.domain.model.Address
 
 class FavoritePlaceAdapter(
-    private val viewModel: HistoryPlaceViewModel
+    private val setCurrentAddress: (Address) -> Unit,
+    private val deleteAddress: (Address) -> Unit
 ): ListAdapter<Address, FavoritePlaceAdapter.ViewHolder>(HistoryAddressDiffCallback()) {
 
     inner class ViewHolder(private val binding: ItemFavoritePlaceListBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -24,7 +25,7 @@ class FavoritePlaceAdapter(
 
         private fun setDeleteButtonListener(item: Address) {
             binding.placeItemDelete.setOnClickListener {
-                viewModel.deleteAddress(item)
+                deleteAddress(item)
                 val list = currentList.toMutableList()
                 list.remove(item)
                 submitList(list)
@@ -33,7 +34,7 @@ class FavoritePlaceAdapter(
 
         private fun setItemClickListener(item: Address) {
             binding.root.setOnClickListener {
-                viewModel.setCurrentAddress(item)
+                setCurrentAddress(item)
                 Navigation.findNavController(binding.root).navigate(HistoryPlaceFragmentDirections.actionGlobalMapView())
             }
         }
