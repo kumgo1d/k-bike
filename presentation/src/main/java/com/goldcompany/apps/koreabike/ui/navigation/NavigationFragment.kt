@@ -49,8 +49,9 @@ class NavigationFragment : Fragment() {
 
         observeResultMessage()
         observeSearchAddressList()
-        setAdapter()
         observeNavAddressName()
+        observeNavigationPath()
+
         setTouchListener()
         searchNavAddress()
     }
@@ -74,6 +75,20 @@ class NavigationFragment : Fragment() {
 
         viewModel.endAddress.observe(viewLifecycleOwner) { address ->
             binding.end.setText(address.addressName)
+        }
+    }
+
+    private fun observeNavigationPath() {
+        viewModel.navigation.observe(viewLifecycleOwner) { result ->
+            val bundle = Bundle()
+            val path = result.trackList[0].path
+            val duration = result.trackList[0].duration
+            val distance = result.trackList[0].distance
+
+            bundle.putInt("duration", duration)
+            bundle.putInt("distance", distance)
+            bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
+            findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
         }
     }
 
@@ -137,20 +152,7 @@ class NavigationFragment : Fragment() {
 
     private fun navigateAddress() {
         if (viewModel.isAddressCorrect()) {
-            lifecycleScope.launch {
-                viewModel.getNavigationPath()
-                    .collect { result ->
-                        val bundle = Bundle()
-                        val path = result.trackList[0].path
-                        val duration = result.trackList[0].duration
-                        val distance = result.trackList[0].distance
-
-                        bundle.putInt("duration", duration)
-                        bundle.putInt("distance", distance)
-                        bundle.putParcelableArrayList("path", path as ArrayList<out Parcelable>)
-                        findNavController().navigate(R.id.action_navigationFragment_to_navigationMapFragment, bundle)
-                    }
-            }
+            viewModel.getNavigationPath()
         }
     }
 

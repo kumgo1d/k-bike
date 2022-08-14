@@ -1,6 +1,5 @@
 package com.goldcompany.apps.koreabike.ui.navigation
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -42,6 +41,9 @@ class NavigationViewModel @Inject constructor(
     private val _addressList = MutableLiveData<List<Address>>()
     val addressList: LiveData<List<Address>> = _addressList
 
+    private val _navigation = MutableLiveData<Navigation>()
+    val navigation: LiveData<Navigation> = _navigation
+
     private val _resultMessage = MutableLiveData<Int>()
     val resultMessage: LiveData<Int> = _resultMessage
 
@@ -57,10 +59,13 @@ class NavigationViewModel @Inject constructor(
         }
     }
 
-    suspend fun getNavigationPath(): Flow<Navigation> = flow {
-        val start = _startAddress.value?.coordinate ?: ""
-        val end = _endAddress.value?.coordinate ?: ""
-        emit(getNavigationPathUseCase(start, end))
+    fun getNavigationPath() {
+        viewModelScope.launch {
+            val start = _startAddress.value?.coordinate ?: ""
+            val end = _endAddress.value?.coordinate ?: ""
+            val result = getNavigationPathUseCase(start, end)
+            _navigation.postValue(result)
+        }
     }
 
     fun isAddressCorrect(): Boolean {
