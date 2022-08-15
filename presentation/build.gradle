@@ -39,8 +39,9 @@ android {
     buildFeatures {
         compose true
     }
+
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0'
+        kotlinCompilerExtensionVersion "1.2.0-rc02"
     }
 
     compileOptions {
@@ -128,7 +129,6 @@ dependencies {
 
     //hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$androidx_hilt_version"
     // When using Kotlin.
     kapt "androidx.hilt:hilt-compiler:$androidx_hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
