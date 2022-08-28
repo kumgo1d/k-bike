@@ -1,9 +1,7 @@
 package com.goldcompany.apps.koreabike.compose
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -22,7 +20,7 @@ fun HistoryPlaceItemView(
     onClick: () -> Unit
 ) {
     Surface(onClick = onClick) {
-        Row {
+        Row(modifier = Modifier.fillMaxWidth()) {
             val searchIcon = painterResource(id = R.drawable.ic_search_button)
             Image(
                 painter = searchIcon,

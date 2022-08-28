@@ -4,13 +4,9 @@ import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.goldcompany.apps.koreabike.MainCoroutineRule
-import com.goldcompany.apps.koreabike.data.KBikeRepository
 import com.goldcompany.apps.koreabike.ui.search_address.SearchAddressViewModel
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
+import com.goldcompany.koreabike.domain.repository.KBikeRepository
 import io.mockk.MockKAnnotations
-import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
@@ -43,17 +39,8 @@ class SearchAddressViewModelTest {
 
     private lateinit var viewModel: SearchAddressViewModel
 
-    @MockK
-    private lateinit var repository: KBikeRepository
-
     @Before
     fun setup() {
         MockKAnnotations.init(this, relaxed = true)
-        viewModel = SearchAddressViewModel(repository)
-    }
-
-    @Test
-    fun searchAddress_pagingDataLoaded() = runBlockingTest {
-        Assert.assertNotNull(viewModel.searchAddress("현대백화점"))
     }
 }
