@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.AddressDiffUtil
-import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.address.Address
 
 class SearchAddressAdapter(
     private val setCurrentAddress: (Address) -> Unit

@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
-import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.address.Address
 import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -23,7 +23,6 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 

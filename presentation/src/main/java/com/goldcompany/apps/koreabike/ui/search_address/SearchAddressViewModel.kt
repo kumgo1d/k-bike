@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.usecase.GetCurrentAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.InsertAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase

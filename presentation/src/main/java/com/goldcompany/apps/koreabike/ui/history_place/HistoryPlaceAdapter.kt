@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.compose.HistoryPlaceItemView
 import com.goldcompany.apps.koreabike.util.AddressDiffUtil
-import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.address.Address
 
 class FavoritePlaceAdapter(
     private val setCurrentAddress: (Address) -> Unit,

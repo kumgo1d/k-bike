@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.address.Address
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -44,7 +44,8 @@ fun HistoryPlaceItemView(
         Image(
             painter = painterResource(id = R.drawable.ic_delete_button),
             contentDescription = null,
-            modifier = Modifier.wrapContentWidth(Alignment.End)
+            modifier = Modifier
+                .wrapContentWidth(Alignment.End)
                 .clickable { deleteAddress },
             alignment = Alignment.TopEnd
         )

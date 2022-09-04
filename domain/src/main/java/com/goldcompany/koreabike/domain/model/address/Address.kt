@@ -1,4 +1,4 @@
-package com.goldcompany.koreabike.domain.model
+package com.goldcompany.koreabike.domain.model.address
 
 data class Address(
     val id: String,

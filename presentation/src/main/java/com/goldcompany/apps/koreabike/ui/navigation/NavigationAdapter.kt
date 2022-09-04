@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.hideKeyboard
-import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.address.Address
 
 class NavigationAdapter(
     private val setNavAddress: (NavAddress) -> Unit

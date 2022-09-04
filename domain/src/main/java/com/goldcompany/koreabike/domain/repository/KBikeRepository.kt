@@ -1,6 +1,6 @@
 package com.goldcompany.koreabike.domain.repository
 
-import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.model.navigation.Navigation
 import javax.inject.Singleton
 

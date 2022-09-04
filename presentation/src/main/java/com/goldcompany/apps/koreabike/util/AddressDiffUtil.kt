@@ -1,7 +1,7 @@
 package com.goldcompany.apps.koreabike.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.address.Address
 
 object AddressDiffUtil : DiffUtil.ItemCallback<Address>() {
     override fun areItemsTheSame(oldItem: Address, newItem: Address): Boolean {

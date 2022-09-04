@@ -1,7 +1,7 @@
 package com.goldcompany.apps.koreabike.ui.history_place
 
 import androidx.lifecycle.*
-import com.goldcompany.koreabike.domain.model.Address
+import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
