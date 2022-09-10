@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.compose.HistoryPlaceItemView
 import com.goldcompany.apps.koreabike.util.AddressDiffUtil
 import com.goldcompany.koreabike.domain.model.address.Address
+import kotlinx.coroutines.*
 
 class FavoritePlaceAdapter(
     private val setCurrentAddress: (Address) -> Unit,
@@ -16,7 +17,7 @@ class FavoritePlaceAdapter(
 ): ListAdapter<Address, FavoritePlaceAdapter.ViewHolder>(AddressDiffUtil) {
 
     inner class ViewHolder(composeView: ComposeView) : RecyclerView.ViewHolder(composeView) {
-
+        private val SET_ITEM_DELAY = 300L
         fun bind(address: Address) {
             (itemView as ComposeView).setContent {
                 MaterialTheme {
@@ -29,8 +30,14 @@ class FavoritePlaceAdapter(
                             submitList(list)
                         },
                         onClick = {
-                            setCurrentAddress(address)
-                            Navigation.findNavController(itemView).navigate(HistoryPlaceFragmentDirections.actionGlobalMapView())
+                            CoroutineScope(Dispatchers.Main).launch {
+                                val setAddress = CoroutineScope(Dispatchers.IO).async {
+                                    setCurrentAddress(address)
+                                }
+                                setAddress.await()
+                                delay(SET_ITEM_DELAY)
+                                Navigation.findNavController(itemView).navigate(HistoryPlaceFragmentDirections.actionGlobalMapView())
+                            }
                         }
                     )
                 }

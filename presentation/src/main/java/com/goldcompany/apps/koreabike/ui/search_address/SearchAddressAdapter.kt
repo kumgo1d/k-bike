@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.goldcompany.apps.koreabike.databinding.ItemSearchAddressBinding
 import com.goldcompany.apps.koreabike.util.AddressDiffUtil
 import com.goldcompany.koreabike.domain.model.address.Address
+import kotlinx.coroutines.*
 
 class SearchAddressAdapter(
     private val setCurrentAddress: (Address) -> Unit
 ): ListAdapter<Address, SearchAddressAdapter.ViewHolder>(AddressDiffUtil) {
-
+    private val SET_ITEM_DELAY = 300L
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemSearchAddressBinding.inflate(
@@ -32,8 +33,14 @@ class SearchAddressAdapter(
             binding.address = item
 
             itemView.setOnClickListener {
-                setCurrentAddress(item)
-                Navigation.findNavController(itemView).popBackStack()
+                CoroutineScope(Dispatchers.Main).launch {
+                    val setAddress = CoroutineScope(Dispatchers.IO).async {
+                        setCurrentAddress(item)
+                    }
+                    setAddress.await()
+                    delay(SET_ITEM_DELAY)
+                    Navigation.findNavController(itemView).popBackStack()
+                }
             }
         }
     }

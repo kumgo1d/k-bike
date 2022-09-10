@@ -8,8 +8,6 @@ import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.usecase.GetCurrentAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.SearchNearbyPlacesForMarkerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,6 +23,9 @@ class BikeMapViewModel @Inject constructor(
     private val _markerAddress = MutableLiveData<List<Address>>()
     val markerAddress: LiveData<List<Address>> = _markerAddress
 
+    private val _currentAddress = MutableLiveData<Address?>()
+    val currentAddress: LiveData<Address?> = _currentAddress
+
     fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String) {
         viewModelScope.launch {
             val result = searchNearbyPlacesForMarkerUseCase(code, longitude, latitude)
@@ -33,7 +34,9 @@ class BikeMapViewModel @Inject constructor(
         }
     }
 
-    suspend fun getAddress(): Flow<Address?> = flow {
-        emit(getCurrentAddressUseCase())
+    fun getAddress() {
+        viewModelScope.launch {
+            _currentAddress.value = getCurrentAddressUseCase()
+        }
     }
 }

@@ -11,7 +11,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentBikeMapBinding
@@ -23,8 +22,6 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
 
 interface BikeMapHandler {
     fun setCategoryMarkOverlay(code: String)
@@ -111,9 +108,16 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeCurrentAddress()
         observeMarkerAddress()
         setUpSearchNavigation()
         setUpSearchAddress()
+    }
+
+    private fun observeCurrentAddress() {
+        viewModel.currentAddress.observe(viewLifecycleOwner) { address ->
+            setCameraPosition(address)
+        }
     }
 
     private fun observeMarkerAddress() {
@@ -168,11 +172,9 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setUpSearchAddress() {
-        binding.searchAddressButton.let {
-            it.setOnClickListener {
-                val direction = BikeMapFragmentDirections.actionMapViewToSearchAddressFragment()
-                findNavController().navigate(direction)
-            }
+        binding.searchAddressButton.setOnClickListener {
+            val direction = BikeMapFragmentDirections.actionMapViewToSearchAddressFragment()
+            findNavController().navigate(direction)
         }
     }
 
@@ -193,13 +195,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun getAddress() {
-        lifecycleScope.launch {
-            viewModel.getAddress()
-                .distinctUntilChanged()
-                .collect {
-                    setCameraPosition(it)
-                }
-        }
+        viewModel.getAddress()
     }
 
     private fun setCameraPosition(address: Address?) {

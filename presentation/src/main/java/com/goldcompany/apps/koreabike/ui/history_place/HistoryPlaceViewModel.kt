@@ -1,6 +1,9 @@
 package com.goldcompany.apps.koreabike.ui.history_place
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
