@@ -79,6 +79,11 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun setCameraPositionToMyLocation() {
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -117,6 +122,26 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     private fun observeCurrentAddress() {
         viewModel.currentAddress.observe(viewLifecycleOwner) { address ->
             setCameraPosition(address)
+        }
+    }
+
+    private fun setCameraPosition(address: Address?) {
+        val latitude = address?.y?.toDouble() ?: 37.5643
+        val longitude = address?.x?.toDouble() ?: 126.9801
+
+        if (checkLocationPermission() && address != null) {
+            val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+
+            naverMap.cameraPosition = cameraPosition
+            setUserLocationMarker(latitude, longitude)
+
+        } else if (checkLocationPermission() && address == null) {
+            setCameraPositionToMyLocation()
+        } else {
+            val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
+            setUserLocationMarker(latitude, longitude)
+            naverMap.cameraPosition = cameraPosition
+            naverMap.locationTrackingMode = LocationTrackingMode.None
         }
     }
 
@@ -163,11 +188,9 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setUpSearchNavigation() {
-        binding.searchNavigationPathButton.let {
-            it.setOnClickListener {
-                val direction = BikeMapFragmentDirections.actionMapViewToNavigationFragment()
-                findNavController().navigate(direction)
-            }
+        binding.searchNavigationPathButton.setOnClickListener {
+            val direction = BikeMapFragmentDirections.actionMapViewToNavigationFragment()
+            findNavController().navigate(direction)
         }
     }
 
@@ -198,26 +221,6 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
         viewModel.getAddress()
     }
 
-    private fun setCameraPosition(address: Address?) {
-        val latitude = address?.y?.toDouble() ?: 37.5643
-        val longitude = address?.x?.toDouble() ?: 126.9801
-
-        if (checkLocationPermission() && address != null) {
-            val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
-
-            naverMap.cameraPosition = cameraPosition
-            setUserLocationMarker(latitude, longitude)
-
-        } else if (checkLocationPermission() && address == null) {
-            setCameraPositionToMyLocation()
-        } else {
-            val cameraPosition = CameraPosition(LatLng(latitude, longitude), 15.0)
-            setUserLocationMarker(latitude, longitude)
-            naverMap.cameraPosition = cameraPosition
-            naverMap.locationTrackingMode = LocationTrackingMode.None
-        }
-    }
-
     private fun checkLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireActivity(),
@@ -232,10 +235,5 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
             iconTintColor = resources.getColor(R.color.colorPrimary, resources.newTheme())
             map = naverMap
         }
-    }
-
-    private fun setCameraPositionToMyLocation() {
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 }
