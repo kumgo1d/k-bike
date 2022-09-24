@@ -46,8 +46,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentBikeMapBinding
     private lateinit var naverMap: NaverMap
 
-    private var locationMarker = Marker()
-
+    private val locationMarker = Marker()
     private val placeMarkers = mutableListOf<Marker>()
     private val viewModel by viewModels<BikeMapViewModel>()
     private val requestPermissionLauncher =
