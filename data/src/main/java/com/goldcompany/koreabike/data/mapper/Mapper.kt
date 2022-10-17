@@ -21,6 +21,16 @@ fun mapperApiAddressToAddress(apiAddress: ApiAddress): Address {
     )
 }
 
+suspend fun mapperAddressEntityListToListAddress(list: List<AddressEntity>): List<Address> {
+    val addressList = mutableListOf<Address>()
+
+    list.forEach {
+        addressList.add(mapperUserAddressEntityToAddress(it))
+    }
+
+    return addressList
+}
+
 fun mapperUserAddressEntityToAddress(entity: AddressEntity): Address {
     return Address(
         id = entity.id,

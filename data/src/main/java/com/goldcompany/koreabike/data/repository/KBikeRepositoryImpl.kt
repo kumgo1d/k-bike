@@ -1,14 +1,17 @@
 package com.goldcompany.koreabike.data.repository
 
-import com.goldcompany.koreabike.data.mapper.mapperAddressToUserAddressEntity
-import com.goldcompany.koreabike.data.mapper.mapperApiAddressToAddress
-import com.goldcompany.koreabike.data.mapper.mapperApiRouteToNavigation
-import com.goldcompany.koreabike.data.mapper.mapperUserAddressEntityToAddress
+import com.goldcompany.koreabike.data.mapper.*
 import com.goldcompany.koreabike.data.repository.local.KBikeLocalDataSource
 import com.goldcompany.koreabike.data.repository.remote.KBikeRemoteDataSource
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.model.navigation.Navigation
 import com.goldcompany.koreabike.domain.repository.KBikeRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 class KBikeRepositoryImpl(
     private val localDataSource: KBikeLocalDataSource,
@@ -34,9 +37,9 @@ class KBikeRepositoryImpl(
         return mapperApiRouteToNavigation(remoteDataSource.getNavigationPath(start, end).apiNavigationRoute.comfort)
     }
 
-    override suspend fun getAllAddress(): List<Address> {
-        return localDataSource.getAllAddress().map {
-            mapperUserAddressEntityToAddress(it)
+    override suspend fun getAllAddress(): Flow<List<Address>> = withContext(Dispatchers.IO) {
+        return@withContext localDataSource.getAllAddress().map {
+            mapperAddressEntityListToListAddress(it)
         }
     }
 

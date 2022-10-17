@@ -7,11 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentHistoryPlaceBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HistoryPlaceFragment : Fragment() {
@@ -27,23 +32,37 @@ class HistoryPlaceFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_history_place, container, false)
 
-        setAdapter()
+        initPlacesAdapter()
+        getHistoryPlaces()
         addListener()
 
         return binding.root
     }
 
-    private fun setAdapter() {
+    private fun initPlacesAdapter() {
         adapter = FavoritePlaceAdapter(
             setCurrentAddress = viewModel::setCurrentAddress,
             deleteAddress = viewModel::deleteAddress
         )
         binding.favoriteAddressList.adapter = adapter
         binding.favoriteAddressList.addItemDecoration(AddressAdapterDecoration())
+    }
 
-        viewModel.addressList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+    private fun getHistoryPlaces() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collectLatest { uiState ->
+                    when (uiState) {
+                        is HistoryPlacesUiState.Success -> adapter.submitList(uiState.items)
+                        is HistoryPlacesUiState.Exception -> showError(uiState.e)
+                    }
+                }
+            }
         }
+    }
+
+    private fun showError(e: Throwable) {
+
     }
 
     private fun addListener() {

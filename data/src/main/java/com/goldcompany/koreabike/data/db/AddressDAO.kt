@@ -1,11 +1,12 @@
 package com.goldcompany.koreabike.data.db
 
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AddressDAO {
     @Query("select * from user_address ORDER BY date DESC")
-    suspend fun getAll(): List<AddressEntity>
+    fun getAll(): Flow<List<AddressEntity>>
 
     @Query("select * from user_address WHERE selected = 1 LIMIT 1")
     suspend fun getAddress(): AddressEntity?

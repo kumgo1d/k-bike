@@ -2,6 +2,7 @@ package com.goldcompany.koreabike.domain.repository
 
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.model.navigation.Navigation
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Singleton
 
 @Singleton
@@ -19,7 +20,7 @@ interface KBikeRepository {
         end: String
     ): Navigation
 
-    suspend fun getAllAddress(): List<Address>
+    suspend fun getAllAddress(): Flow<List<Address>>
 
     suspend fun getAddress(): Address?
 

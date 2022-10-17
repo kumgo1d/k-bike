@@ -4,12 +4,13 @@ import com.goldcompany.koreabike.data.db.AddressDAO
 import com.goldcompany.koreabike.data.db.AddressEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Singleton
 
 @Singleton
 interface KBikeLocalDataSource {
-    suspend fun getAllAddress(): List<AddressEntity>
+    suspend fun getAllAddress(): Flow<List<AddressEntity>>
 
     suspend fun getAddress(): AddressEntity?
 
@@ -23,7 +24,7 @@ interface KBikeLocalDataSource {
 class KBikeLocalDataSourceImpl(private val addressDAO: AddressDAO): KBikeLocalDataSource {
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    override suspend fun getAllAddress(): List<AddressEntity> = withContext(ioDispatcher) {
+    override suspend fun getAllAddress(): Flow<List<AddressEntity>> = withContext(ioDispatcher) {
         return@withContext addressDAO.getAll()
     }
 
