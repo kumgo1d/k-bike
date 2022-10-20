@@ -1,5 +1,6 @@
 package com.goldcompany.koreabike.domain.repository
 
+import com.goldcompany.koreabike.domain.model.Result
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.model.navigation.Navigation
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +21,7 @@ interface KBikeRepository {
         end: String
     ): Navigation
 
-    suspend fun getAllAddress(): Flow<List<Address>>
+    fun getAllAddress(): Flow<Result<List<Address>>>
 
     suspend fun getAddress(): Address?
 

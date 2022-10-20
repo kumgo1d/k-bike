@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 interface KBikeLocalDataSource {
-    suspend fun getAllAddress(): Flow<List<AddressEntity>>
+    fun getAllAddress(): Flow<List<AddressEntity>>
 
     suspend fun getAddress(): AddressEntity?
 
@@ -24,8 +24,8 @@ interface KBikeLocalDataSource {
 class KBikeLocalDataSourceImpl(private val addressDAO: AddressDAO): KBikeLocalDataSource {
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    override suspend fun getAllAddress(): Flow<List<AddressEntity>> = withContext(ioDispatcher) {
-        return@withContext addressDAO.getAll()
+    override fun getAllAddress(): Flow<List<AddressEntity>> {
+        return addressDAO.getAll()
     }
 
     override suspend fun getAddress(): AddressEntity? = withContext(ioDispatcher) {

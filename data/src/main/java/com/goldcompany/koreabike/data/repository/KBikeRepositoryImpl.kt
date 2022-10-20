@@ -3,6 +3,7 @@ package com.goldcompany.koreabike.data.repository
 import com.goldcompany.koreabike.data.mapper.*
 import com.goldcompany.koreabike.data.repository.local.KBikeLocalDataSource
 import com.goldcompany.koreabike.data.repository.remote.KBikeRemoteDataSource
+import com.goldcompany.koreabike.domain.model.Result
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.model.navigation.Navigation
 import com.goldcompany.koreabike.domain.repository.KBikeRepository
@@ -37,9 +38,9 @@ class KBikeRepositoryImpl(
         return mapperApiRouteToNavigation(remoteDataSource.getNavigationPath(start, end).apiNavigationRoute.comfort)
     }
 
-    override suspend fun getAllAddress(): Flow<List<Address>> = withContext(Dispatchers.IO) {
-        return@withContext localDataSource.getAllAddress().map {
-            mapperAddressEntityListToListAddress(it)
+    override fun getAllAddress(): Flow<Result<List<Address>>> {
+        return localDataSource.getAllAddress().map {
+            Result.Success(mapperAddressEntityListToListAddress(it))
         }
     }
 
