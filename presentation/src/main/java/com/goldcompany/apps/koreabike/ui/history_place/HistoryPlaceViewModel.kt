@@ -2,24 +2,15 @@ package com.goldcompany.apps.koreabike.ui.history_place
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.goldcompany.koreabike.domain.model.address.Address
+import com.goldcompany.apps.koreabike.util.Async
 import com.goldcompany.koreabike.domain.model.Result
+import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.model.succeeded
 import com.goldcompany.koreabike.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-sealed class HistoryPlacesUiState {
-    data class Success(val items: List<Address>): HistoryPlacesUiState()
-    data class Exception(val e: Throwable): HistoryPlacesUiState()
-}
-
-sealed class Async<out T> {
-    object Loading : Async<Nothing>()
-    data class Success<out T>(val data: T) : Async<T>()
-}
 
 data class PlaceUiState(
     val isLoading: Boolean = true,
@@ -36,9 +27,8 @@ class HistoryPlaceViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
-    private val _itemsAsync =
-        combine(getAllHistoryAddressUseCase.invoke()) {
-            getAddressList(it.component1())
+    private val _itemsAsync = getAllHistoryAddressUseCase().map {
+            getAddressList(it)
         }.map { Async.Success(it) }
         .onStart<Async<List<Address>>> { emit(Async.Loading) }
 
