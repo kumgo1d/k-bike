@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.compose.material.MaterialTheme
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
+import com.goldcompany.apps.koreabike.util.ListPageTopAppBars
 import com.goldcompany.apps.koreabike.util.hideKeyboard
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +33,16 @@ class NavigationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNavigationBinding.inflate(layoutInflater, container, false)
+            .apply {
+                navigationAppBar.setContent {
+                    MaterialTheme {
+                        ListPageTopAppBars(title = R.string.navigation_fragment_title) {
+                            findNavController().popBackStack()
+                        }
+                    }
+                }
+            }
+
         setAdapter()
         return binding.root
     }
@@ -94,10 +106,6 @@ class NavigationFragment : Fragment() {
         binding.parentLayout.setOnTouchListener { _, _ ->
             clearFocus()
             return@setOnTouchListener true
-        }
-
-        binding.navigationAppBar.navigationBackButton.setOnClickListener {
-            findNavController().popBackStack()
         }
 
         binding.navigateButton.setOnClickListener {

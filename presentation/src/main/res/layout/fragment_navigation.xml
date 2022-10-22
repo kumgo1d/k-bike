@@ -9,13 +9,13 @@
         android:layout_height="match_parent"
         tools:context=".ui.navigation.NavigationFragment">
 
-        <include
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/navigation_app_bar"
-            layout="@layout/item_app_bar"
-            app:title="@{@string/navigation_fragment_title}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/navigation_start_edit_layout"

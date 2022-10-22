@@ -33,4 +33,5 @@
     <string name="navigation_fragment_title">내비게이션</string>
     <string name="favorite_list">즐겨찾기</string>
     <string name="search_list">검색목록</string>
+    <string name="back_to_page">이전화면</string>
 </resources>

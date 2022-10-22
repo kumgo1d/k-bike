@@ -7,10 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.MaterialTheme
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationResultBinding
+import com.goldcompany.apps.koreabike.util.ListPageTopAppBars
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
@@ -27,10 +29,18 @@ import com.naver.maps.map.overlay.PathOverlay
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_navigation_result, container, false)
+        binding = DataBindingUtil.inflate<FragmentNavigationResultBinding?>(layoutInflater, R.layout.fragment_navigation_result, container, false)
+            .apply {
+                navigationMapAppBar.setContent {
+                    MaterialTheme {
+                        ListPageTopAppBars(title = R.string.navigation_fragment_title) {
+                            findNavController().popBackStack()
+                        }
+                    }
+                }
+            }
 
         startMap()
-        setListener()
         setDistanceAndDuration()
 
         return binding.root
@@ -42,12 +52,6 @@ import com.naver.maps.map.overlay.PathOverlay
             childFragmentManager.beginTransaction().replace(R.id.navigation_map_container, it).commit()
         }
         mapFragment.getMapAsync(this)
-    }
-
-    private fun setListener() {
-        binding.navigationMapAppBar.navigationBackButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
     }
 
     private fun setDistanceAndDuration() {

@@ -1,12 +1,12 @@
 package com.goldcompany.apps.koreabike.ui.history_place
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.compose.material.MaterialTheme
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentHistoryPlaceBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
+import com.goldcompany.apps.koreabike.util.ListPageTopAppBars
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -32,11 +33,19 @@ class HistoryPlaceFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_history_place, container, false)
+        binding = DataBindingUtil.inflate<FragmentHistoryPlaceBinding?>(layoutInflater, R.layout.fragment_history_place, container, false)
+            .apply {
+                appBar.setContent {
+                    MaterialTheme {
+                        ListPageTopAppBars(title = R.string.search_list) {
+                            findNavController().popBackStack()
+                        }
+                    }
+                }
+            }
 
         initPlacesAdapter()
         getHistoryPlaces()
-        addListener()
 
         return binding.root
     }
@@ -76,11 +85,5 @@ class HistoryPlaceFragment : Fragment() {
     
     private fun stopLoading() {
         binding.favoriteAddressLoading.visibility = View.GONE
-    }
-
-    private fun addListener() {
-        binding.appBar.navigationBackButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
     }
 }
