@@ -22,7 +22,8 @@ fun HistoryPlaceItemView(
     onClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(horizontal = 8.dp),
         onClick = onClick
     ) {
@@ -46,7 +47,7 @@ fun HistoryPlaceItemView(
             contentDescription = null,
             modifier = Modifier
                 .wrapContentWidth(Alignment.End)
-                .clickable { deleteAddress },
+                .clickable(onClick = deleteAddress),
             alignment = Alignment.TopEnd
         )
     }

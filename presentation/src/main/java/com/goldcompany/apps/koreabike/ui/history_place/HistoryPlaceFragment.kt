@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentHistoryPlaceBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -58,6 +59,11 @@ class HistoryPlaceFragment : Fragment() {
                     } else {
                         adapter.submitList(uiState.items)
                         stopLoading()
+                    }
+
+                    uiState.message?.let {
+                        Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
+                        viewModel.shownMessage()
                     }
                 }
             }

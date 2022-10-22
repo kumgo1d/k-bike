@@ -17,7 +17,6 @@ class FavoritePlaceAdapter(
 ): ListAdapter<Address, FavoritePlaceAdapter.ViewHolder>(AddressDiffUtil) {
 
     inner class ViewHolder(composeView: ComposeView) : RecyclerView.ViewHolder(composeView) {
-        private val SET_ITEM_DELAY = 300L
         fun bind(address: Address) {
             (itemView as ComposeView).setContent {
                 MaterialTheme {
@@ -25,9 +24,6 @@ class FavoritePlaceAdapter(
                         address = address,
                         deleteAddress = {
                             deleteAddress(address)
-                            val list = currentList.toMutableList()
-                            list.remove(address)
-                            submitList(list)
                         },
                         onClick = {
                             CoroutineScope(Dispatchers.Main).launch {
@@ -35,7 +31,6 @@ class FavoritePlaceAdapter(
                                     setCurrentAddress(address)
                                 }
                                 setAddress.await()
-                                delay(SET_ITEM_DELAY)
                                 Navigation.findNavController(itemView).navigate(HistoryPlaceFragmentDirections.actionGlobalMapView())
                             }
                         }
