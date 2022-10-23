@@ -1,5 +1,6 @@
 package com.goldcompany.apps.koreabike.util
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,7 +14,7 @@ import com.goldcompany.apps.koreabike.R
 
 @Composable
 fun ListPageTopAppBars(
-    title: Int,
+    @StringRes title: Int,
     navigateBack: () -> Unit
 ) {
     TopAppBar(

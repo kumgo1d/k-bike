@@ -7,16 +7,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-<!--        <include-->
-<!--            android:id="@+id/app_bar"-->
-<!--            layout="@layout/item_app_bar"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:title="@{@string/search_list}" />-->
-
         <androidx.compose.ui.platform.ComposeView
             android:id="@+id/app_bar"
             android:layout_width="0dp"
@@ -26,7 +16,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/favorite_address_list"
+            android:id="@+id/history_address_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

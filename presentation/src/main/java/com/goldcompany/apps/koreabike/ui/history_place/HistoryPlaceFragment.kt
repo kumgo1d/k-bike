@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -35,10 +36,16 @@ class HistoryPlaceFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate<FragmentHistoryPlaceBinding?>(layoutInflater, R.layout.fragment_history_place, container, false)
             .apply {
-                appBar.setContent {
-                    MaterialTheme {
-                        ListPageTopAppBars(title = R.string.search_list) {
-                            findNavController().popBackStack()
+                appBar.apply {
+                    setViewCompositionStrategy(
+                        ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+                    )
+
+                    setContent {
+                        MaterialTheme {
+                            ListPageTopAppBars(title = R.string.search_list) {
+                                findNavController().popBackStack()
+                            }
                         }
                     }
                 }
@@ -55,8 +62,8 @@ class HistoryPlaceFragment : Fragment() {
             setCurrentAddress = viewModel::setCurrentAddress,
             deleteAddress = viewModel::deleteAddress
         )
-        binding.favoriteAddressList.adapter = adapter
-        binding.favoriteAddressList.addItemDecoration(AddressAdapterDecoration())
+        binding.historyAddressList.adapter = adapter
+        binding.historyAddressList.addItemDecoration(AddressAdapterDecoration())
     }
 
     private fun getHistoryPlaces() {

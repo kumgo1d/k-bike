@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
@@ -31,10 +32,15 @@ import com.naver.maps.map.overlay.PathOverlay
     ): View {
         binding = DataBindingUtil.inflate<FragmentNavigationResultBinding?>(layoutInflater, R.layout.fragment_navigation_result, container, false)
             .apply {
-                navigationMapAppBar.setContent {
-                    MaterialTheme {
-                        ListPageTopAppBars(title = R.string.navigation_fragment_title) {
-                            findNavController().popBackStack()
+                navigationMapAppBar.apply {
+                    setViewCompositionStrategy(
+                        ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+                    )
+                    setContent {
+                        MaterialTheme {
+                            ListPageTopAppBars(title = R.string.navigation_fragment_title) {
+                                findNavController().popBackStack()
+                            }
                         }
                     }
                 }

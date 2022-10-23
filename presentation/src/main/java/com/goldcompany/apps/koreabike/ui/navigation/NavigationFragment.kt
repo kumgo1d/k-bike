@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -34,10 +35,15 @@ class NavigationFragment : Fragment() {
     ): View {
         binding = FragmentNavigationBinding.inflate(layoutInflater, container, false)
             .apply {
-                navigationAppBar.setContent {
-                    MaterialTheme {
-                        ListPageTopAppBars(title = R.string.navigation_fragment_title) {
-                            findNavController().popBackStack()
+                navigationAppBar.apply {
+                    setViewCompositionStrategy(
+                        ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+                    )
+                    setContent {
+                        MaterialTheme {
+                            ListPageTopAppBars(title = R.string.navigation_fragment_title) {
+                                findNavController().popBackStack()
+                            }
                         }
                     }
                 }
