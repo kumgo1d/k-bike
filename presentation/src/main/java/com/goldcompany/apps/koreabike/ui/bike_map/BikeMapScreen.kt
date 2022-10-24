@@ -48,7 +48,7 @@ private fun BikeMap(
     initialPosition: LatLng
 ) {
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(initialPosition, 10f)
+        position = CameraPosition.fromLatLngZoom(initialPosition, 16f)
     }
 
     GoogleMap(
@@ -57,8 +57,7 @@ private fun BikeMap(
     ) {
         Marker(
             state = MarkerState(position = initialPosition),
-            title = stringResource(id = R.string.current_location),
-            snippet = stringResource(id = R.string.current_location)
+            title = stringResource(id = R.string.current_location)
         )
     }
 }
@@ -70,7 +69,7 @@ private fun BikeMapPreView() {
         Surface {
             BikeMap(
                 modifier = Modifier.fillMaxSize(),
-                initialPosition = LatLng(37.5643, 126.9081)
+                initialPosition = LatLng(37.541, 126.986)
             )
         }
     }

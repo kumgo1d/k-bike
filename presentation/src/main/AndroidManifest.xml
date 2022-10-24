@@ -28,5 +28,10 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="fe7iwsbkl5" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCIbCbnGD46QmOLmmLW0iRvYVEMf6mJOhQ" />
+
     </application>
+
 </manifest>

@@ -17,3 +17,4 @@
 app/release/app-release.aab
 key/pwd.txt
 /gradle.properties
+presentation/src/main/AndroidManifest.xml
