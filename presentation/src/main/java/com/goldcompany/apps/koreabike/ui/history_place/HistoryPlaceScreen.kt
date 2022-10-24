@@ -9,9 +9,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.goldcompany.apps.koreabike.R
@@ -63,7 +65,7 @@ private fun AddressLazyColumn(
         modifier = modifier
     ) {
         items(addressList) { address ->
-            HistoryPlaceItemView(
+            HistoryPlaceAddressItem(
                 address = address,
                 deleteAddress = { deleteAddress(address) },
                 onClick = { onClick(address) }
@@ -73,7 +75,7 @@ private fun AddressLazyColumn(
 }
 
 @Composable
-private fun HistoryPlaceItemView(
+private fun HistoryPlaceAddressItem(
     address: Address,
     deleteAddress: (Address) -> Unit,
     onClick: (Address) -> Unit
@@ -81,25 +83,48 @@ private fun HistoryPlaceItemView(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = dimensionResource(id = R.dimen.list_item_horizontal_margin))
             .clickable { onClick(address) }
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_search_button),
-            contentDescription = null,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            contentDescription = null
         )
-        Column {
-            Text(text = address.placeName)
-            Text(text = address.addressName)
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 8.dp)
+        ) {
+            Text(
+                text = address.placeName,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = address.addressName,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
         Image(
             painter = painterResource(id = R.drawable.ic_delete_button),
             contentDescription = null,
             modifier = Modifier
-                .wrapContentWidth(Alignment.End)
-                .clickable{ deleteAddress(address) },
-            alignment = Alignment.TopEnd
+                .clickable { deleteAddress(address) }
         )
+    }
+}
+
+@Preview
+@Composable
+private fun HistoryPlaceAddressItemPreView() {
+    MaterialTheme {
+        Surface {
+            HistoryPlaceAddressItem(
+                address = Address("", "addressNameaddressNameaddressNameaddressName", "", "", "", "placeName", "", "", ""),
+                deleteAddress = { },
+                onClick = { }
+            )
+        }
     }
 }
