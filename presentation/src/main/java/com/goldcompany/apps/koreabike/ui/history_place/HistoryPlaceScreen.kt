@@ -12,11 +12,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.goldcompany.apps.koreabike.R
+import com.goldcompany.apps.koreabike.util.AddressText
 import com.goldcompany.apps.koreabike.util.ListPageTopAppBars
 import com.goldcompany.koreabike.domain.model.address.Address
 
@@ -35,7 +35,7 @@ fun HistoryPlaceScreen(
                 navigateBack = { }
             )
         },
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize()
     ) { paddingValues ->
         val uiState by viewModel.uiState.collectAsState()
 
@@ -95,16 +95,8 @@ private fun HistoryPlaceAddressItem(
                 .weight(1f)
                 .padding(horizontal = 8.dp)
         ) {
-            Text(
-                text = address.placeName,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = address.addressName,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            AddressText(text = address.placeName)
+            AddressText(text = address.addressName)
         }
         Image(
             painter = painterResource(id = R.drawable.ic_delete_button),
