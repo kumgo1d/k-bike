@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -54,12 +54,13 @@
                     android:id="@+id/search_address_button"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingVertical="8dp"
-                    android:paddingHorizontal="10dp"
                     android:background="@android:color/white"
+                    android:focusable="false"
                     android:hint="@string/search_address_hint2"
                     android:maxLines="1"
-                    android:focusable="false"/>
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="8dp"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </com.google.android.material.card.MaterialCardView>
 

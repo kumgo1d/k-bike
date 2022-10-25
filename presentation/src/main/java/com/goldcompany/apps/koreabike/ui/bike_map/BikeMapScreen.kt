@@ -1,13 +1,20 @@
 package com.goldcompany.apps.koreabike.ui.bike_map
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.goldcompany.apps.koreabike.R
 import com.google.android.gms.maps.model.CameraPosition
@@ -21,8 +28,9 @@ import com.google.maps.android.compose.rememberCameraPositionState
 @Composable
 fun BikeMapScreen(
     modifier: Modifier = Modifier,
-    viewModel: BikeMapViewModel = viewModel(),
-    scaffoldState: ScaffoldState = rememberScaffoldState()
+    viewModel: BikeMapViewModel = hiltViewModel(),
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    navigateSearchAddress: () -> Unit
 ) {
     Scaffold(
         scaffoldState = scaffoldState,
@@ -38,6 +46,10 @@ fun BikeMapScreen(
                 .padding(paddingValues)
                 .fillMaxSize(),
             initialPosition = initialPosition
+        )
+
+        SearchAddressBar(
+            navigateSearchAddress
         )
     }
 }
@@ -62,6 +74,30 @@ private fun BikeMap(
     }
 }
 
+@Composable
+private fun SearchAddressBar(
+    navigateSearchAddress: () -> Unit
+) {
+    Button(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        shape = Shapes(medium = RoundedCornerShape(16.dp)).medium,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = colorResource(id = R.color.white)
+        ),
+        border = BorderStroke(1.dp, colorResource(id = R.color.colorPrimary)),
+        onClick = navigateSearchAddress,
+        content = {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = stringResource(id = R.string.search_address_hint2),
+                textAlign = TextAlign.Start
+            )
+        }
+    )
+}
+
 @Preview
 @Composable
 private fun BikeMapPreView() {
@@ -71,6 +107,7 @@ private fun BikeMapPreView() {
                 modifier = Modifier.fillMaxSize(),
                 initialPosition = LatLng(37.541, 126.986)
             )
+            SearchAddressBar({ })
         }
     }
 }

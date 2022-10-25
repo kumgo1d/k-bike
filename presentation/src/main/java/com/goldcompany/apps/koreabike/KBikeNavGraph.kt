@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.goldcompany.apps.koreabike.ui.bike_map.BikeMapScreen
 import com.goldcompany.apps.koreabike.ui.history_place.HistoryPlaceScreen
+import com.goldcompany.apps.koreabike.ui.search_address.SearchAddressScreen
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -16,14 +17,27 @@ fun KBikeNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    startDestination: String = "home"
+    startDestination: String = KBikeDestinations.BIKE_MAP_SCREEN
 ) {
     NavHost(
         modifier = modifier,
         navController = navController,
         startDestination = startDestination
     ) {
-        composable("home") { BikeMapScreen() }
-        composable("history") { HistoryPlaceScreen() }
+        composable(KBikeDestinations.BIKE_MAP_SCREEN) {
+            BikeMapScreen(
+                navigateSearchAddress = {
+                    navController.navigate(KBikeDestinations.HISTORY_ADDRESS_SCREEN)
+                }
+            )
+        }
+        composable(KBikeDestinations.SEARCH_ADDRESS_SCREEN) {
+            SearchAddressScreen()
+        }
+        composable(KBikeDestinations.HISTORY_ADDRESS_SCREEN) {
+            HistoryPlaceScreen(
+                navigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
