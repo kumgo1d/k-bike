@@ -7,6 +7,16 @@ import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.model.navigation.Navigation
 import com.goldcompany.koreabike.domain.model.navigation.NavigationTrack
 
+fun mapperApiAddressListToAddressList(list: List<ApiAddress>): List<Address> {
+    val addressList = mutableListOf<Address>()
+
+    list.forEach {
+        addressList.add(mapperApiAddressToAddress(it))
+    }
+
+    return addressList
+}
+
 fun mapperApiAddressToAddress(apiAddress: ApiAddress): Address {
     return Address(
         id = apiAddress.id,
@@ -21,7 +31,7 @@ fun mapperApiAddressToAddress(apiAddress: ApiAddress): Address {
     )
 }
 
-suspend fun mapperAddressEntityListToListAddress(list: List<AddressEntity>): List<Address> {
+fun mapperAddressEntityListToAddressList(list: List<AddressEntity>): List<Address> {
     val addressList = mutableListOf<Address>()
 
     list.forEach {

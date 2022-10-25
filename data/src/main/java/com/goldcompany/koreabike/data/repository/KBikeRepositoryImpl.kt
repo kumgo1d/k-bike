@@ -7,20 +7,16 @@ import com.goldcompany.koreabike.domain.model.Result
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.model.navigation.Navigation
 import com.goldcompany.koreabike.domain.repository.KBikeRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 
 class KBikeRepositoryImpl(
     private val localDataSource: KBikeLocalDataSource,
     private val remoteDataSource: KBikeRemoteDataSource
 ) : KBikeRepository {
-    override suspend fun searchAddress(address: String, page: Int): List<Address> {
-        return remoteDataSource.searchAddress(address, page).addressList.map {
-            mapperApiAddressToAddress(it)
+    override fun searchAddress(address: String, page: Int): Flow<Result<List<Address>>> {
+        return remoteDataSource.searchAddress(address, page).map {
+            Result.Success(mapperApiAddressListToAddressList(it))
         }
     }
 
@@ -40,7 +36,7 @@ class KBikeRepositoryImpl(
 
     override fun getAllAddress(): Flow<Result<List<Address>>> {
         return localDataSource.getAllAddress().map {
-            Result.Success(mapperAddressEntityListToListAddress(it))
+            Result.Success(mapperAddressEntityListToAddressList(it))
         }
     }
 
