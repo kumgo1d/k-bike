@@ -10,5 +10,7 @@ object KBikeDestinations {
 }
 
 class KBikeNavigationActions(private val navController: NavHostController) {
-
+    fun popBackStack() {
+        navController.popBackStack()
+    }
 }

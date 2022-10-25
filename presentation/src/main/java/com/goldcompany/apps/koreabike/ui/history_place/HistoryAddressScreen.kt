@@ -11,12 +11,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.util.AddressText
 import com.goldcompany.apps.koreabike.util.ListPageTopAppBars
@@ -45,7 +45,7 @@ fun HistoryPlaceScreen(
         if (uiState.isLoading) {
             Box(modifier.fillMaxSize()) {
                 CircularProgressIndicator(
-                    color = MaterialTheme.colors.onSurface,
+                    color = colorResource(id = R.color.colorPrimary),
                     modifier = Modifier.align(Alignment.Center)
                 )
             }

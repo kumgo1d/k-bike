@@ -32,11 +32,13 @@ fun KBikeNavGraph(
             )
         }
         composable(KBikeDestinations.SEARCH_ADDRESS_SCREEN) {
-            SearchAddressScreen()
+            SearchAddressScreen(
+                navigateBack = { KBikeNavigationActions(navController).popBackStack() }
+            )
         }
         composable(KBikeDestinations.HISTORY_ADDRESS_SCREEN) {
             HistoryPlaceScreen(
-                navigateBack = { navController.popBackStack() }
+                navigateBack = { KBikeNavigationActions(navController).popBackStack() }
             )
         }
     }
