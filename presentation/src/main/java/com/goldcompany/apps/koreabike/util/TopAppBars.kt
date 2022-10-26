@@ -21,16 +21,20 @@ fun ListPageTopAppBars(
         title = { 
             Text(
                 text = stringResource(id = title),
-                color = colorResource(id = R.color.black)
+                color = colorResource(id = R.color.white)
             )
         },
         navigationIcon = {
             IconButton(onClick = navigateBack) {
-                Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_to_page))
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(id = R.string.back_to_page),
+                    tint = colorResource(id = R.color.white)
+                )
             }
         },
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = colorResource(id = R.color.white)
+        backgroundColor = colorResource(id = R.color.colorPrimary)
     )
 }
 

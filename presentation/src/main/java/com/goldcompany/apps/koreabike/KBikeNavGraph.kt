@@ -27,7 +27,7 @@ fun KBikeNavGraph(
         composable(KBikeDestinations.BIKE_MAP_SCREEN) {
             BikeMapScreen(
                 navigateSearchAddress = {
-                    navController.navigate(KBikeDestinations.HISTORY_ADDRESS_SCREEN)
+                    navController.navigate(KBikeDestinations.SEARCH_ADDRESS_SCREEN)
                 }
             )
         }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.goldcompany.apps.koreabike.util.Async
 import com.goldcompany.koreabike.domain.model.Result
 import com.goldcompany.koreabike.domain.model.address.Address
+import com.goldcompany.koreabike.domain.model.succeeded
 import com.goldcompany.koreabike.domain.usecase.GetCurrentAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.InsertAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase
@@ -34,10 +35,36 @@ class SearchAddressViewModel @Inject constructor(
     private val _message: MutableStateFlow<Int?> = MutableStateFlow(null)
     private val _place: MutableStateFlow<String?> = MutableStateFlow(null)
     private val _page = MutableStateFlow(1)
-    private val _addressAsync =
-       combine(_place, _page) { place, page ->
-           searchAddress(place.toString(), page)
-       }
+    private val _addressAsync = _place.combine(_page) { place, page ->
+        searchAddress(place, page)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = Async.Loading
+    )
+
+    val uiState: StateFlow<SearchAddressUiState> = combine(
+        _isLoading, _message, _addressAsync
+    ) { isLoading, message, addressAsync ->
+        when (addressAsync) {
+            Async.Loading -> {
+                SearchAddressUiState(
+                    isLoading = true
+                )
+            }
+            is Async.Success -> {
+                SearchAddressUiState(
+                    isLoading = false,
+                    message = message,
+                    items = addressAsync.data
+                )
+            }
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = SearchAddressUiState(isLoading = true)
+    )
 
     private val _addressList = MutableLiveData<List<Address>>()
     val addressList: LiveData<List<Address>> = _addressList
@@ -49,13 +76,21 @@ class SearchAddressViewModel @Inject constructor(
         }
     }
 
-    fun searchAddress(place: String, page: Int): Async<List<Address>?> {
-        searchAddressUseCase(place, page).map { searchResult ->
-            if (searchResult is Result.Success) {
-                return@map Async.Success(searchResult.data)
-            } else {
-                return@map Async.Success(null)
+    fun setSearchPlace(place: String) {
+        _place.value = place
+        _page.value = 1
+    }
+
+    private fun searchAddress(place: String?, page: Int): Async<List<Address>> {
+        if (place != null) {
+            searchAddressUseCase(place, page).map { searchResult ->
+                if (searchResult.succeeded && searchResult is Result.Success) {
+                    return@map Async.Success(searchResult.data)
+                } else {
+                    return@map Async.Success(emptyList())
+                }
             }
         }
+        return Async.Success(emptyList())
     }
 }

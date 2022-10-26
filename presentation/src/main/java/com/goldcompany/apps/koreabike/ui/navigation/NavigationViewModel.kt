@@ -53,7 +53,7 @@ class NavigationViewModel @Inject constructor(
     fun searchAddress(address: String, page: Int) {
         viewModelScope.launch {
             val response = searchAddressUseCase(address, page)
-            _addressList.postValue(response)
+//            _addressList.postValue(response)
         }
     }
 
