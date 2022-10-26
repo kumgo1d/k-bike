@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
-import com.goldcompany.apps.koreabike.util.ListPageTopAppBars
+import com.goldcompany.apps.koreabike.util.ListPageTopAppBar
 import com.goldcompany.apps.koreabike.util.hideKeyboard
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +41,7 @@ class NavigationFragment : Fragment() {
                     )
                     setContent {
                         MaterialTheme {
-                            ListPageTopAppBars(title = R.string.navigation_fragment_title) {
+                            ListPageTopAppBar(title = R.string.navigation_fragment_title) {
                                 findNavController().popBackStack()
                             }
                         }

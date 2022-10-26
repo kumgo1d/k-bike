@@ -12,8 +12,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.goldcompany.apps.koreabike.R
 
+enum class SearchAppBarState {
+    OPENED,
+    CLOSED
+}
+
 @Composable
-fun ListPageTopAppBars(
+fun ListPageTopAppBar(
     @StringRes title: Int,
     navigateBack: () -> Unit
 ) {
@@ -40,10 +45,10 @@ fun ListPageTopAppBars(
 
 @Preview
 @Composable
-private fun AddressListTopAppBarsPreview() {
+private fun ListPageTopAppBarPreview() {
     MaterialTheme {
         Surface {
-            ListPageTopAppBars(R.string.app_name, { })
+            ListPageTopAppBar(R.string.app_name, { })
         }
     }
 }

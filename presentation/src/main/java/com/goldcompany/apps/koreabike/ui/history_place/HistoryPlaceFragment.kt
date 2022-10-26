@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentHistoryPlaceBinding
 import com.goldcompany.apps.koreabike.util.AddressAdapterDecoration
-import com.goldcompany.apps.koreabike.util.ListPageTopAppBars
+import com.goldcompany.apps.koreabike.util.ListPageTopAppBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -43,7 +43,7 @@ class HistoryPlaceFragment : Fragment() {
 
                     setContent {
                         MaterialTheme {
-                            ListPageTopAppBars(title = R.string.search_list) {
+                            ListPageTopAppBar(title = R.string.search_list) {
                                 findNavController().popBackStack()
                             }
                         }

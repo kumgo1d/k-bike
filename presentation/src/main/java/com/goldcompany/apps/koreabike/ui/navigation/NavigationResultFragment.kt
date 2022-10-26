@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.databinding.FragmentNavigationResultBinding
-import com.goldcompany.apps.koreabike.util.ListPageTopAppBars
+import com.goldcompany.apps.koreabike.util.ListPageTopAppBar
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
@@ -38,7 +38,7 @@ import com.naver.maps.map.overlay.PathOverlay
                     )
                     setContent {
                         MaterialTheme {
-                            ListPageTopAppBars(title = R.string.navigation_fragment_title) {
+                            ListPageTopAppBar(title = R.string.navigation_fragment_title) {
                                 findNavController().popBackStack()
                             }
                         }
