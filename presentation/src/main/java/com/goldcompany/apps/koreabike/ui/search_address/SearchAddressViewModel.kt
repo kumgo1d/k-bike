@@ -14,9 +14,11 @@ import com.goldcompany.koreabike.domain.usecase.InsertAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.UpdateCurrentAddressUnselectedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 data class SearchAddressUiState(
@@ -67,12 +69,12 @@ class SearchAddressViewModel @Inject constructor(
         }
     }
 
-    fun searchAddress() {
+    fun searchAddress(place: String) {
         _uiState.update {
             it.copy(isLoading = true)
         }
-        Timber.d("Dfdfdfdf")
-        searchAddressUseCase(_searchAddressState.value, _uiState.value.page).map { searchResult ->
+        viewModelScope.launch {
+            val searchResult = searchAddressUseCase(place, _uiState.value.page)
             if (searchResult is Result.Success) {
                 val addressList = searchResult.data
                 _uiState.update {

@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 interface KBikeRepository {
-    fun searchAddress(address: String, page: Int): Flow<Result<List<Address>>>
+    suspend fun searchAddress(address: String, page: Int): Result<List<Address>>
 
     suspend fun searchNearbyPlaces(
         code: String,

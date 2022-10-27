@@ -53,7 +53,7 @@ fun SearchAddressScreen(
                 onClickForSearch = { viewModel.setSearchAppBarStateOpen() },
                 onClickForSearchClose = { viewModel.setSearchAppBarStateClose() },
                 onSearchPlaceChange = viewModel::setSearchAddressState,
-                onSearch = { viewModel.searchAddress() }
+                onSearch = viewModel::searchAddress
             )
         }
     ) { paddingValues ->
@@ -87,7 +87,7 @@ private fun SearchAppBar(
     onClickForSearch: () -> Unit,
     onClickForSearchClose: () -> Unit,
     onSearchPlaceChange: (String) -> Unit,
-    onSearch: () -> Unit
+    onSearch: (String) -> Unit
 ) {
     when (searchAppBarState) {
         SearchAppBarState.OPENED -> {
@@ -151,7 +151,7 @@ private fun SearchTextField(
     place: String,
     onSearchPlaceChange: (String) -> Unit,
     onClickForSearchClose: () -> Unit,
-    onSearch: () -> Unit
+    onSearch: (String) -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -164,7 +164,6 @@ private fun SearchTextField(
             value = place,
             onValueChange = {
                 onSearchPlaceChange(it)
-                onSearch()
             },
             textStyle = TextStyle(
                 fontFamily = FontFamily.Monospace,
@@ -201,9 +200,10 @@ private fun SearchTextField(
             ),
             keyboardActions = KeyboardActions(
                 onSearch = {
-                    onSearch()
+                    onSearch(place)
                 }
             ),
+            singleLine = true,
             maxLines = 1
         )
     }
@@ -217,7 +217,6 @@ private fun AddressLazyColumn(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(8.dp),
         modifier = modifier
     ) {
         items(addressList) { address ->

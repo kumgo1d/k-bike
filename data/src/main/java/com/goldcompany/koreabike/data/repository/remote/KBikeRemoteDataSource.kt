@@ -1,20 +1,20 @@
 package com.goldcompany.koreabike.data.repository.remote
 
+import android.util.Log
 import com.goldcompany.koreabike.data.BuildConfig
 import com.goldcompany.koreabike.data.api.KakaoApiService
 import com.goldcompany.koreabike.data.api.NaverApiService
-import com.goldcompany.koreabike.data.model.address.ApiAddress
+import com.goldcompany.koreabike.data.model.address.ApiAddressResponse
 import com.goldcompany.koreabike.data.model.driving.ApiNavigationPathResponse
 import com.goldcompany.koreabike.data.model.place.ApiPlaceMarkerResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Singleton
 
 @Singleton
 interface KBikeRemoteDataSource {
-    suspend fun searchAddress(address: String, page: Int): List<ApiAddress>
+    suspend fun searchAddress(address: String, page: Int): ApiAddressResponse
 
     suspend fun searchNearbyPlaces(
         code: String,
@@ -34,13 +34,14 @@ class KBikeRemoteDataSourceImpl(
     private val NAVER_API_KEY = BuildConfig.NAVER_API_KEY
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    override suspend fun searchAddress(address: String, page: Int): List<ApiAddress> = withContext(ioDispatcher) {
-        return@withContext kakaoApiService.
-        searchAddress(
+    override suspend fun searchAddress(address: String, page: Int): ApiAddressResponse = withContext(ioDispatcher) {
+        val call = kakaoApiService.searchAddress(
             KAKAO_API_KEY,
             address = address,
             page = page
-        ).addressList
+        )
+        Log.d("dfdfdf", "call api : $call")
+        return@withContext call
     }
 
     override suspend fun searchNearbyPlaces(
