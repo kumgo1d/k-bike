@@ -76,7 +76,10 @@ class SearchAddressViewModel @Inject constructor(
 
     fun setCurrentAddress(newAddress: Address) {
         viewModelScope.launch {
-            getCurrentAddressUseCase()?.let { updateCurrentAddressUnselectedUseCase(it.id) }
+            val address = getCurrentAddressUseCase()
+            if (address is Result.Success) {
+                address.data?.let { updateCurrentAddressUnselectedUseCase(it.id) }
+            }
             insertAddressUseCase(newAddress)
         }
     }

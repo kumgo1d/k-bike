@@ -217,7 +217,7 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun getAddress() {
-        viewModel.getAddress()
+//        viewModel.getAddress()
     }
 
     private fun checkLocationPermission(): Boolean {

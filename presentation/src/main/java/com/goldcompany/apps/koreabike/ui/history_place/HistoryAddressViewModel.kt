@@ -73,10 +73,13 @@ class HistoryPlaceViewModel @Inject constructor(
         _message.value = null
     }
 
-    fun setCurrentAddress(address: Address) {
+    fun setCurrentAddress(newAddress: Address) {
         viewModelScope.launch {
-            getCurrentAddressUseCase()?.let { updateCurrentAddressUnselectedUseCase(it.id) }
-            insertAddressUseCase(address)
+            val address = getCurrentAddressUseCase()
+            if (address is Result.Success) {
+                address.data?.let { updateCurrentAddressUnselectedUseCase(it.id) }
+            }
+            insertAddressUseCase(newAddress)
         }
     }
 

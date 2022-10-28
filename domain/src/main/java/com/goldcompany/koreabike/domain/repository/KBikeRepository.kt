@@ -23,7 +23,7 @@ interface KBikeRepository {
 
     fun getAllAddress(): Flow<Result<List<Address>>>
 
-    suspend fun getAddress(): Address?
+    suspend fun getAddress(): Result<Address?>
 
     suspend fun updateCurrentAddressUnselected(id: String)
 

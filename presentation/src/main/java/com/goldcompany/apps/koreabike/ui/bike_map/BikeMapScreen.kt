@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -15,16 +17,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.goldcompany.apps.koreabike.R
+import com.goldcompany.apps.koreabike.util.LoadingState
+import com.goldcompany.koreabike.domain.model.address.Address
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BikeMapScreen(
     modifier: Modifier = Modifier,
@@ -36,16 +38,13 @@ fun BikeMapScreen(
         scaffoldState = scaffoldState,
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->
-        val currentAddress = viewModel.currentAddress.observeAsState()
-        val latitude = currentAddress.value?.y?.toDouble() ?: 37.5643
-        val longitude = currentAddress.value?.x?.toDouble() ?: 126.9801
-        val initialPosition = LatLng(latitude, longitude)
+        val uiState by viewModel.uiState.collectAsState()
 
         BikeMap(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
-            initialPosition = initialPosition
+            address = uiState.address
         )
 
         SearchAddressBar(
@@ -57,15 +56,17 @@ fun BikeMapScreen(
 @Composable
 private fun BikeMap(
     modifier: Modifier,
-    initialPosition: LatLng
+    address: Address?
 ) {
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(initialPosition, 16f)
-    }
+    val latitude = address?.y?.toDouble() ?: 37.5643
+    val longitude = address?.x?.toDouble() ?: 126.9801
+    val initialPosition = LatLng(latitude, longitude)
 
     GoogleMap(
         modifier = modifier,
-        cameraPositionState = cameraPositionState
+        cameraPositionState = CameraPositionState(
+            position = CameraPosition.fromLatLngZoom(initialPosition, 16f)
+        )
     ) {
         Marker(
             state = MarkerState(position = initialPosition),
@@ -105,7 +106,7 @@ private fun BikeMapPreView() {
         Surface {
             BikeMap(
                 modifier = Modifier.fillMaxSize(),
-                initialPosition = LatLng(37.541, 126.986)
+                address = null
             )
             SearchAddressBar({ })
         }

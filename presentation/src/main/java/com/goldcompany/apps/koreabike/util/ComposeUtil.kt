@@ -33,13 +33,17 @@ fun AddressText(
 @Composable
 fun DefaultAddressItem(
     address: Address,
-    onClick: (Address) -> Unit
+    onClick: (Address) -> Unit,
+    navigateBack: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(id = R.dimen.list_item_horizontal_margin))
-            .clickable { onClick(address) }
+            .clickable {
+                onClick(address)
+                navigateBack()
+            }
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_search_button),
@@ -63,7 +67,8 @@ private fun DefaultAddressItemPreView() {
         Surface {
             DefaultAddressItem(
                 address = Address("", "addressNameaddressNameaddressNameaddressName", "", "", "", "placeName", "", "", ""),
-                onClick = { }
+                onClick = {},
+                navigateBack = {}
             )
         }
     }

@@ -72,7 +72,8 @@ fun SearchAddressScreen(
                         .fillMaxSize()
                         .padding(paddingValues),
                     addressList = uiState.items,
-                    onClick = {  }
+                    onClick = viewModel::setCurrentAddress,
+                    navigateBack = navigateBack
                 )
             }
             else -> {
@@ -90,7 +91,8 @@ fun SearchAddressScreen(
 private fun SearchAddressColumn(
     modifier: Modifier,
     addressList: List<Address>,
-    onClick: (Address) -> Unit
+    onClick: (Address) -> Unit,
+    navigateBack: () -> Unit
 ) {
     if (addressList.isEmpty()) {
         Text(
@@ -104,7 +106,8 @@ private fun SearchAddressColumn(
         AddressLazyColumn(
             modifier = modifier,
             addressList = addressList,
-            onClick = onClick
+            onClick = onClick,
+            navigateBack = navigateBack
         )
     }
 }
@@ -113,7 +116,8 @@ private fun SearchAddressColumn(
 private fun AddressLazyColumn(
     modifier: Modifier,
     addressList: List<Address>,
-    onClick: (Address) -> Unit
+    onClick: (Address) -> Unit,
+    navigateBack: () -> Unit
 ) {
     LazyColumn(
         contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp),
@@ -123,20 +127,8 @@ private fun AddressLazyColumn(
         items(addressList) { address ->
             DefaultAddressItem(
                 address = address,
-                onClick = onClick
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun DefaultAddressItemPreView() {
-    MaterialTheme {
-        Surface {
-            DefaultAddressItem(
-                address = Address("", "addressNameaddressNameaddressNameaddressName", "", "", "", "placeName", "", "", ""),
-                onClick = { }
+                onClick = onClick,
+                navigateBack = navigateBack
             )
         }
     }
