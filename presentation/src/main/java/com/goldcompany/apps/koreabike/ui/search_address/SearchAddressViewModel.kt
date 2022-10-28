@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.goldcompany.apps.koreabike.util.LoadingState
 import com.goldcompany.apps.koreabike.util.SearchAppBarState
 import com.goldcompany.koreabike.domain.model.Result
 import com.goldcompany.koreabike.domain.model.address.Address
@@ -23,7 +24,7 @@ import javax.inject.Inject
 
 data class SearchAddressUiState(
     val page: Int = 1,
-    val isLoading: Boolean = true,
+    val isLoading: LoadingState = LoadingState.INIT,
     val message: Int? = null,
     val items: List<Address> = emptyList()
 )
@@ -45,7 +46,18 @@ class SearchAddressViewModel @Inject constructor(
     }
 
     fun setSearchAppBarStateClose() {
-        searchAppBarState.value = SearchAppBarState.CLOSED
+        if (_searchAddressState.value.isEmpty()) {
+            searchAppBarState.value = SearchAppBarState.CLOSED
+            _uiState.update {
+                it.copy(
+                    page = 1,
+                    isLoading = LoadingState.INIT,
+                    items = emptyList()
+                )
+            }
+        } else {
+            _searchAddressState.value = ""
+        }
     }
 
     private val _searchAddressState: MutableState<String> =
@@ -71,7 +83,7 @@ class SearchAddressViewModel @Inject constructor(
 
     fun searchAddress(place: String) {
         _uiState.update {
-            it.copy(isLoading = true)
+            it.copy(isLoading = LoadingState.LOADING)
         }
         viewModelScope.launch {
             val searchResult = searchAddressUseCase(place, _uiState.value.page)
@@ -80,12 +92,12 @@ class SearchAddressViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         items = addressList,
-                        isLoading = false
+                        isLoading = LoadingState.DONE
                     )
                 }
             } else {
                 _uiState.update {
-                    it.copy(isLoading = false)
+                    it.copy(isLoading = LoadingState.ERROR)
                 }
             }
         }
