@@ -9,7 +9,7 @@ interface AddressDAO {
     fun getAll(): Flow<List<AddressEntity>>
 
     @Query("select * from user_address WHERE selected = 1 LIMIT 1")
-    suspend fun getAddress(): AddressEntity?
+    fun getAddress(): Flow<AddressEntity?>
 
     @Query("UPDATE user_address SET selected = 0 WHERE id = :id")
     suspend fun updateCurrentAddressUnselected(id: String)

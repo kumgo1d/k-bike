@@ -5,16 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.goldcompany.apps.koreabike.util.Async
 import com.goldcompany.apps.koreabike.util.LoadingState
 import com.goldcompany.koreabike.domain.model.Result
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.usecase.GetCurrentAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.SearchNearbyPlacesForMarkerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,9 +38,6 @@ class BikeMapViewModel @Inject constructor(
     private val _currentAddress = MutableLiveData<Address?>()
     val currentAddress: LiveData<Address?> = _currentAddress
 
-    private val _uiState = MutableStateFlow(BikeMapUiState())
-    val uiState: StateFlow<BikeMapUiState> = _uiState.asStateFlow()
-
     fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String) {
         viewModelScope.launch {
             val result = searchNearbyPlacesForMarkerUseCase(code, longitude, latitude)
@@ -51,29 +46,37 @@ class BikeMapViewModel @Inject constructor(
         }
     }
 
-    fun getAddress() {
-        _uiState.update {
-            it.copy(
-                isLoading = LoadingState.LOADING
-            )
-        }
-        viewModelScope.launch {
-            val address = getCurrentAddressUseCase()
-            Log.d(this@BikeMapViewModel.toString(), "get current address : $address")
-            if (address is Result.Success) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = LoadingState.DONE,
-                        address = address.data
-                    )
-                }
-            } else {
-                _uiState.update {
-                    it.copy(
-                        isLoading = LoadingState.ERROR
-                    )
-                }
+    private val _message: MutableStateFlow<Int?> = MutableStateFlow(null)
+    private val _addressAsync = getCurrentAddressUseCase().map {
+        getCurrentAddress(it)
+    }.map { Async.Success(it) }
+    .onStart<Async<Address?>> { emit(Async.Loading) }
+
+    val uiState: StateFlow<BikeMapUiState> = combine(
+        _message, _addressAsync
+    ) { msessage, addressAsync ->
+        when (addressAsync) {
+            Async.Loading -> {
+                BikeMapUiState(isLoading = LoadingState.LOADING)
             }
+            is Async.Success -> {
+                BikeMapUiState(
+                    isLoading = LoadingState.DONE,
+                    address = addressAsync.data
+                )
+            }
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = BikeMapUiState(isLoading = LoadingState.INIT)
+    )
+
+    private fun getCurrentAddress(address: Result<Address?>): Address? {
+        return if (address is Result.Success) {
+            address.data
+        } else {
+            null
         }
     }
 }

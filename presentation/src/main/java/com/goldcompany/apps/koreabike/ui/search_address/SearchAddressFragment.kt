@@ -46,9 +46,9 @@ class SearchAddressFragment : Fragment() {
     }
 
     private fun observeSearchAddressList() {
-        viewModel.addressList.observe(viewLifecycleOwner) { list ->
-            adapter.submitList(list)
-        }
+//        viewModel.addressList.observe(viewLifecycleOwner) { list ->
+//            adapter.submitList(list)
+//        }
     }
 
     @SuppressLint("ClickableViewAccessibility")

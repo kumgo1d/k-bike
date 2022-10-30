@@ -46,10 +46,10 @@ class KBikeRepositoryImpl(
         }
     }
 
-    override suspend fun getAddress(): Result<Address?> = withContext(Dispatchers.IO) {
-        val address = localDataSource.getAddress()
-        return@withContext if (address != null) { Result.Success(mapperUserAddressEntityToAddress(address)) }
-        else { Result.Error(Exception("no local address"))}
+    override fun getAddress(): Flow<Result<Address?>> {
+        return localDataSource.getAddress().map { entity ->
+            Result.Success(entity?.let { it -> mapperUserAddressEntityToAddress(it) })
+        }
     }
 
     override suspend fun updateCurrentAddressUnselected(id: String) {

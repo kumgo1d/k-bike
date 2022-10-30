@@ -15,10 +15,7 @@ import com.goldcompany.koreabike.domain.usecase.InsertAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.UpdateCurrentAddressUnselectedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,12 +34,32 @@ class SearchAddressViewModel @Inject constructor(
     private val insertAddressUseCase: InsertAddressUseCase
 ) : ViewModel() {
 
+    private val _currentAddress = MutableStateFlow<Address?>(null)
+
+    init {
+        viewModelScope.launch {
+            getCurrentAddressUseCase().collectLatest {
+                if (it is Result.Success) {
+                    _currentAddress.value = it.data
+                }
+            }
+        }
+    }
+
     private val _searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(value = SearchAppBarState.CLOSED)
     val searchAppBarState = _searchAppBarState
 
     fun setSearchAppBarStateOpen() {
         searchAppBarState.value = SearchAppBarState.OPENED
+    }
+
+    private val _searchAddressState: MutableState<String> =
+        mutableStateOf(value = "")
+    val searchAddressState = _searchAddressState
+
+    fun setSearchAddressState(place: String) {
+        _searchAddressState.value = place
     }
 
     fun setSearchAppBarStateClose() {
@@ -60,26 +77,12 @@ class SearchAddressViewModel @Inject constructor(
         }
     }
 
-    private val _searchAddressState: MutableState<String> =
-        mutableStateOf(value = "")
-    val searchAddressState = _searchAddressState
-
-    fun setSearchAddressState(place: String) {
-        _searchAddressState.value = place
-    }
-
     private val _uiState = MutableStateFlow(SearchAddressUiState())
     val uiState: StateFlow<SearchAddressUiState> = _uiState.asStateFlow()
 
-    private val _addressList = MutableLiveData<List<Address>>()
-    val addressList: LiveData<List<Address>> = _addressList
-
     fun setCurrentAddress(newAddress: Address) {
         viewModelScope.launch {
-            val address = getCurrentAddressUseCase()
-            if (address is Result.Success) {
-                address.data?.let { updateCurrentAddressUnselectedUseCase(it.id) }
-            }
+            _currentAddress.value?.let { updateCurrentAddressUnselectedUseCase(it.id) }
             insertAddressUseCase(newAddress)
         }
     }

@@ -12,7 +12,7 @@ import javax.inject.Singleton
 interface KBikeLocalDataSource {
     fun getAllAddress(): Flow<List<AddressEntity>>
 
-    suspend fun getAddress(): AddressEntity?
+    fun getAddress(): Flow<AddressEntity?>
 
     suspend fun updateCurrentAddressUnselected(id: String)
 
@@ -28,8 +28,8 @@ class KBikeLocalDataSourceImpl(private val addressDAO: AddressDAO): KBikeLocalDa
         return addressDAO.getAll()
     }
 
-    override suspend fun getAddress(): AddressEntity? = withContext(ioDispatcher) {
-        return@withContext addressDAO.getAddress()
+    override fun getAddress(): Flow<AddressEntity?> {
+        return addressDAO.getAddress()
     }
 
     override suspend fun updateCurrentAddressUnselected(id: String) = withContext(ioDispatcher) {
