@@ -119,9 +119,9 @@ class BikeMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun observeCurrentAddress() {
-        viewModel.currentAddress.observe(viewLifecycleOwner) { address ->
-            setCameraPosition(address)
-        }
+//        viewModel.currentAddress.observe(viewLifecycleOwner) { address ->
+//            setCameraPosition(address)
+//        }
     }
 
     private fun setCameraPosition(address: Address?) {

@@ -1,6 +1,5 @@
 package com.goldcompany.apps.koreabike.ui.bike_map
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,9 +33,6 @@ class BikeMapViewModel @Inject constructor(
 
     private val _markerAddress = MutableLiveData<List<Address>>()
     val markerAddress: LiveData<List<Address>> = _markerAddress
-
-    private val _currentAddress = MutableLiveData<Address?>()
-    val currentAddress: LiveData<Address?> = _currentAddress
 
     fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String) {
         viewModelScope.launch {
