@@ -85,10 +85,6 @@ dependencies {
     implementation 'com.naver.maps:map-sdk:3.13.0'
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    // Paging Library
-    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
-    testImplementation "androidx.paging:paging-common-ktx:$paging_version"
-
     // Kotlin fragment navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
