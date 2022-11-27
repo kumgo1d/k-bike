@@ -2,8 +2,6 @@ package com.goldcompany.apps.koreabike.ui.home
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -23,10 +21,7 @@ import com.goldcompany.apps.koreabike.ui.history_place.HistoryPlaceScreen
 import com.goldcompany.apps.koreabike.ui.search_address.SearchAddressScreen
 
 @Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier,
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
-) {
+fun HomeScreen() {
     val navController = rememberNavController()
     val items = listOf(
         KBikeScreen.BikeMap,
