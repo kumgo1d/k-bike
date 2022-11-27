@@ -25,21 +25,13 @@ fun KBikeNavGraph(
         startDestination = startDestination
     ) {
         composable(KBikeDestinations.BIKE_MAP_SCREEN) {
-            BikeMapScreen(
-                navigateSearchAddress = {
-                    navController.navigate(KBikeDestinations.SEARCH_ADDRESS_SCREEN)
-                }
-            )
+            BikeMapScreen(navController = navController)
         }
-        composable(KBikeDestinations.SEARCH_ADDRESS_SCREEN) {
-            SearchAddressScreen(
-                navigateBack = { KBikeNavigationActions(navController).popBackStack() }
-            )
+        composable(KBikeDestinations.SEARCH_PLACE_SCREEN) {
+            SearchAddressScreen(navController = navController)
         }
-        composable(KBikeDestinations.HISTORY_ADDRESS_SCREEN) {
-            HistoryPlaceScreen(
-                navigateBack = { KBikeNavigationActions(navController).popBackStack() }
-            )
+        composable(KBikeDestinations.MY_PLACE_SCREEN) {
+            HistoryPlaceScreen(navController = navController)
         }
     }
 }

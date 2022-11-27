@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.util.DefaultAddressItem
 import com.goldcompany.apps.koreabike.util.LoadingState
@@ -25,7 +26,7 @@ fun SearchAddressScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchAddressViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    navigateBack: () -> Unit
+    navController: NavController
 ) {
     val searchAppBarState by viewModel.searchAppBarState
     val searchAddressState by viewModel.searchAddressState
@@ -38,7 +39,7 @@ fun SearchAddressScreen(
                 title = R.string.search_list,
                 place = searchAddressState,
                 searchAppBarState = searchAppBarState,
-                navigateBack = navigateBack,
+                navigateBack = { navController.popBackStack() },
                 onClickForSearch = { viewModel.setSearchAppBarStateOpen() },
                 onClickForSearchClose = { viewModel.setSearchAppBarStateClose() },
                 onSearchPlaceChange = viewModel::setSearchAddressState,
@@ -66,13 +67,13 @@ fun SearchAddressScreen(
                 }
             }
             LoadingState.DONE -> {
-                SearchAddressColumn(
+                SearchAddressResultView(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
                     addressList = uiState.items,
                     onClick = viewModel::setCurrentAddress,
-                    navigateBack = navigateBack
+                    navigateBack = { navController.popBackStack() }
                 )
             }
             else -> {
@@ -87,7 +88,7 @@ fun SearchAddressScreen(
 }
 
 @Composable
-private fun SearchAddressColumn(
+private fun SearchAddressResultView(
     modifier: Modifier,
     addressList: List<Address>,
     onClick: (Address) -> Unit,

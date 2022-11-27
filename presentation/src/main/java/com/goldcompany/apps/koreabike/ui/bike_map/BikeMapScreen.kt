@@ -16,6 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.goldcompany.apps.koreabike.KBikeDestinations
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.google.android.gms.maps.model.CameraPosition
@@ -30,11 +32,11 @@ fun BikeMapScreen(
     modifier: Modifier = Modifier,
     viewModel: BikeMapViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    navigateSearchAddress: () -> Unit
+    navController: NavController
 ) {
     Scaffold(
         scaffoldState = scaffoldState,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) { paddingValues ->
         val uiState by viewModel.uiState.collectAsState()
 
@@ -45,9 +47,7 @@ fun BikeMapScreen(
             address = uiState.address
         )
 
-        SearchAddressBar(
-            navigateSearchAddress
-        )
+        SearchAddressBar { navController.navigate(KBikeDestinations.SEARCH_PLACE_SCREEN) }
     }
 }
 
@@ -83,7 +83,8 @@ private fun SearchAddressBar(
             .fillMaxWidth(),
         shape = Shapes(medium = RoundedCornerShape(16.dp)).medium,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(id = R.color.white)
+            backgroundColor = colorResource(id = R.color.white),
+            contentColor = colorResource(id = R.color.colorPrimary)
         ),
         border = BorderStroke(1.dp, colorResource(id = R.color.colorPrimary)),
         onClick = navigateSearchAddress,

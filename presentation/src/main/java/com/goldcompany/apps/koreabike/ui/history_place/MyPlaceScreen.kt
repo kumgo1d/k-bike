@@ -17,25 +17,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.util.AddressText
 import com.goldcompany.apps.koreabike.util.ListPageTopAppBar
 import com.goldcompany.koreabike.domain.model.address.Address
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HistoryPlaceScreen(
     modifier: Modifier = Modifier,
     viewModel: HistoryPlaceViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    navigateBack: () -> Unit
+    navController: NavController
 ) {
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = { 
             ListPageTopAppBar(
                 title = R.string.search_list,
-                navigateBack = navigateBack
+                navigateBack = {navController.popBackStack()}
             )
         },
         modifier = modifier.fillMaxSize()

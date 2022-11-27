@@ -40,15 +40,6 @@ fun ListPageTopAppBar(
                 color = colorResource(id = R.color.white)
             )
         },
-        navigationIcon = {
-            IconButton(onClick = navigateBack) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = stringResource(id = R.string.back_to_page),
-                    tint = colorResource(id = R.color.white)
-                )
-            }
-        },
         modifier = Modifier.fillMaxWidth(),
         backgroundColor = colorResource(id = R.color.colorPrimary)
     )
