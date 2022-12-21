@@ -10,7 +10,7 @@ K-자전거는 자전거를 탈 때 고려해야 하는 여러 기능들을 지�
 사용 API : Naver Api, Kakao Api <br>
 기술 스택 : <br>
 Kotlin, Clean Architecture, Android Jetpack, AAC(ViewModel, LiveData, Binding, Navigation), Room<br>
-Coroutine Flow, Room, DI(Hilt), Jetpack Compose, Google, Naver, Kakao API <br>
+Kotlin Coroutine Flow, Room, Hilt, Jetpack Compose, Retrofit <br>
 <br><br>
 애플리케이션 코드 구조, 서비스 화면<br>
 ![캡처](./images/1.PNG)
