@@ -1,6 +1,5 @@
 package com.goldcompany.apps.koreabike.ui.search_address
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -17,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 data class SearchAddressUiState(
@@ -102,8 +100,6 @@ class SearchAddressViewModel @Inject constructor(
                 it.copy(isLoading = LoadingState.LOADING)
             }
         }
-
-
 
         viewModelScope.launch {
             val currentPlace = place ?: _uiState.value.currentPlace
