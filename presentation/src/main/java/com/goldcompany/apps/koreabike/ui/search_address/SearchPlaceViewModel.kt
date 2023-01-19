@@ -20,10 +20,11 @@ import javax.inject.Inject
 
 data class SearchAddressUiState(
     val isLoading: LoadingState = LoadingState.INIT,
-    val message: Int? = null,
     val items: List<Address> = emptyList(),
     val page: Int = 1,
-    val currentPlace: String = ""
+    val currentPlace: String = "",
+    val isEnd: Boolean = false,
+    val message: Int? = null
 )
 
 @HiltViewModel
@@ -92,7 +93,9 @@ class SearchAddressViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = LoadingState.LOADING,
-                    page = 1
+                    items = emptyList(),
+                    page = 1,
+                    isEnd = false
                 )
             }
         } else {
@@ -101,28 +104,39 @@ class SearchAddressViewModel @Inject constructor(
             }
         }
 
+        if (_uiState.value.isEnd) {
+            _uiState.update {
+                it.copy(isLoading = LoadingState.DONE)
+            }
+            return
+        }
+
         viewModelScope.launch {
             val currentPlace = place ?: _uiState.value.currentPlace
-            val searchResult = searchAddressUseCase(
+            val response = searchAddressUseCase(
                 address = currentPlace,
                 page = _uiState.value.page
             )
 
             delay(500)
 
-            if (searchResult is Result.Success) {
-                val addressList = searchResult.data
+            if (response is Result.Success) {
+                val addressList = response.data.list
                 _uiState.update {
                     it.copy(
-                        items = it.items + addressList,
                         isLoading = LoadingState.DONE,
+                        items = it.items + addressList,
                         page = it.page + 1,
-                        currentPlace = currentPlace
+                        currentPlace = currentPlace,
+                        isEnd = response.data.isEnd
                     )
                 }
             } else {
                 _uiState.update {
-                    it.copy(isLoading = LoadingState.ERROR)
+                    it.copy(
+                        isLoading = LoadingState.ERROR,
+                        isEnd = false
+                    )
                 }
             }
         }

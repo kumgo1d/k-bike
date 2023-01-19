@@ -28,14 +28,11 @@ class KBikeRemoteDataSourceImpl(
     private val kakaoApiService: KakaoApiService,
     private val naverApiService: NaverApiService
 ): KBikeRemoteDataSource {
-    private val KAKAO_API_KEY = BuildConfig.KAKAO_API_KEY
-    private val NAVER_CLIENT_ID = BuildConfig.NAVER_CLIENT_ID
-    private val NAVER_CLIENT_SECRET = BuildConfig.NAVER_CLIENT_SECRET
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     override suspend fun searchAddress(address: String, page: Int): ApiAddressResponse = withContext(ioDispatcher) {
         return@withContext kakaoApiService.searchAddress(
-            key = KAKAO_API_KEY,
+            key = BuildConfig.KAKAO_API_KEY,
             address = address,
             page = page
         )
@@ -47,7 +44,7 @@ class KBikeRemoteDataSourceImpl(
         latitude: String
     ): ApiPlaceMarkerResponse = withContext(ioDispatcher) {
         return@withContext kakaoApiService.searchNearbyPlacesMarker(
-            key = KAKAO_API_KEY,
+            key = BuildConfig.KAKAO_API_KEY,
             code = code,
             longitude = longitude,
             latitude = latitude,
@@ -57,8 +54,8 @@ class KBikeRemoteDataSourceImpl(
 
     override suspend fun getNavigationPath(start: String, end: String): ApiNavigationPathResponse = withContext(ioDispatcher) {
         return@withContext naverApiService.getPath(
-            apiKeyId = NAVER_CLIENT_ID,
-            apiKey = NAVER_CLIENT_SECRET,
+            apiKeyId = BuildConfig.NAVER_CLIENT_ID,
+            apiKey = BuildConfig.NAVER_CLIENT_SECRET,
             start = start,
             goal = end
         )

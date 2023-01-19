@@ -11,8 +11,10 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -113,6 +115,7 @@ private fun DefaultSearchAppBar(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchTextField(
     place: String,
@@ -126,6 +129,8 @@ private fun SearchTextField(
         elevation = AppBarDefaults.TopAppBarElevation,
         color = colorResource(id = R.color.colorPrimary)
     ) {
+        val keyboardController = LocalSoftwareKeyboardController.current
+
         TextField(
             modifier = Modifier.padding(horizontal = 4.dp),
             value = place,
@@ -167,6 +172,7 @@ private fun SearchTextField(
             ),
             keyboardActions = KeyboardActions(
                 onSearch = {
+                    keyboardController?.hide()
                     onSearch(place)
                 }
             ),
