@@ -1,6 +1,5 @@
 package com.goldcompany.koreabike.data.repository.remote
 
-import android.util.Log
 import com.goldcompany.koreabike.data.BuildConfig
 import com.goldcompany.koreabike.data.api.KakaoApiService
 import com.goldcompany.koreabike.data.api.NaverApiService
@@ -35,12 +34,11 @@ class KBikeRemoteDataSourceImpl(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     override suspend fun searchAddress(address: String, page: Int): ApiAddressResponse = withContext(ioDispatcher) {
-        val call = kakaoApiService.searchAddress(
+        return@withContext kakaoApiService.searchAddress(
             key = KAKAO_API_KEY,
             address = address,
             page = page
         )
-        return@withContext call
     }
 
     override suspend fun searchNearbyPlaces(

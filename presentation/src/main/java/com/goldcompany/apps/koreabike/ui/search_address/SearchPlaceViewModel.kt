@@ -1,5 +1,6 @@
 package com.goldcompany.apps.koreabike.ui.search_address
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -13,15 +14,18 @@ import com.goldcompany.koreabike.domain.usecase.InsertAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.UpdateCurrentAddressUnselectedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 data class SearchAddressUiState(
-    val page: Int = 1,
     val isLoading: LoadingState = LoadingState.INIT,
     val message: Int? = null,
-    val items: List<Address> = emptyList()
+    val items: List<Address> = emptyList(),
+    val page: Int = 1,
+    val currentPlace: String = ""
 )
 
 @HiltViewModel
@@ -85,18 +89,39 @@ class SearchAddressViewModel @Inject constructor(
         }
     }
 
-    fun searchAddress(place: String) {
-        _uiState.update {
-            it.copy(isLoading = LoadingState.LOADING)
+    fun searchAddress(place: String? = null) {
+        if (place != null && _uiState.value.currentPlace != place) {
+            _uiState.update {
+                it.copy(
+                    isLoading = LoadingState.LOADING,
+                    page = 1
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(isLoading = LoadingState.LOADING)
+            }
         }
+
+
+
         viewModelScope.launch {
-            val searchResult = searchAddressUseCase(place, _uiState.value.page)
+            val currentPlace = place ?: _uiState.value.currentPlace
+            val searchResult = searchAddressUseCase(
+                address = currentPlace,
+                page = _uiState.value.page
+            )
+
+            delay(500)
+
             if (searchResult is Result.Success) {
                 val addressList = searchResult.data
                 _uiState.update {
                     it.copy(
-                        items = addressList,
-                        isLoading = LoadingState.DONE
+                        items = it.items + addressList,
+                        isLoading = LoadingState.DONE,
+                        page = it.page + 1,
+                        currentPlace = currentPlace
                     )
                 }
             } else {

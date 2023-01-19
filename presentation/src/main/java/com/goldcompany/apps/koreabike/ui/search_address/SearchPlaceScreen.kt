@@ -2,11 +2,11 @@ package com.goldcompany.apps.koreabike.ui.search_address
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -30,6 +30,8 @@ fun SearchAddressScreen(
 ) {
     val searchAppBarState by viewModel.searchAppBarState
     val searchAddressState by viewModel.searchAddressState
+
+    val listState: LazyListState = rememberLazyListState()
 
     Scaffold(
         modifier = modifier,
@@ -73,7 +75,9 @@ fun SearchAddressScreen(
                         .padding(paddingValues),
                     addressList = uiState.items,
                     onClick = viewModel::setCurrentAddress,
-                    navigateBack = { navController.popBackStack() }
+                    navigateBack = { navController.popBackStack() },
+                    searchNextAddressPage = viewModel::searchAddress,
+                    listState = listState
                 )
             }
             else -> {
@@ -92,7 +96,9 @@ private fun SearchAddressResultView(
     modifier: Modifier,
     addressList: List<Address>,
     onClick: (Address) -> Unit,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    searchNextAddressPage: () -> Unit,
+    listState: LazyListState
 ) {
     if (addressList.isEmpty()) {
         Text(
@@ -107,7 +113,9 @@ private fun SearchAddressResultView(
             modifier = modifier,
             addressList = addressList,
             onClick = onClick,
-            navigateBack = navigateBack
+            navigateBack = navigateBack,
+            searchNextAddressPage = searchNextAddressPage,
+            listState = listState
         )
     }
 }
@@ -117,14 +125,36 @@ private fun AddressLazyColumn(
     modifier: Modifier,
     addressList: List<Address>,
     onClick: (Address) -> Unit,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    searchNextAddressPage: () -> Unit,
+    listState: LazyListState = rememberLazyListState()
 ) {
+    val endOfListReached by remember {
+        derivedStateOf {
+            listState.isScrolledToEnd()
+        }
+    }
+
+    LaunchedEffect(
+        endOfListReached
+    ) {
+        if (endOfListReached) {
+            searchNextAddressPage()
+        }
+    }
+
     LazyColumn(
         contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
+        modifier = modifier,
+        state = listState
     ) {
-        items(addressList) { address ->
+        items(
+            items = addressList,
+            key = { address ->
+                address.id
+            }
+        ) { address ->
             DefaultAddressItem(
                 address = address,
                 onClick = onClick,
@@ -132,4 +162,9 @@ private fun AddressLazyColumn(
             )
         }
     }
+}
+
+fun LazyListState.isScrolledToEnd(): Boolean {
+    val lastItem = layoutInfo.visibleItemsInfo.lastOrNull()
+    return lastItem?.index == layoutInfo.totalItemsCount - 1
 }

@@ -1,5 +1,6 @@
 package com.goldcompany.koreabike.data.repository
 
+import android.util.Log
 import com.goldcompany.koreabike.data.mapper.*
 import com.goldcompany.koreabike.data.repository.local.KBikeLocalDataSource
 import com.goldcompany.koreabike.data.repository.remote.KBikeRemoteDataSource
@@ -16,14 +17,22 @@ class KBikeRepositoryImpl(
     private val localDataSource: KBikeLocalDataSource,
     private val remoteDataSource: KBikeRemoteDataSource
 ) : KBikeRepository {
-    override suspend fun searchAddress(address: String, page: Int): Result<List<Address>> = withContext(Dispatchers.IO) {
-        val response = remoteDataSource.searchAddress(address, page)
-
-        return@withContext Result.Success(
-            response.addressList.map {
-                mapperApiAddressToAddress(it)
-            }
-        )
+    override suspend fun searchAddress(
+        address: String,
+        page: Int
+    ): Result<List<Address>> = withContext(Dispatchers.IO) {
+        try {
+            val response = remoteDataSource.searchAddress(address, page)
+            Log.d("Search Address","Search Address API RESPONSE : $response")
+            return@withContext Result.Success(
+                response.addressList.map {
+                    mapperApiAddressToAddress(it)
+                }
+            )
+        } catch (e: Exception) {
+            Log.e("Search Address","Search Address API RESPONSE : $e")
+            return@withContext Result.Error(e)
+        }
     }
 
     override suspend fun searchNearbyPlaces(
