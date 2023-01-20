@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.goldcompany.apps.koreabike.KBikeDestinations
+import com.goldcompany.apps.koreabike.KBikeScreen
 import com.goldcompany.apps.koreabike.R
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.google.android.gms.maps.model.CameraPosition
@@ -47,7 +47,7 @@ fun BikeMapScreen(
             address = uiState.address
         )
 
-        SearchAddressBar { navController.navigate(KBikeDestinations.SEARCH_PLACE_SCREEN) }
+        SearchAddressBar { navController.navigate(KBikeScreen.SearchPlace.route) }
     }
 }
 
