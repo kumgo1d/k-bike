@@ -1,15 +1,14 @@
 package com.goldcompany.apps.koreabike.ui.bike_map
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.goldcompany.apps.koreabike.R
 import com.goldcompany.apps.koreabike.util.Async
 import com.goldcompany.apps.koreabike.util.LoadingState
 import com.goldcompany.koreabike.domain.model.Result
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.usecase.GetCurrentAddressUseCase
-import com.goldcompany.koreabike.domain.usecase.SearchCategoryPlacesUseCase
+import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -18,30 +17,19 @@ import javax.inject.Inject
 data class BikeMapUiState(
     val isLoading: LoadingState = LoadingState.INIT,
     val address: Address? = null,
-    val markerCode: String = "",
-    val markerList: List<Address> = emptyList()
+)
+
+data class BikeMapBottomSheetUiState(
+    val isLoading: Boolean = false,
+    val message: Int? = null,
+    val currentPlace: Address? = null
 )
 
 @HiltViewModel
 class BikeMapViewModel @Inject constructor(
-    private val searchCategoryPlacesUseCase: SearchCategoryPlacesUseCase,
+    private val searchAddressUseCase: SearchAddressUseCase,
     private val getCurrentAddressUseCase: GetCurrentAddressUseCase
 ) : ViewModel() {
-
-    private val _markerCode = MutableLiveData<String>()
-    val markerCode: LiveData<String> = _markerCode
-
-    private val _markerAddress = MutableLiveData<List<Address>>()
-    val markerAddress: LiveData<List<Address>> = _markerAddress
-
-    fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String) {
-        viewModelScope.launch {
-            val result = searchCategoryPlacesUseCase(code, longitude, latitude)
-            _markerCode.value = code
-            _markerAddress.postValue(result)
-        }
-    }
-
     private val _message: MutableStateFlow<Int?> = MutableStateFlow(null)
     private val _addressAsync = getCurrentAddressUseCase().map {
         getCurrentAddress(it)
@@ -50,7 +38,7 @@ class BikeMapViewModel @Inject constructor(
 
     val uiState: StateFlow<BikeMapUiState> = combine(
         _message, _addressAsync
-    ) { msessage, addressAsync ->
+    ) { _, addressAsync ->
         when (addressAsync) {
             Async.Loading -> {
                 BikeMapUiState(isLoading = LoadingState.LOADING)
@@ -64,7 +52,7 @@ class BikeMapViewModel @Inject constructor(
         }
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
+        started = SharingStarted.WhileSubscribed(2000),
         initialValue = BikeMapUiState(isLoading = LoadingState.INIT)
     )
 
@@ -73,6 +61,39 @@ class BikeMapViewModel @Inject constructor(
             address.data
         } else {
             null
+        }
+    }
+
+    private val _bottomSheetUiState = MutableStateFlow(BikeMapBottomSheetUiState())
+    val bottomSheetUiState: StateFlow<BikeMapBottomSheetUiState> = _bottomSheetUiState
+
+    fun searchPlace(place: String) {
+        _bottomSheetUiState.update { it.copy(isLoading = true) }
+
+        viewModelScope.launch {
+            val response = searchAddressUseCase(
+                address = place,
+                page = 1
+            )
+
+            if (response is Result.Success) {
+                val data = response.data.list
+                if (data.isNotEmpty()) {
+                    _bottomSheetUiState.update {
+                        it.copy(
+                            isLoading = false,
+                            currentPlace = data[0]
+                        )
+                    }
+                }
+            } else {
+                _bottomSheetUiState.update {
+                    it.copy(
+                        isLoading = false,
+                        message = R.string.error_code
+                    )
+                }
+            }
         }
     }
 }

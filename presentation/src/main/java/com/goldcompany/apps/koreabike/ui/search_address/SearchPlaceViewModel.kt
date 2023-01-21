@@ -89,27 +89,7 @@ class SearchAddressViewModel @Inject constructor(
     }
 
     fun searchAddress(place: String? = null) {
-        if (place != null && _uiState.value.currentPlace != place) {
-            _uiState.update {
-                it.copy(
-                    isLoading = LoadingState.LOADING,
-                    items = emptyList(),
-                    page = 1,
-                    isEnd = false
-                )
-            }
-        } else {
-            _uiState.update {
-                it.copy(isLoading = LoadingState.LOADING)
-            }
-        }
-
-        if (_uiState.value.isEnd) {
-            _uiState.update {
-                it.copy(isLoading = LoadingState.DONE)
-            }
-            return
-        }
+        checkCurrentPlace(place)
 
         viewModelScope.launch {
             val currentPlace = place ?: _uiState.value.currentPlace
@@ -139,6 +119,30 @@ class SearchAddressViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun checkCurrentPlace(place: String?) {
+        if (place != null && _uiState.value.currentPlace != place) {
+            _uiState.update {
+                it.copy(
+                    isLoading = LoadingState.LOADING,
+                    items = emptyList(),
+                    page = 1,
+                    isEnd = false
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(isLoading = LoadingState.LOADING)
+            }
+        }
+
+        if (_uiState.value.isEnd) {
+            _uiState.update {
+                it.copy(isLoading = LoadingState.DONE)
+            }
+            return
         }
     }
 }

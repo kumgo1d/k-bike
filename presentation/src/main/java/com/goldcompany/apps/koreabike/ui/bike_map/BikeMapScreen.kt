@@ -1,22 +1,26 @@
 package com.goldcompany.apps.koreabike.ui.bike_map
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.goldcompany.apps.koreabike.KBikeScreen
@@ -29,12 +33,16 @@ import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun BikeMapScreen(
     modifier: Modifier = Modifier,
     viewModel: BikeMapViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavController
 ) {
     Scaffold(
@@ -43,22 +51,60 @@ fun BikeMapScreen(
     ) { paddingValues ->
 
         val uiState by viewModel.uiState.collectAsState()
+        val bottomSheetUiState by viewModel.bottomSheetUiState.collectAsState()
 
-        BikeMap(
+        BikeMapDefaultScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
-            address = uiState.address
+            address = uiState.address,
+            bottomSheetUiState = bottomSheetUiState,
+            coroutineScope = coroutineScope,
+            searchPlace = viewModel::searchPlace,
+            navigateSearchAddress = {
+                navController.navigate(KBikeScreen.SearchPlace.route)
+            }
         )
-
-        BikeMapSettingsView(navController)
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun BikeMapDefaultScreen(
+    modifier: Modifier,
+    address: Address?,
+    bottomSheetUiState: BikeMapBottomSheetUiState,
+    coroutineScope: CoroutineScope,
+    searchPlace: (String) -> Unit,
+    navigateSearchAddress: () -> Unit
+) {
+    val bottomState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden
+    )
+
+    BikeMap(
+        modifier = modifier,
+        address = address,
+        searchPlace = searchPlace,
+        coroutineScope = coroutineScope,
+        bottomState = bottomState
+    )
+    SearchAddressBar(navigateSearchAddress = navigateSearchAddress)
+    BottomSheetLayout(
+        bottomSheetUiState = bottomSheetUiState,
+        bottomState = bottomState,
+        coroutineScope = coroutineScope
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun BikeMap(
     modifier: Modifier,
-    address: Address?
+    address: Address?,
+    searchPlace: (String) -> Unit,
+    coroutineScope: CoroutineScope,
+    bottomState: ModalBottomSheetState
 ) {
     val latitude = address?.y?.toDouble() ?: 37.5643
     val longitude = address?.x?.toDouble() ?: 126.9801
@@ -68,22 +114,18 @@ private fun BikeMap(
         modifier = modifier,
         cameraPositionState = CameraPositionState(
             position = CameraPosition.fromLatLngZoom(initialPosition, 16f)
-        )
+        ),
+        onPOIClick = { marker ->
+            searchPlace(marker.name)
+            coroutineScope.launch {
+                bottomState.show()
+            }
+        }
     ) {
         Marker(
             state = MarkerState(position = initialPosition),
             title = stringResource(id = R.string.current_location)
         )
-    }
-}
-
-@Composable
-private fun BikeMapSettingsView(
-    navController: NavController
-) {
-    Column {
-        SearchAddressBar { navController.navigate(KBikeScreen.SearchPlace.route) }
-//        SearchKeywordPlaces()
     }
 }
 
@@ -113,47 +155,66 @@ private fun SearchAddressBar(
     )
 }
 
+@SuppressLint("SetJavaScriptEnabled")
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun SearchKeywordPlaces() {
-    Row {
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(colorResource(id = R.color.white))
-                .clickable {
+private fun BottomSheetLayout(
+    bottomSheetUiState: BikeMapBottomSheetUiState,
+    bottomState: ModalBottomSheetState,
+    coroutineScope: CoroutineScope,
+) {
+    var backEnabled by remember { mutableStateOf(false) }
+    val webView: WebView? = null
 
-                }
-                .padding(horizontal = 10.dp, vertical = 5.dp)
-        ) {
+    BackHandler(enabled = backEnabled) {
+        webView?.goBack()
+    }
+
+    ModalBottomSheetLayout(
+        sheetState = bottomState,
+        sheetContent = {
             Text(
-                text = "편의점",
-                textAlign = TextAlign.Start,
-                style = KBikeTypography.caption.copy(colorResource(id = R.color.black))
+                modifier = Modifier.padding(8.dp),
+                text = bottomSheetUiState.currentPlace?.placeName.toString(),
+                style = KBikeTypography.h1
             )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun BikeMapPreView() {
-    MaterialTheme {
-        Surface {
-            BikeMap(
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = bottomSheetUiState.currentPlace?.roadAddressName.toString(),
+                style = KBikeTypography.button
+            )
+            AndroidView(
                 modifier = Modifier.fillMaxSize(),
-                address = null
+                factory = { context ->
+                    WebView(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        webViewClient = object : WebViewClient() {
+                            override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
+                                backEnabled = view.canGoBack()
+                            }
+                        }
+                        settings.javaScriptEnabled = true
+                    }
+                },
+                update = { webView ->
+                    webView.loadUrl(bottomSheetUiState.currentPlace?.placeUrl ?: "")
+                }
             )
-            SearchAddressBar({ })
         }
+    ) {
+        // Anchor
     }
 }
 
 @Preview
 @Composable
-private fun SearchKeywordPlacesPreView() {
+private fun SearchAddressBarPreView() {
     MaterialTheme {
         Surface {
-            SearchKeywordPlaces()
+            SearchAddressBar({})
         }
     }
 }
