@@ -11,7 +11,7 @@ import javax.inject.Singleton
 interface KBikeRepository {
     suspend fun searchAddress(address: String, page: Int): Result<AddressResponse>
 
-    suspend fun searchNearbyPlaces(
+    suspend fun searchCategoryPlaces(
         code: String,
         longitude: String,
         latitude: String

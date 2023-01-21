@@ -15,7 +15,7 @@ interface KakaoApiService {
     ): ApiAddressResponse
 
     @GET("v2/local/search/category.json")
-    suspend fun searchNearbyPlacesMarker(
+    suspend fun searchCategoryPlaces(
         @Header("Authorization") key: String,
         @Query("category_group_code") code: String,
         @Query("x") longitude: String,

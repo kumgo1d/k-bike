@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.util.DefaultAddressItem
+import com.goldcompany.apps.koreabike.compose.DefaultAddressItemView
 import com.goldcompany.apps.koreabike.util.LoadingState
 import com.goldcompany.apps.koreabike.util.SearchAppBar
 import com.goldcompany.koreabike.domain.model.address.Address
@@ -155,7 +155,7 @@ private fun AddressLazyColumn(
                 address.id
             }
         ) { address ->
-            DefaultAddressItem(
+            DefaultAddressItemView(
                 address = address,
                 onClick = onClick,
                 navigateBack = navigateBack

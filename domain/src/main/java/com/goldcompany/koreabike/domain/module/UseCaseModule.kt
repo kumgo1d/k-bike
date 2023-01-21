@@ -21,7 +21,7 @@ class UseCaseModule {
     @Provides
     fun provideSearchNearbyPlacesUseCase(
         repository: KBikeRepository
-    ): SearchNearbyPlacesForMarkerUseCase = SearchNearbyPlacesForMarkerUseCase(repository)
+    ): SearchCategoryPlacesUseCase = SearchCategoryPlacesUseCase(repository)
 
     @Singleton
     @Provides

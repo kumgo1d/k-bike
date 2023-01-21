@@ -36,12 +36,12 @@ class KBikeRepositoryImpl(
         }
     }
 
-    override suspend fun searchNearbyPlaces(
+    override suspend fun searchCategoryPlaces(
         code: String,
         longitude: String,
         latitude: String
     ): List<Address> {
-        return remoteDataSource.searchNearbyPlaces(code, longitude, latitude).apiPlaces.map {
+        return remoteDataSource.searchCategoryPlaces(code, longitude, latitude).apiPlaces.map {
             mapperApiAddressToAddress(it)
         }
     }

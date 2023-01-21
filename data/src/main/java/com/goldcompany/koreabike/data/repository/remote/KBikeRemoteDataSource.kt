@@ -15,7 +15,7 @@ import javax.inject.Singleton
 interface KBikeRemoteDataSource {
     suspend fun searchAddress(address: String, page: Int): ApiAddressResponse
 
-    suspend fun searchNearbyPlaces(
+    suspend fun searchCategoryPlaces(
         code: String,
         longitude: String,
         latitude: String
@@ -38,12 +38,12 @@ class KBikeRemoteDataSourceImpl(
         )
     }
 
-    override suspend fun searchNearbyPlaces(
+    override suspend fun searchCategoryPlaces(
         code: String,
         longitude: String,
         latitude: String
     ): ApiPlaceMarkerResponse = withContext(ioDispatcher) {
-        return@withContext kakaoApiService.searchNearbyPlacesMarker(
+        return@withContext kakaoApiService.searchCategoryPlaces(
             key = BuildConfig.KAKAO_API_KEY,
             code = code,
             longitude = longitude,

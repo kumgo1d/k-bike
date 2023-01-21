@@ -9,7 +9,7 @@ import com.goldcompany.apps.koreabike.util.LoadingState
 import com.goldcompany.koreabike.domain.model.Result
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.usecase.GetCurrentAddressUseCase
-import com.goldcompany.koreabike.domain.usecase.SearchNearbyPlacesForMarkerUseCase
+import com.goldcompany.koreabike.domain.usecase.SearchCategoryPlacesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ data class BikeMapUiState(
 
 @HiltViewModel
 class BikeMapViewModel @Inject constructor(
-    private val searchNearbyPlacesForMarkerUseCase: SearchNearbyPlacesForMarkerUseCase,
+    private val searchCategoryPlacesUseCase: SearchCategoryPlacesUseCase,
     private val getCurrentAddressUseCase: GetCurrentAddressUseCase
 ) : ViewModel() {
 
@@ -36,7 +36,7 @@ class BikeMapViewModel @Inject constructor(
 
     fun searchNearbyPlacesMarker(code: String, longitude: String, latitude: String) {
         viewModelScope.launch {
-            val result = searchNearbyPlacesForMarkerUseCase(code, longitude, latitude)
+            val result = searchCategoryPlacesUseCase(code, longitude, latitude)
             _markerCode.value = code
             _markerAddress.postValue(result)
         }

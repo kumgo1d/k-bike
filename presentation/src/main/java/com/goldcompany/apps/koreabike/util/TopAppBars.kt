@@ -1,6 +1,7 @@
 package com.goldcompany.apps.koreabike.util
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -84,8 +85,12 @@ private fun DefaultSearchAppBar(
     navigateBack: () -> Unit
 ) {
     TopAppBar(
+        modifier = Modifier.fillMaxWidth(),
         title = {
             Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable{ onClickForSearch() },
                 text = stringResource(id = title),
                 color = colorResource(id = R.color.white)
             )
@@ -99,7 +104,6 @@ private fun DefaultSearchAppBar(
                 )
             }
         },
-        modifier = Modifier.fillMaxWidth(),
         backgroundColor = colorResource(id = R.color.colorPrimary),
         actions = {
             IconButton(

@@ -4,7 +4,7 @@ import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.repository.KBikeRepository
 import javax.inject.Inject
 
-class SearchNearbyPlacesForMarkerUseCase @Inject constructor(private val repository: KBikeRepository) {
+class SearchCategoryPlacesUseCase @Inject constructor(private val repository: KBikeRepository) {
     suspend operator fun invoke(code: String, longitude: String, latitude: String): List<Address> =
-        repository.searchNearbyPlaces(code, longitude, latitude)
+        repository.searchCategoryPlaces(code, longitude, latitude)
 }

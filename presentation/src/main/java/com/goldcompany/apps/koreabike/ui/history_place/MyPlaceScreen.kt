@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.goldcompany.apps.koreabike.R
-import com.goldcompany.apps.koreabike.util.AddressText
+import com.goldcompany.apps.koreabike.compose.AddressTextView
 import com.goldcompany.apps.koreabike.util.ListPageTopAppBar
 import com.goldcompany.koreabike.domain.model.address.Address
 
@@ -103,8 +103,8 @@ private fun HistoryPlaceAddressItem(
                 .weight(1f)
                 .padding(horizontal = 8.dp)
         ) {
-            AddressText(text = address.placeName)
-            AddressText(text = address.addressName)
+            AddressTextView(text = address.placeName)
+            AddressTextView(text = address.addressName)
         }
         Image(
             painter = painterResource(id = R.drawable.ic_delete_button),

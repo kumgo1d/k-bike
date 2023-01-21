@@ -1,4 +1,4 @@
-package com.goldcompany.apps.koreabike.util
+package com.goldcompany.apps.koreabike.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -20,7 +20,7 @@ import com.goldcompany.apps.koreabike.R
 import com.goldcompany.koreabike.domain.model.address.Address
 
 @Composable
-fun AddressText(
+fun AddressTextView(
     text: String
 ) {
     Text(
@@ -31,7 +31,7 @@ fun AddressText(
 }
 
 @Composable
-fun DefaultAddressItem(
+fun DefaultAddressItemView(
     address: Address,
     onClick: (Address) -> Unit,
     navigateBack: () -> Unit
@@ -54,8 +54,8 @@ fun DefaultAddressItem(
                 .weight(1f)
                 .padding(horizontal = 8.dp)
         ) {
-            AddressText(text = address.placeName)
-            AddressText(text = address.addressName)
+            AddressTextView(text = address.placeName)
+            AddressTextView(text = address.addressName)
         }
     }
 }
@@ -65,7 +65,7 @@ fun DefaultAddressItem(
 private fun DefaultAddressItemPreView() {
     MaterialTheme {
         Surface {
-            DefaultAddressItem(
+            DefaultAddressItemView(
                 address = Address("", "addressNameaddressNameaddressNameaddressName", "", "", "", "placeName", "", "", ""),
                 onClick = {},
                 navigateBack = {}
