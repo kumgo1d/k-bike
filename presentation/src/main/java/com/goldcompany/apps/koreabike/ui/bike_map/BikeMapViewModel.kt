@@ -10,6 +10,7 @@ import com.goldcompany.koreabike.domain.model.address.Address
 import com.goldcompany.koreabike.domain.usecase.GetCurrentAddressUseCase
 import com.goldcompany.koreabike.domain.usecase.SearchAddressUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -71,6 +72,7 @@ class BikeMapViewModel @Inject constructor(
         _bottomSheetUiState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
+            delay(500)
             val response = searchAddressUseCase(
                 address = place,
                 page = 1

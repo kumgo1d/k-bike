@@ -2,15 +2,11 @@ package com.goldcompany.apps.koreabike.ui.bike_map
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -25,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.goldcompany.apps.koreabike.KBikeScreen
 import com.goldcompany.apps.koreabike.R
+import com.goldcompany.apps.koreabike.compose.CircularLoadingView
 import com.goldcompany.apps.koreabike.util.KBikeTypography
 import com.goldcompany.koreabike.domain.model.address.Address
 import com.google.android.gms.maps.model.CameraPosition
@@ -34,7 +31,6 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -92,8 +88,7 @@ private fun BikeMapDefaultScreen(
     SearchAddressBar(navigateSearchAddress = navigateSearchAddress)
     BottomSheetLayout(
         bottomSheetUiState = bottomSheetUiState,
-        bottomState = bottomState,
-        coroutineScope = coroutineScope
+        bottomState = bottomState
     )
 }
 
@@ -155,58 +150,65 @@ private fun SearchAddressBar(
     )
 }
 
-@SuppressLint("SetJavaScriptEnabled")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun BottomSheetLayout(
     bottomSheetUiState: BikeMapBottomSheetUiState,
-    bottomState: ModalBottomSheetState,
-    coroutineScope: CoroutineScope,
+    bottomState: ModalBottomSheetState
 ) {
-    var backEnabled by remember { mutableStateOf(false) }
-    val webView: WebView? = null
-
-    BackHandler(enabled = backEnabled) {
-        webView?.goBack()
-    }
-
     ModalBottomSheetLayout(
         sheetState = bottomState,
         sheetContent = {
-            Text(
-                modifier = Modifier.padding(8.dp),
-                text = bottomSheetUiState.currentPlace?.placeName.toString(),
-                style = KBikeTypography.h1
-            )
-            Text(
-                modifier = Modifier.padding(8.dp),
-                text = bottomSheetUiState.currentPlace?.roadAddressName.toString(),
-                style = KBikeTypography.button
-            )
-            AndroidView(
-                modifier = Modifier.fillMaxSize(),
-                factory = { context ->
-                    WebView(context).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                        webViewClient = object : WebViewClient() {
-                            override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
-                                backEnabled = view.canGoBack()
-                            }
-                        }
-                        settings.javaScriptEnabled = true
-                    }
-                },
-                update = { webView ->
-                    webView.loadUrl(bottomSheetUiState.currentPlace?.placeUrl ?: "")
+            when (bottomSheetUiState.isLoading) {
+                true -> {
+                    CircularLoadingView(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentSize()
+                    )
                 }
-            )
+                false -> {
+                    PlaceWebView(bottomSheetUiState = bottomSheetUiState)
+                }
+            }
         }
     ) {
         // Anchor
     }
+}
+
+@SuppressLint("SetJavaScriptEnabled")
+@Composable
+private fun PlaceWebView(
+    bottomSheetUiState: BikeMapBottomSheetUiState
+) {
+    var backEnabled by remember { mutableStateOf(false) }
+    var view: WebView? = null
+
+    BackHandler(enabled = backEnabled) {
+        view?.goBack()
+    }
+
+    AndroidView(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 16.dp),
+        factory = { context ->
+            WebView(context).apply {
+                webViewClient = object : WebViewClient() {
+                    override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
+                        backEnabled = view.canGoBack()
+                    }
+                }
+                settings.javaScriptEnabled = true
+                view = this
+            }
+        },
+        update = { webView ->
+            view = webView
+            webView.loadUrl(bottomSheetUiState.currentPlace?.placeUrl ?: "")
+        }
+    )
 }
 
 @Preview
